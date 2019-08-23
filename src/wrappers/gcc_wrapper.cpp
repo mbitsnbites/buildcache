@@ -24,6 +24,7 @@
 #include <sys/sys_utils.hpp>
 
 #include <regex>
+#include <set>
 #include <stdexcept>
 
 namespace bcache {
@@ -192,6 +193,12 @@ std::string gcc_wrapper_t::get_program_id() {
 std::map<std::string, std::string> gcc_wrapper_t::get_build_files() {
   std::map<std::string, std::string> files;
   auto found_object_file = false;
+  bool has_coverage = false;
+  const std::set<std::string> coverage_options = {
+      "-ftest-coverage",
+      "-fprofile-arcs",
+      "--coverage"
+  };
   for (size_t i = 0u; i < m_args.size(); ++i) {
     const auto next_idx = i + 1u;
     if ((m_args[i] == "-o") && (next_idx < m_args.size())) {
@@ -200,12 +207,15 @@ std::map<std::string, std::string> gcc_wrapper_t::get_build_files() {
       }
       files["object"] = m_args[next_idx];
       found_object_file = true;
-    } else if (m_args[i] == "-ftest-coverage") {
-      throw std::runtime_error("Code coverage data is currently not supported.");
+    } else if (coverage_options.find(m_args[i]) != coverage_options.cend()) {
+      has_coverage = true;
     }
   }
   if (!found_object_file) {
     throw std::runtime_error("Unable to get the target object file.");
+  }
+  if (has_coverage) {
+      files["coverage"] = file::change_extension(files["object"], ".gcno");
   }
   return files;
 }

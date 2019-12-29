@@ -29,6 +29,9 @@
 
 namespace bcache {
 namespace {
+// Tick this to a new number if the format has changed in a non-backwards-compatible way.
+const std::string HASH_VERSION = "1";
+
 bool is_source_file(const std::string& arg) {
   const auto ext = lower_case(file::get_extension(arg));
   return ((ext == ".cpp") || (ext == ".cc") || (ext == ".cxx") || (ext == ".c"));
@@ -193,7 +196,7 @@ std::string msvc_wrapper_t::get_program_id() {
     throw std::runtime_error("Unable to get the compiler version information string.");
   }
 
-  return result.std_err;
+  return HASH_VERSION + result.std_err;
 }
 
 std::map<std::string, std::string> msvc_wrapper_t::get_build_files() {

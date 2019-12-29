@@ -27,6 +27,9 @@
 
 namespace bcache {
 namespace {
+// Tick this to a new number if the format has changed in a non-backwards-compatible way.
+const std::string HASH_VERSION = "1";
+
 bool is_source_file(const std::string& arg) {
   const auto ext = lower_case(file::get_extension(arg));
   return ((ext == ".cpp") || (ext == ".cc") || (ext == ".cxx") || (ext == ".c"));
@@ -113,6 +116,6 @@ std::string ghs_wrapper_t::get_program_id() {
     }
   }
 
-  return program_version_info + os_version_info;
+  return HASH_VERSION + program_version_info + os_version_info;
 }
 }  // namespace bcache

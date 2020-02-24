@@ -18,7 +18,7 @@ It is similar in spirit to [ccache](https://ccache.samba.org/), [sccache](https:
   * In addition to caching compilation results, BuildCache can be used for caching almost any reproducible program artifacts (e.g. test results, [rendered images](https://en.wikipedia.org/wiki/Rendering_(computer_graphics)), etc).
 * A fast local file system cache.
 * Can optionally use a remote, shared server as a second level cache.
-* Optional compression with [LZ4](https://github.com/lz4/lz4) (almost negligable overhead).
+* Optional compression with [LZ4](https://github.com/lz4/lz4) or [ZSTD](https://github.com/facebook/zstd) (almost negligable overhead).
 
 ## Status
 
@@ -207,6 +207,8 @@ The following options control the behavior of BuildCache:
 | `BUILDCACHE_MAX_REMOTE_ENTRY_SIZE` | `max_remote_entry_size` | Remote cache entry size limit in bytes (uncompressed) | 134217728 |
 | `BUILDCACHE_HARD_LINKS` | `hard_links` | Allow the use of hard links when caching | false |
 | `BUILDCACHE_COMPRESS` | `compress` | Allow the use of compression when caching (overrides hard links) | false |
+| `BUILDCACHE_COMPRESS_FORMAT` | `compress_format` | Cache compresion format (see below) | DEFAULT |
+| `BUILDCACHE_COMPRESS_LEVEL` | `compress_level` | Cache compresion level (see below) | -1 |
 | `BUILDCACHE_PERF` | `perf` | Enable performance logging | false |
 | `BUILDCACHE_DISABLE` | `disable` | Disable caching (bypass BuildCache) | false |
 | `BUILDCACHE_ACCURACY` | `accuracy` | Caching accuracy (see below) | DEFAULT |
@@ -286,3 +288,28 @@ Binaries built with this mode can be used for code coverage generation.
 ### SLOPPY
 
 With the `SLOPPY` mode, absolute file paths and line number information are always ignored during cache lookup, which improves cache hit ratio. The downside is that you may not be able to use the binaries for code coverage.
+
+## Cache compression format
+
+With the cache compression format setting, `BUILDCACHE_COMPRESS_FORMAT`, it is possible to
+control how the generated caches are compressed.
+
+Note: The "compress" setting must be set to true in order to utilize this setting.
+
+| BUILDCACHE_COMPRESS_FORMAT   | Comment                                                            |
+| ---------------------------- | ------------------------------------------------------------------ |
+| LZ4                          | Utilize LZ4 compression (faster compression, larger cache sizes)   |
+| ZSTD                         | Utilize ZSTD compression (slower compression, smaller cache sizes) |
+| DEFAULT                      | Utilize LZ4 compresson                                             |
+
+The default compression format is `DEFAULT`.
+
+## Cache compression level
+
+With the cache compression level setting, `BUILDCACHE_COMPRESS_LEVEL`, it is possible to
+control the effort exerted by the compressor in order to produce smaller cache files. See the
+documentation of your chosen compressor for more information.
+
+The default compression level is -1, which will utilize the default compression level for the compressor.
+
+Note: The "compress" setting must be set to true in order to utilize this setting.

@@ -23,6 +23,7 @@
 #include <base/string_list.hpp>
 
 #include <cstdint>
+
 #include <map>
 #include <string>
 
@@ -36,10 +37,22 @@ enum class cache_accuracy_t {
   STRICT    ///< Be as strict as possible.
 };
 
+/// @brief The cache format.
+enum class compress_format_t {
+  LZ4,     ///< Utilize LZ4 compression (faster compression, larger cache sizes)
+  ZSTD,    ///< Utilize ZSTD compression (slower compression, smaller cache sizes)
+  DEFAULT  ///< Utilize LZ4 compression
+};
+
 /// @brief Convert a cache accuracy enum value to a string.
 /// @param accuracy The cache accuracy.
 /// @returns an upper case string representing the cache accuracy.
 std::string to_string(const cache_accuracy_t accuracy);
+
+/// @brief Convert a cache format enum value to a string.
+/// @param format The cache format.
+/// @returns an upper case string representing the cache format.
+std::string to_string(const compress_format_t format);
 
 /// @brief Initialize the configuration based on environment variables etc.
 void init();
@@ -85,6 +98,12 @@ bool hard_links();
 
 /// @returns true if BuildCache should compress data in the cache.
 bool compress();
+
+/// @returns the compression format.
+compress_format_t compress_format();
+
+/// @returns the compression level.
+int32_t compress_level();
 
 /// @returns true if performance profiling output is enabled.
 bool perf();

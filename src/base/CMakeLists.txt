@@ -55,7 +55,7 @@ if(HAS_HMAC)
 endif()
 
 add_library(base ${BASE_SRC})
-target_link_libraries(base md4 lz4)
+target_link_libraries(base md4 lz4 zstd)
 if(WIN32 OR MINGW)
   target_link_libraries(base userenv)
 elseif(OPENSSL_FOUND)

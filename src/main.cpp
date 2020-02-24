@@ -32,17 +32,18 @@
 #include <wrappers/program_wrapper.hpp>
 
 // These 3rd party includes are used for getting the version numbers.
+#include "buildcache_version.h"
+
 #include <cjson/cJSON.h>
 #include <hiredis/hiredis.h>
 #include <lua.h>
 #include <lz4/lz4.h>
+#include <zstd/zstd.h>
 
 #include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <string>
-
-#include "buildcache_version.h"
 
 // For program binary identification (e.g. using the "strings", "ident" or "what" tools).
 char PROGRAM_IDENTITY_1[] = "@(#)BuildCache version " BUILDCACHE_VERSION_STRING;
@@ -74,8 +75,8 @@ std::unique_ptr<bcache::program_wrapper_t> find_suitable_wrapper(
           // Check if the given wrapper can handle this command (first match wins).
           wrapper.reset(new bcache::lua_wrapper_t(args, script_path));
           if (wrapper->can_handle_command()) {
-            bcache::debug::log(bcache::debug::DEBUG) << "Found matching Lua wrapper for "
-                                                     << true_exe_path << ": " << script_path;
+            bcache::debug::log(bcache::debug::DEBUG)
+                << "Found matching Lua wrapper for " << true_exe_path << ": " << script_path;
             break;
           } else {
             wrapper = nullptr;
@@ -170,12 +171,16 @@ std::unique_ptr<bcache::program_wrapper_t> find_suitable_wrapper(
                 << (bcache::config::hard_links() ? "true" : "false") << "\n";
       std::cout << "  BUILDCACHE_COMPRESS:               "
                 << (bcache::config::compress() ? "true" : "false") << "\n";
+      std::cout << "  BUILDCACHE_COMPRESS_FORMAT:        "
+                << to_string(bcache::config::compress_format()) << "\n";
+      std::cout << "  BUILDCACHE_COMPRESS_LEVEL:         " << bcache::config::compress_level()
+                << "\n";
       std::cout << "  BUILDCACHE_PERF:                   "
                 << (bcache::config::perf() ? "true" : "false") << "\n";
       std::cout << "  BUILDCACHE_DISABLE:                "
                 << (bcache::config::disable() ? "true" : "false") << "\n";
-      std::cout << "  BUILDCACHE_ACCURACY:               " << to_string(bcache::config::accuracy())
-                << "\n";
+      std::cout << "  BUILDCACHE_ACCURACY:               "
+                << to_string(bcache::config::accuracy()) << "\n";
     }
   } catch (const std::exception& e) {
     std::cerr << "*** Unexpected error: " << e.what() << "\n";
@@ -229,6 +234,7 @@ std::unique_ptr<bcache::program_wrapper_t> find_suitable_wrapper(
   std::cout << "  lua " << LUA_VERSION_MAJOR << "." << LUA_VERSION_MINOR << "."
             << LUA_VERSION_RELEASE << "\n";
   std::cout << "  lz4 " << LZ4_VERSION_STRING << "\n";
+  std::cout << "  zstd " << ZSTD_VERSION_STRING << "\n";
   std::cout << "  md4\n";
 #ifdef USE_MINGW_THREADS
   std::cout << "  mingw-std-threads\n";
@@ -364,7 +370,6 @@ void print_help(const char* program_name) {
   std::cout << "    -V, --version         print version and copyright information\n";
   std::cout << "\n";
   std::cout << "See also https://github.com/mbitsnbites/buildcache\n";
-
 }
 }  // namespace
 

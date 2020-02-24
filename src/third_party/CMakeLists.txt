@@ -60,6 +60,52 @@ add_library(lz4
 target_include_directories(lz4 INTERFACE .)
 
 #---------------------------------------------------------------------------------------------------
+# zstd
+#---------------------------------------------------------------------------------------------------
+add_library(zstd
+  zstd/cover.c
+  zstd/debug.c
+  zstd/divsufsort.c
+  zstd/entropy_common.c
+  zstd/error_private.c
+  zstd/fastcover.c
+  zstd/fse_compress.c
+  zstd/fse_decompress.c
+  zstd/hist.c
+  zstd/huf_compress.c
+  zstd/huf_decompress.c
+  zstd/pool.c
+  zstd/threading.c
+  zstd/xxhash.c
+  zstd/zbuff_common.c
+  zstd/zbuff_compress.c
+  zstd/zbuff_decompress.c
+  zstd/zdict.c
+  zstd/zstd_common.c
+  zstd/zstd_compress.c
+  zstd/zstd_compress_literals.c
+  zstd/zstd_compress_sequences.c
+  zstd/zstd_ddict.c
+  zstd/zstd_decompress.c
+  zstd/zstd_decompress_block.c
+  zstd/zstd_double_fast.c
+  zstd/zstd_fast.c
+  zstd/zstd_lazy.c
+  zstd/zstd_ldm.c
+  zstd/zstd_opt.c
+  zstd/zstd_v01.c
+  zstd/zstd_v02.c
+  zstd/zstd_v03.c
+  zstd/zstd_v04.c
+  zstd/zstd_v05.c
+  zstd/zstd_v06.c
+  zstd/zstd_v07.c
+  zstd/zstdmt_compress.c
+  )
+
+target_include_directories(zstd INTERFACE .)
+
+#---------------------------------------------------------------------------------------------------
 # Lua
 #---------------------------------------------------------------------------------------------------
 set(LUA_DIR lua-5.3.4)

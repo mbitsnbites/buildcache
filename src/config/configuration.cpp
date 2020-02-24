@@ -33,9 +33,9 @@ namespace {
 // Various constants.
 const std::string ROOT_FOLDER_NAME = ".buildcache";
 const std::string CONFIGURATION_FILE_NAME = "config.json";
-const int64_t DEFAULT_MAX_CACHE_SIZE = 5368709120L;         // 5 GiB
-const int64_t DEFAULT_MAX_LOCAL_ENTRY_SIZE = 134217728L;    // 128 MiB
-const int64_t DEFAULT_MAX_REMOTE_ENTRY_SIZE = 134217728L;   // 128 MiB
+const int64_t DEFAULT_MAX_CACHE_SIZE = 5368709120L;        // 5 GiB
+const int64_t DEFAULT_MAX_LOCAL_ENTRY_SIZE = 134217728L;   // 128 MiB
+const int64_t DEFAULT_MAX_REMOTE_ENTRY_SIZE = 134217728L;  // 128 MiB
 
 // Configuration options.
 std::string s_dir;
@@ -52,9 +52,11 @@ int32_t s_debug = -1;
 std::string s_log_file;
 bool s_hard_links = false;
 bool s_compress = false;
+int32_t s_compress_level = -1;
 bool s_perf = false;
 bool s_disable = false;
 config::cache_accuracy_t s_accuracy = config::cache_accuracy_t::DEFAULT;
+config::compress_format_t s_compress_format = config::compress_format_t::DEFAULT;
 
 std::string to_lower(const std::string& str) {
   std::string str_lower(str.size(), ' ');
@@ -96,6 +98,17 @@ config::cache_accuracy_t to_cache_accuracy(const std::string& str) {
     return config::cache_accuracy_t::SLOPPY;
   } else {
     return config::cache_accuracy_t::DEFAULT;
+  }
+}
+
+config::compress_format_t to_cache_format(const std::string& str) {
+  const auto s = to_lower(str);
+  if (s == "lz4") {
+    return config::compress_format_t::LZ4;
+  } else if (s == "zstd") {
+    return config::compress_format_t::ZSTD;
+  } else {
+    return config::compress_format_t::DEFAULT;
   }
 }
 
@@ -219,6 +232,14 @@ void load_from_file(const std::string& file_name) {
     }
   }
 
+  // Get "compression_level".
+  {
+    const auto* node = cJSON_GetObjectItemCaseSensitive(root, "compress_level");
+    if (cJSON_IsNumber(node)) {
+      s_compress_level = static_cast<int32_t>(node->valueint);
+    }
+  }
+
   // Get "perf".
   {
     const auto* node = cJSON_GetObjectItemCaseSensitive(root, "perf");
@@ -243,6 +264,14 @@ void load_from_file(const std::string& file_name) {
     }
   }
 
+  // Get "cache_format".
+  {
+    const auto* node = cJSON_GetObjectItemCaseSensitive(root, "compress_format");
+    if (cJSON_IsString(node) && node->valuestring != nullptr) {
+      s_compress_format = to_cache_format(std::string(node->valuestring));
+    }
+  }
+
   cJSON_Delete(root);
 }
 }  // namespace
@@ -256,6 +285,19 @@ std::string to_string(const cache_accuracy_t accuracy) {
       return "DEFAULT";
     case cache_accuracy_t::SLOPPY:
       return "SLOPPY";
+    default:
+      return "?";
+  }
+}
+
+std::string to_string(const compress_format_t format) {
+  switch (format) {
+    case compress_format_t::LZ4:
+      return "LZ4";
+    case compress_format_t::ZSTD:
+      return "ZSTD";
+    case compress_format_t::DEFAULT:
+      return "DEFAULT";
     default:
       return "?";
   }
@@ -322,7 +364,7 @@ void init() {
       }
       const env_var_t s3_secret_env("BUILDCACHE_S3_SECRET");
       if (s3_secret_env) {
-        s_s3_secret= s3_secret_env.as_string();
+        s_s3_secret = s3_secret_env.as_string();
       }
     }
 
@@ -398,6 +440,14 @@ void init() {
       }
     }
 
+    // Get the compression level flag from the environment.
+    {
+      const env_var_t compress_level_env("BUILDCACHE_COMPRESS_LEVEL");
+      if (compress_level_env) {
+        s_compress_level = static_cast<int32_t>(compress_level_env.as_int64());
+      }
+    }
+
     // Get the perf flag from the environment.
     {
       const env_var_t perf_env("BUILDCACHE_PERF");
@@ -419,6 +469,14 @@ void init() {
       const env_var_t accuracy_env("BUILDCACHE_ACCURACY");
       if (accuracy_env) {
         s_accuracy = to_cache_accuracy(accuracy_env.as_string());
+      }
+    }
+
+    // Get the cache format from the environment.
+    {
+      const env_var_t format_env("BUILDCACHE_COMPRESS_FORMAT");
+      if (format_env) {
+        s_compress_format = to_cache_format(format_env.as_string());
       }
     }
   } catch (...) {
@@ -484,6 +542,10 @@ bool compress() {
   return s_compress;
 }
 
+int32_t compress_level() {
+  return s_compress_level;
+}
+
 bool perf() {
   return s_perf;
 }
@@ -492,9 +554,12 @@ bool disable() {
   return s_disable;
 }
 
-cache_accuracy_t accuracy()
-{
+cache_accuracy_t accuracy() {
   return s_accuracy;
+}
+
+compress_format_t compress_format() {
+  return s_compress_format;
 }
 
 }  // namespace config

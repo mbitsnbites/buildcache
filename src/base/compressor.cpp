@@ -18,12 +18,15 @@
 //--------------------------------------------------------------------------------------------------
 
 #include <base/compressor.hpp>
-
 #include <base/file_utils.hpp>
-
-#include <lz4/lz4.h>
+#include <config/configuration.hpp>
 
 #include <cstdint>
+#include <lz4/lz4.h>
+#include <zstd/zstd.h>
+
+#include <algorithm>
+#include <functional>
 #include <limits>
 #include <stdexcept>
 #include <vector>
@@ -38,11 +41,13 @@ namespace {
 // +-----------+------------------------+-------------------------------------------------+
 // | 0         | uint32 (little endian) | Compression format                              |
 // |           |                        |   0x00345a4c = LZ4                              |
+// |           |                        |   0x4454535a = ZSTD                             |
 // | 4         | uint32 (little endian) | Original (uncompressed) size, in bytes          |
 // | 8         | (algorithm dependent)  | Compressed data                                 |
 // +-----------+------------------------+-------------------------------------------------+
 const int COMPR_HEADER_SIZE = 8;
 const uint32_t COMPR_FORMAT_LZ4 = 0x00345a4cu;
+const uint32_t COMPR_FORMAT_ZSTD = 0x4454535au;
 
 void encode_uint32(std::vector<char>& buffer, const int offset, const uint32_t value) {
   buffer[offset + 0] = static_cast<char>(value);
@@ -61,32 +66,80 @@ uint32_t decode_uint32(const std::string& buffer, const int offset) {
 }  // namespace
 
 std::string compress(const std::string& str) {
+  const uint32_t compress_format = (config::compress_format() == config::compress_format_t::ZSTD)
+                                       ? COMPR_FORMAT_ZSTD
+                                       : COMPR_FORMAT_LZ4;
+  int32_t compress_level = config::compress_level();
+
+  std::function<size_t(size_t)> bound_func;
+
   // Can this data be compressed?
-  if (str.size() > static_cast<std::string::size_type>(LZ4_MAX_INPUT_SIZE)) {
-    throw std::runtime_error("Unable to compress the data: Too large data buffer.");
+  if (compress_format == COMPR_FORMAT_LZ4) {
+    if (str.size() > static_cast<std::string::size_type>(LZ4_MAX_INPUT_SIZE)) {
+      throw std::runtime_error("Unable to compress the data: Too large data buffer.");
+    }
+
+    bound_func = LZ4_compressBound;
+
+    if (compress_level == -1) {
+      compress_level = 1;  // "acceleration" in LZ4
+    }
+  } else if (compress_format == COMPR_FORMAT_ZSTD) {
+    bound_func = ZSTD_compressBound;
+
+    if (compress_level != -1) {
+      // Ensure that we set a valid compression level
+      ZSTD_bounds b = ZSTD_cParam_getBounds(ZSTD_c_compressionLevel);
+      compress_level = std::max(b.lowerBound, std::min(compress_level, b.upperBound));
+    } else {
+      compress_level = ZSTD_CLEVEL_DEFAULT;
+    }
   }
 
   // Allocate memory for the destination buffer.
   const auto original_size = static_cast<int>(str.size());
-  const auto max_compressed_size = LZ4_compressBound(original_size);
+  int compressed_size = 0;
+
+  const auto max_compressed_size = bound_func(original_size);
   if (max_compressed_size == 0) {
     throw std::runtime_error("Unable to compress the data.");
   }
+
   std::vector<char> compressed_data(COMPR_HEADER_SIZE + max_compressed_size);
 
   // Perform the compression.
-  const auto size = LZ4_compress_default(
-      str.c_str(), &compressed_data[COMPR_HEADER_SIZE], original_size, max_compressed_size);
-  if (size == 0) {
-    throw std::runtime_error("Unable to compress the data.");
+  if (compress_format == COMPR_FORMAT_LZ4) {
+    compressed_size = LZ4_compress_fast(str.c_str(),
+                                        &compressed_data[COMPR_HEADER_SIZE],
+                                        original_size,
+                                        max_compressed_size,
+                                        compress_level);
+
+    if (compressed_size == 0) {
+      throw std::runtime_error("Unable to compress the data.");
+    }
+  } else if (compress_format == COMPR_FORMAT_ZSTD) {
+    compressed_size = ZSTD_compress(&compressed_data[COMPR_HEADER_SIZE],
+                                    max_compressed_size,
+                                    str.c_str(),
+                                    original_size,
+                                    compress_level);
+
+    if (ZSTD_isError(compressed_size)) {
+      throw std::runtime_error("An error occurred while compressing the data.");
+    } else {
+      if (compressed_size == 0) {
+        throw std::runtime_error("Unable to compress the data.");
+      }
+    }
   }
 
   // Write data to the header.
-  encode_uint32(compressed_data, 0, COMPR_FORMAT_LZ4);
+  encode_uint32(compressed_data, 0, compress_format);
   encode_uint32(compressed_data, 4, static_cast<uint32_t>(original_size));
 
   // Convert the buffer to a string (and truncate it to the compressed size).
-  return std::string(compressed_data.data(), COMPR_HEADER_SIZE + size);
+  return std::string(compressed_data.data(), COMPR_HEADER_SIZE + compressed_size);
 }
 
 std::string decompress(const std::string& compressed_str) {
@@ -107,7 +160,7 @@ std::string decompress(const std::string& compressed_str) {
   const auto original_size = static_cast<int>(static_cast<int32_t>(original_size_u32));
 
   // Sanity check: Is the header data reasonable?
-  if (format != COMPR_FORMAT_LZ4) {
+  if (format != COMPR_FORMAT_LZ4 && format != COMPR_FORMAT_ZSTD) {
     throw std::runtime_error("Unrecognized compression format.");
   }
   if (original_size < 0) {
@@ -119,10 +172,24 @@ std::string decompress(const std::string& compressed_str) {
 
   // Perform the decompression.
   const auto compressed_size = static_cast<int>(compressed_str.size()) - COMPR_HEADER_SIZE;
-  const auto size = LZ4_decompress_safe(compressed_str.data() + COMPR_HEADER_SIZE,
-                                        decompressed_data.data(),
-                                        compressed_size,
-                                        original_size);
+  size_t size = 0;
+
+  if (format == COMPR_FORMAT_LZ4) {
+    size = LZ4_decompress_safe(compressed_str.data() + COMPR_HEADER_SIZE,
+                               decompressed_data.data(),
+                               compressed_size,
+                               original_size);
+  } else if (format == COMPR_FORMAT_ZSTD) {
+    size = ZSTD_decompress(decompressed_data.data(),
+                           original_size,
+                           compressed_str.data() + COMPR_HEADER_SIZE,
+                           compressed_size);
+
+    if (ZSTD_isError(size)) {
+      throw std::runtime_error("An error occurred while decompressing the data.");
+    }
+  }
+
   if (size != original_size) {
     throw std::runtime_error("Unable to decompress the data.");
   }

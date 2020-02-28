@@ -18,6 +18,8 @@
 #---------------------------------------------------------------------------------------------------
 
 add_library(wrappers
+  ccc_analyzer_wrapper.cpp
+  ccc_analyzer_wrapper.hpp
   gcc_wrapper.cpp
   gcc_wrapper.hpp
   ghs_wrapper.cpp

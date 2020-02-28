@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// Copyright (c) 2018 Marcus Geelnard
+// Copyright (c) 2020 Marcus Geelnard
 //
 // This software is provided 'as-is', without any express or implied warranty. In no event will the
 // authors be held liable for any damages arising from the use of this software.
@@ -17,26 +17,30 @@
 //  3. This notice may not be removed or altered from any source distribution.
 //--------------------------------------------------------------------------------------------------
 
-#ifndef BUILDCACHE_GCC_WRAPPER_HPP_
-#define BUILDCACHE_GCC_WRAPPER_HPP_
+#ifndef BUILDCACHE_CCC_ANALYZER_WRAPPER_HPP_
+#define BUILDCACHE_CCC_ANALYZER_WRAPPER_HPP_
 
-#include <wrappers/program_wrapper.hpp>
+#include <wrappers/gcc_wrapper.hpp>
 
 namespace bcache {
-/// @brief A program wrapper for GCC and GCC-like C/C++ compilers.
-class gcc_wrapper_t : public program_wrapper_t {
+/// @brief This is a wrapper for the scan-build ccc-analyzer (a Clang-based static analyzer).
+///
+/// The analyzer runs GCC/Clang under the hood, so we inherit from the GCC wrapper.
+class ccc_analyzer_wrapper_t : public gcc_wrapper_t {
 public:
-  gcc_wrapper_t(const string_list_t& args);
+  ccc_analyzer_wrapper_t(const string_list_t& args);
 
   bool can_handle_command() override;
 
-protected:
-  string_list_t get_capabilities() override;
-  std::string preprocess_source() override;
-  string_list_t get_relevant_arguments() override;
+private:
   std::map<std::string, std::string> get_relevant_env_vars() override;
-  std::string get_program_id() override;
   std::map<std::string, expected_file_t> get_build_files() override;
+  sys::run_result_t run_for_miss() override;
+
+  static const int MAX_NUM_REPORTS = 10;
+  std::string m_report_paths[MAX_NUM_REPORTS];
+  file::tmp_file_t m_tmp_report_dir;
 };
 }  // namespace bcache
-#endif  // BUILDCACHE_GCC_WRAPPER_HPP_
+
+#endif  // BUILDCACHE_CCC_ANALYZER_WRAPPER_HPP_

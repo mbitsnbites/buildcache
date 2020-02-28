@@ -24,6 +24,7 @@
 #include <config/configuration.hpp>
 #include <sys/perf_utils.hpp>
 #include <sys/sys_utils.hpp>
+#include <wrappers/ccc_analyzer_wrapper.hpp>
 #include <wrappers/gcc_wrapper.hpp>
 #include <wrappers/ghs_wrapper.hpp>
 #include <wrappers/lua_wrapper.hpp>
@@ -95,7 +96,10 @@ std::unique_ptr<bcache::program_wrapper_t> find_suitable_wrapper(
       if (!wrapper->can_handle_command()) {
         wrapper.reset(new bcache::msvc_wrapper_t(args));
         if (!wrapper->can_handle_command()) {
-          wrapper = nullptr;
+          wrapper.reset(new bcache::ccc_analyzer_wrapper_t(args));
+          if (!wrapper->can_handle_command()) {
+            wrapper = nullptr;
+          }
         }
       }
     }

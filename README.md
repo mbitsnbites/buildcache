@@ -134,12 +134,13 @@ $ BUILDCACHE_REMOTE=s3://my-minio-server:9000/my-buildcache-bucket BUILDCACHE_S3
 Currently the following compilers and languages are supported:
 
 | Compiler | Languages | Support |
-| -------- | --------- | --------- |
-| GCC      | C, C++    | Built-in  |
-| Clang    | C, C++    | Built-in  |
-| Microsoft Visual C++ | C, C++    | Built-in  |
-| Green Hills Software    | C, C++    | Built-in  |
-| Texas Instruments TMS320C6000™ | C, C++  | Lua example |
+| --- | --- | --- |
+| GCC | C, C++ | Built-in |
+| Clang | C, C++ | Built-in |
+| Microsoft Visual C++ | C, C++ | Built-in |
+| Green Hills Software | C, C++ | Built-in |
+| scan-build static analyzer | C, C++ | Built-in |
+| Texas Instruments TMS320C6000™ | C, C++ | Lua example |
 
 New backends are relatively easy to add, both as built-in wrappers in C++ and as Lua wrappers (see below).
 

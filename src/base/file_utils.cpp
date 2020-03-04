@@ -239,6 +239,22 @@ std::string get_temp_dir() {
   }
   return std::string();
 #else
+  // 1. Try $XDG_RUNTIME_DIR. See:
+  //    https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
+  env_var_t xdg_runtime_dir("XDG_RUNTIME_DIR");
+  if (xdg_runtime_dir && dir_exists(xdg_runtime_dir.as_string())) {
+    return xdg_runtime_dir.as_string();
+  }
+
+  // 2. Try $TMPDIR. See:
+  //    https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap08.html#tag_08_03
+  env_var_t tmpdir("TMPDIR");
+  if (tmpdir && dir_exists(tmpdir.as_string())) {
+    return tmpdir.as_string();
+  }
+
+  // 3. Fall back to /tmp. See:
+  //    http://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch03s18.html
   return std::string("/tmp");
 #endif
 }

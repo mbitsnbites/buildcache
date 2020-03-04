@@ -192,12 +192,13 @@ int l_split_args(lua_State* state) {
 }
 
 int l_run(lua_State* state) {
-  // Get arguments.
-  const auto cmd = pop_string_list(state);
+  // Get arguments (in reverse order).
   auto quiet = true;
-  if (lua_gettop(state) > 0) {
-    quiet = pop_bool(state);
+  if (lua_isboolean(state, -1) != 0) {
+    quiet = (lua_toboolean(state, -1) != 0);
+    lua_pop(state, 1);
   }
+  const auto cmd = pop_string_list(state);
 
   // Call the C++ function and push the result.
   push(state, sys::run(cmd, quiet));

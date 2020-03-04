@@ -45,7 +45,62 @@ TEST_CASE("tmp_file_t produces expected results") {
     CHECK_GT(result.path().size(), min_expected_size);
   }
 
-  // TODO(m): Create a temporary file and test that it is deleted when the object goes out of scope.
+  SUBCASE("Two files are created and deleted") {
+    const std::string base_path = file::get_temp_dir();
+    const std::string ext = ".foo";
+
+    std::string tmp1_path;
+    std::string tmp2_path;
+    {
+      const auto tmp1 = file::tmp_file_t(base_path, ext);
+      const auto tmp2 = file::tmp_file_t(base_path, ext);
+      tmp1_path = tmp1.path();
+      tmp2_path = tmp2.path();
+
+      // Create the first file.
+      file::write("Hello world!", tmp1.path());
+
+      // The first file, but not the second file, should exist.
+      CHECK_EQ(file::file_exists(tmp1_path), true);
+      CHECK_EQ(file::file_exists(tmp2_path), false);
+
+      // Create the first file.
+      file::write("Hello world!", tmp2.path());
+
+      // Both files should exist.
+      CHECK_EQ(file::file_exists(tmp1_path), true);
+      CHECK_EQ(file::file_exists(tmp2_path), true);
+    }
+
+    // After the tmp_file_t objects go out of scope, both files should be deleted.
+    CHECK_EQ(file::file_exists(tmp1_path), false);
+    CHECK_EQ(file::file_exists(tmp2_path), false);
+  }
+
+  SUBCASE("A directory is created and completely removed") {
+    const std::string base_path = file::get_temp_dir();
+    const std::string ext = "";
+
+    std::string tmp_dir_path;
+    std::string tmp_file_path;
+    {
+      const auto tmp = file::tmp_file_t(base_path, ext);
+      tmp_dir_path = tmp.path();
+      tmp_file_path = file::append_path(tmp_dir_path, "hello.foo");
+
+      // Create the directory and a file in the dir.
+      file::create_dir(tmp_dir_path);
+      file::write("Hello world!", tmp_file_path);
+
+      // The dir and the file should exist.
+      CHECK_EQ(file::dir_exists(tmp_dir_path), true);
+      CHECK_EQ(file::file_exists(tmp_file_path), true);
+    }
+
+    // After the tmp_file_t object goes out of scope, the file and the dir should be deleted.
+    CHECK_EQ(file::dir_exists(tmp_dir_path), false);
+    CHECK_EQ(file::file_exists(tmp_file_path), false);
+  }
 }
 
 TEST_CASE("append_path produces expected results") {

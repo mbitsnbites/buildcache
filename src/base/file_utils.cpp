@@ -158,12 +158,14 @@ tmp_file_t::tmp_file_t(const std::string& dir, const std::string& extension) {
 }
 
 tmp_file_t::~tmp_file_t() {
-  if (file_exists(m_path)) {
-    try {
+  try {
+    if (file_exists(m_path)) {
       remove_file(m_path);
-    } catch (const std::exception& e) {
-      debug::log(debug::ERROR) << e.what();
+    } else if (dir_exists(m_path)) {
+      remove_dir(m_path);
     }
+  } catch (const std::exception& e) {
+    debug::log(debug::ERROR) << e.what();
   }
 }
 

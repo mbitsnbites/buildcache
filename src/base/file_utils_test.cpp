@@ -176,3 +176,21 @@ TEST_CASE("get_extension produces expected results") {
     CHECK_EQ(result, ext);
   }
 }
+
+TEST_CASE("get_unique_id produces expected results") {
+  SUBCASE("No repetition") {
+    // Generate some unique ID:s.
+    const int NUM_IDS = 1000;
+    std::vector<std::string> ids(NUM_IDS);
+    for (auto& id : ids) {
+      id = file::get_unique_id();
+    }
+
+    // Make sure that none of them are the same.
+    for (int i = 0; i < NUM_IDS; ++i) {
+      for (int j = i + 1; j < NUM_IDS; ++j) {
+        CHECK_NE(ids[i], ids[j]);
+      }
+    }
+  }
+}

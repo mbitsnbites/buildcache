@@ -244,6 +244,11 @@ void write(const std::string& data, const std::string& path);
 /// @throws runtime_error if the operation could not be completed.
 /// @note Multiple processes may append to the same file concurrently.
 void append(const std::string& data, const std::string& path);
+
+/// @brief Create a unique ID string.
+/// @returns a string that contains a unique ID.
+std::string get_unique_id();
+
 }  // namespace file
 }  // namespace bcache
 

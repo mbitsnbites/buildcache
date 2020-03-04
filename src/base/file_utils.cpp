@@ -26,9 +26,9 @@
 
 #include <cstdint>
 #include <cstdio>
+#include <ctime>
 #include <algorithm>
 #include <atomic>
-#include <sstream>
 #include <stdexcept>
 #include <vector>
 
@@ -51,6 +51,7 @@
 #include <dirent.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <sys/time.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -141,17 +142,49 @@ void remove_dir_internal(const std::string& path, const bool ignore_errors) {
     throw std::runtime_error("Unable to remove dir.");
   }
 }
+
+/// @brief Get a number based on a high resolution timer.
+/// @note The time unit is unspecified, and taking the difference between two consecutive return
+/// values is not supported as the time scale may be non-continuous.
+uint64_t get_hires_time() {
+#if defined(_WIN32)
+  LARGE_INTEGER count;
+  QueryPerformanceCounter(&count);
+  return static_cast<uint64_t>(count.QuadPart);
+#else
+  struct timeval tv;
+  gettimeofday(&tv, nullptr);
+  return (static_cast<uint64_t>(tv.tv_sec) << 20) | static_cast<uint64_t>(tv.tv_usec);
+#endif
+}
+
+/// @brief Convert an integer to a human-readable string.
+/// @param x The integer to convert.
+/// @returns a string that consists of alphanumerical characters. The string is at least one
+/// character long, and at most 13 characters long.
+std::string to_id_part(const uint64_t x) {
+  static const char CHARS[] = "abcdefghijklmnopqrstuvwxyz0123456789";
+  static const auto NUM_CHARS = static_cast<uint64_t>(sizeof(CHARS) / sizeof(CHARS[0]) - 1);
+
+  std::string part;
+  if (x == 0u) {
+    part += 'u';
+  } else {
+    auto q = x;
+    while (q != 0u) {
+      part += CHARS[q % NUM_CHARS];
+      q = q / NUM_CHARS;
+    }
+  }
+
+  return part;
+}
+
 }  // namespace
 
 tmp_file_t::tmp_file_t(const std::string& dir, const std::string& extension) {
-  // Get unique identifiers for this file.
-  const auto pid = get_process_id();
-  const auto number = ++s_tmp_name_number;
-
-  // Generate a file name from the unique identifiers.
-  std::ostringstream ss;
-  ss << "bcache" << pid << "_" << number;
-  std::string file_name = ss.str();
+  // Generate a file name based on a unique identifier.
+  const auto file_name = std::string("bcache-") + get_unique_id();
 
   // Concatenate base dir, file name and extension into the full path.
   m_path = append_path(dir, file_name + extension);
@@ -828,6 +861,18 @@ std::vector<file_info_t> walk_directory(const std::string& path) {
 #endif
 
   return files;
+}
+
+std::string get_unique_id() {
+  // Gather entropy.
+  const auto pid = static_cast<uint64_t>(get_process_id());
+  const auto date_t = static_cast<uint64_t>(std::time(0));
+  const auto hires_t = get_hires_time();
+  const auto number = static_cast<uint64_t>(++s_tmp_name_number);
+
+  // Form a string from the entropy, in a way that is suitable for a filename.
+  return to_id_part(pid) + "-" + to_id_part(date_t) + "-" + to_id_part(hires_t) + "-" +
+         to_id_part(number);
 }
 
 }  // namespace file

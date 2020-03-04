@@ -178,6 +178,9 @@ documentation):
 | get_relevant_env_vars () | Environment variables that can affect the build output | An empty table |
 | get_program_id () | A unique program identification | The MD4 hash of the program binary |
 | get_build_files () | A table of build result files | An empty table |
+| run_for_miss () | A `sys::run_result_t` compatible table | *See note\** |
+
+\*: `run_for_miss`, when defined, shall run the actual command (as specified by `ARGS`) if a cache miss occurs. The return value shall be a table consisting of `std_out`, `std_err` and `return_code` (see [sys::run_result_t](src/sys/sys_utils.hpp)). The default implementation is equivalent to `bcache.run(ARGS, false)`.
 
 ## Configuration options
 

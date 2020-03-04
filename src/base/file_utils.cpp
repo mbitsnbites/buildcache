@@ -182,7 +182,7 @@ file_info_t::file_info_t(const std::string& path,
 }
 
 std::string append_path(const std::string& path, const std::string& append) {
-  if (path.empty() || append.empty()) {
+  if (path.empty() || append.empty() || path.back() == PATH_SEPARATOR_CHR) {
     return path + append;
   }
   return path + PATH_SEPARATOR + append;

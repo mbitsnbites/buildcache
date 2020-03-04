@@ -20,6 +20,7 @@
 #include <sys/sys_utils.hpp>
 
 #include <base/debug_utils.hpp>
+#include <base/env_utils.hpp>
 #include <base/file_utils.hpp>
 #include <base/unicode_utils.hpp>
 #include <config/configuration.hpp>
@@ -82,11 +83,6 @@ std::string make_exe_path_suitable_for_icecc(const std::string& path) {
 }
 
 #if !defined(_WIN32)
-std::string getenv_str(const char* var) {
-  const auto* value = std::getenv(var);
-  return value != nullptr ? std::string(value) : std::string();
-}
-
 bool try_start_editor(const std::string& program, const std::string& file) {
   try {
     const auto& real_path = file::find_executable(program);
@@ -495,7 +491,7 @@ void open_in_default_editor(const std::string& path) {
 
     // Try an X11 based GUI editor.
     if (!started_editor) {
-      if (!getenv_str("DISPLAY").empty()) {
+      if (env_defined("DISPLAY")) {
         if (try_start_editor("xdg-open", path)) {
           started_editor = true;
         } else if (try_start_editor("gvfs-open", path)) {
@@ -512,7 +508,7 @@ void open_in_default_editor(const std::string& path) {
         started_editor = true;
       }
       if (!started_editor) {
-        const auto env_editor = getenv_str("EDITOR");
+        const auto env_editor = get_env("EDITOR");
         if (!env_editor.empty() && try_start_editor(env_editor, path)) {
           started_editor = true;
         }

@@ -19,6 +19,7 @@
 
 #include <config/configuration.hpp>
 
+#include <base/env_utils.hpp>
 #include <base/file_utils.hpp>
 
 #include <cjson/cJSON.h>
@@ -60,40 +61,6 @@ std::string to_lower(const std::string& str) {
   std::transform(str.begin(), str.end(), str_lower.begin(), ::tolower);
   return str_lower;
 }
-
-/// @brief A helper class for reading and parsing environment variables.
-class env_var_t {
-public:
-  env_var_t(const std::string& name) : m_defined(false) {
-    const auto* env_var = std::getenv(name.c_str());
-    if (env_var != nullptr) {
-      m_value = std::string(env_var);
-      m_defined = true;
-    }
-  }
-
-  operator bool() const {
-    return m_defined;
-  }
-
-  const std::string& as_string() const {
-    return m_value;
-  }
-
-  int64_t as_int64() const {
-    return std::stoll(m_value);
-  }
-
-  bool as_bool() const {
-    const auto value_lower = to_lower(m_value);
-    return m_defined && (!m_value.empty()) && (value_lower != "false") && (value_lower != "no") &&
-           (value_lower != "off") && (value_lower != "0");
-  }
-
-private:
-  std::string m_value;
-  bool m_defined;
-};
 
 std::string get_dir() {
   // Is the environment variable BUILDCACHE_DIR defined?

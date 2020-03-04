@@ -22,6 +22,8 @@ set(BASE_SRC
   compressor.hpp
   debug_utils.cpp
   debug_utils.hpp
+  env_utils.cpp
+  env_utils.hpp
   file_utils.cpp
   file_utils.hpp
   hasher.cpp
@@ -63,6 +65,10 @@ endif()
 
 buildcache_add_test(NAME file_utils_test
                     SOURCES file_utils_test.cpp
+                    LIBRARIES base)
+
+buildcache_add_test(NAME env_utils_test
+                    SOURCES env_utils_test.cpp
                     LIBRARIES base)
 
 buildcache_add_test(NAME lock_file_test

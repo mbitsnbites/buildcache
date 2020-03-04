@@ -20,6 +20,7 @@
 #include <base/file_utils.hpp>
 
 #include <base/debug_utils.hpp>
+#include <base/env_utils.hpp>
 #include <base/string_list.hpp>
 #include <base/unicode_utils.hpp>
 
@@ -275,8 +276,7 @@ std::string get_user_home_dir() {
   return user_home;
 #endif
 #else
-  const auto* home_env = getenv("HOME");
-  return (home_env != nullptr) ? std::string(home_env) : std::string();
+  return get_env("HOME");
 #endif
 }
 
@@ -333,11 +333,7 @@ std::string find_executable(const std::string& path, const std::string& exclude)
   }
 
   // Get the PATH environment variable.
-  const auto* path_env = getenv("PATH");
-  if (!path_env) {
-    return std::string();
-  }
-  const auto search_path = string_list_t(std::string(path_env), PATH_DELIMITER);
+  const auto search_path = string_list_t(get_env("PATH"), PATH_DELIMITER);
 
   // Iterate the path from start to end and see if we can find the executable file.
   for (const auto& base_path : search_path) {

@@ -35,7 +35,7 @@ public:
   cache_entry_t lookup(const hasher_t::hash_t& hash) override;
   void add(const hasher_t::hash_t& hash,
            const cache_entry_t& entry,
-           const std::map<std::string, std::string>& file_paths) override;
+           const std::map<std::string, expected_file_t>& expected_files) override;
   void get_file(const hasher_t::hash_t& hash,
                 const std::string& source_id,
                 const std::string& target_path,

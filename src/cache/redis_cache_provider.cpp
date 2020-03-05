@@ -135,12 +135,12 @@ cache_entry_t bcache::redis_cache_provider_t::lookup(const hasher_t::hash_t& has
 
 void redis_cache_provider_t::add(const hasher_t::hash_t& hash,
                                  const cache_entry_t& entry,
-                                 const std::map<std::string, std::string>& file_paths) {
+                                 const std::map<std::string, expected_file_t>& expected_files) {
   const auto hash_str = hash.as_string();
 
   // Upload (and optinally compress) the files to the remote cache.
   for (const auto& file_id : entry.file_ids()) {
-    const auto& source_path = file_paths.at(file_id);
+    const auto& source_path = expected_files.at(file_id).path();
 
     // Read the data from the source file.
     auto data = file::read(source_path);

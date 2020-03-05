@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// Copyright (c) 2018 Marcus Geelnard
+// Copyright (c) 2020 Marcus Geelnard
 //
 // This software is provided 'as-is', without any express or implied warranty. In no event will the
 // authors be held liable for any damages arising from the use of this software.
@@ -17,26 +17,36 @@
 //  3. This notice may not be removed or altered from any source distribution.
 //--------------------------------------------------------------------------------------------------
 
-#ifndef BUILDCACHE_MSVC_WRAPPER_HPP_
-#define BUILDCACHE_MSVC_WRAPPER_HPP_
+#ifndef BUILDCACHE_EXPECTED_FILE_HPP_
+#define BUILDCACHE_EXPECTED_FILE_HPP_
 
-#include <wrappers/program_wrapper.hpp>
+#include <string>
 
 namespace bcache {
-/// @brief A program wrapper MS Visual Studio.
-class msvc_wrapper_t : public program_wrapper_t {
-public:
-  msvc_wrapper_t(const string_list_t& args);
 
-  bool can_handle_command() override;
+/// @brief A description of an output file that is expected to be produced by a program.
+class expected_file_t {
+public:
+  expected_file_t() = default;
+  expected_file_t(const expected_file_t&) = default;
+  expected_file_t(const std::string& path, bool required) : m_path(path), m_required(required) {
+  }
+
+  /// @returns the path to the output file.
+  const std::string& path() const {
+    return m_path;
+  }
+
+  /// @returns true if the output file is required.
+  bool required() const {
+    return m_required;
+  }
 
 private:
-  string_list_t get_capabilities() override;
-  std::string preprocess_source() override;
-  string_list_t get_relevant_arguments() override;
-  std::map<std::string, std::string> get_relevant_env_vars() override;
-  std::string get_program_id() override;
-  std::map<std::string, expected_file_t> get_build_files() override;
+  std::string m_path;
+  bool m_required;
 };
+
 }  // namespace bcache
-#endif  // BUILDCACHE_MSVC_WRAPPER_HPP_
+
+#endif  // BUILDCACHE_EXPECTED_FILE_HPP_

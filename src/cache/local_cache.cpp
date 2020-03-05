@@ -247,7 +247,7 @@ void local_cache_t::zero_stats() {
 
 void local_cache_t::add(const hasher_t::hash_t& hash,
                         const cache_entry_t& entry,
-                        const std::map<std::string, std::string>& file_paths,
+                        const std::map<std::string, expected_file_t>& expected_files,
                         const bool allow_hard_links) {
   // Create the cache entry parent directory if necessary.
   const auto cache_entry_path = hash_to_cache_entry_path(hash);
@@ -266,7 +266,7 @@ void local_cache_t::add(const hasher_t::hash_t& hash,
 
     // Copy (and optinally compress) the files into the cache.
     for (const auto& file_id : entry.file_ids()) {
-      const auto& source_path = file_paths.at(file_id);
+      const auto& source_path = expected_files.at(file_id).path();
       const auto target_path = file::append_path(cache_entry_path, file_id);
       if (entry.compression_mode() == cache_entry_t::comp_mode_t::ALL) {
         debug::log(debug::DEBUG) << "Compressing " << source_path << " => " << target_path;

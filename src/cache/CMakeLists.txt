@@ -20,6 +20,7 @@
 set(CACHE_SRCS
   cache.cpp
   cache.hpp
+  expected_file.hpp
   cache_entry.cpp
   cache_entry.hpp
   cache_stats.cpp

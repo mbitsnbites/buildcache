@@ -22,6 +22,7 @@
 
 #include <base/hasher.hpp>
 #include <cache/cache_entry.hpp>
+#include <cache/expected_file.hpp>
 #include <cache/remote_cache_provider.hpp>
 
 #include <string>
@@ -52,11 +53,11 @@ public:
   /// @brief Adds a set of files to the cache.
   /// @param hash The cache entry identifier.
   /// @param entry The cache entry data (files, stdout, etc).
-  /// @param file_paths Paths to the actual files in the local file system (map from file ID to
-  /// path).
+  /// @param expected_files Paths to the actual files in the local file system (map from file ID to
+  /// an expected file descriptor).
   void add(const hasher_t::hash_t& hash,
            const cache_entry_t& entry,
-           const std::map<std::string, std::string>& file_paths);
+           const std::map<std::string, expected_file_t>& expected_files);
 
   /// @brief Copy a cached file to the local file system.
   /// @param hash The cache entry identifier.

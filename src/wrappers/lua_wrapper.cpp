@@ -326,6 +326,18 @@ bool is_failed_prgmatch(const std::string& script_str, const std::string& progra
 
   return !match;
 }
+
+std::map<std::string, expected_file_t> to_expected_files_map(
+    const std::map<std::string, std::string>& files) {
+  std::map<std::string, expected_file_t> expected_files;
+  for (const auto& file : files) {
+    // Right now we simply assume that all files are required.
+    // TODO(m): Make it possible to specify files as optional in Lua.
+    expected_files[file.first] = {file.second, true};
+  }
+  return expected_files;
+}
+
 }  // namespace
 
 lua_wrapper_t::runner_t::runner_t(const std::string& script_path, const string_list_t& args)
@@ -500,9 +512,10 @@ std::string lua_wrapper_t::get_program_id() {
   }
 }
 
-std::map<std::string, std::string> lua_wrapper_t::get_build_files() {
+std::map<std::string, expected_file_t> lua_wrapper_t::get_build_files() {
   if (m_runner.call("get_build_files")) {
-    return pop_map(m_runner.state());
+    const auto files_map = pop_map(m_runner.state());
+    return to_expected_files_map(files_map);
   } else {
     return program_wrapper_t::get_build_files();
   }

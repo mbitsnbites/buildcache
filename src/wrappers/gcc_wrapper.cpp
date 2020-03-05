@@ -235,8 +235,8 @@ std::string gcc_wrapper_t::get_program_id() {
   return id;
 }
 
-std::map<std::string, std::string> gcc_wrapper_t::get_build_files() {
-  std::map<std::string, std::string> files;
+std::map<std::string, expected_file_t> gcc_wrapper_t::get_build_files() {
+  std::map<std::string, expected_file_t> files;
   auto found_object_file = false;
   for (size_t i = 0u; i < m_args.size(); ++i) {
     const auto next_idx = i + 1u;
@@ -244,7 +244,7 @@ std::map<std::string, std::string> gcc_wrapper_t::get_build_files() {
       if (found_object_file) {
         throw std::runtime_error("Only a single target object file can be specified.");
       }
-      files["object"] = m_args[next_idx];
+      files["object"] = {m_args[next_idx], true};
       found_object_file = true;
     }
   }
@@ -252,7 +252,7 @@ std::map<std::string, std::string> gcc_wrapper_t::get_build_files() {
     throw std::runtime_error("Unable to get the target object file.");
   }
   if (has_coverage_output(m_args)) {
-    files["coverage"] = file::change_extension(files["object"], ".gcno");
+    files["coverage"] = {file::change_extension(files["object"].path(), ".gcno"), true};
   }
   return files;
 }

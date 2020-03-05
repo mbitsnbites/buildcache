@@ -207,15 +207,15 @@ std::string msvc_wrapper_t::get_program_id() {
   return HASH_VERSION + result.std_err;
 }
 
-std::map<std::string, std::string> msvc_wrapper_t::get_build_files() {
-  std::map<std::string, std::string> files;
+std::map<std::string, expected_file_t> msvc_wrapper_t::get_build_files() {
+  std::map<std::string, expected_file_t> files;
   auto found_object_file = false;
   for (const auto& arg : m_args) {
     if (arg_starts_with(arg, "Fo") && (file::get_extension(arg) == ".obj")) {
       if (found_object_file) {
         throw std::runtime_error("Only a single target object file can be specified.");
       }
-      files["object"] = drop_leading_colon(arg.substr(3));
+      files["object"] = {drop_leading_colon(arg.substr(3)), true};
       found_object_file = true;
     }
   }

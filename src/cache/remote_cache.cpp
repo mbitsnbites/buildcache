@@ -104,10 +104,10 @@ cache_entry_t bcache::remote_cache_t::lookup(const hasher_t::hash_t& hash) {
 
 void remote_cache_t::add(const hasher_t::hash_t& hash,
                          const cache_entry_t& entry,
-                         const std::map<std::string, std::string>& file_paths) {
+                         const std::map<std::string, expected_file_t>& expected_files) {
   if (m_provider != nullptr) {
     try {
-      m_provider->add(hash, entry, file_paths);
+      m_provider->add(hash, entry, expected_files);
     } catch (std::exception& e) {
       debug::log(debug::ERROR) << e.what();
     }

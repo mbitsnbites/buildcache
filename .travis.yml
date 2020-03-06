@@ -29,6 +29,7 @@ matrix:
         homebrew:
           packages:
             - ninja
+          update: true
       script:
         - mkdir out && cd out
         - cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ../src

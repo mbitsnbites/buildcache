@@ -37,6 +37,13 @@ protected:
   std::map<std::string, std::string> get_relevant_env_vars() override;
   std::string get_program_id() override;
   std::map<std::string, expected_file_t> get_build_files() override;
+
+  string_list_t m_resolved_args;
+
+private:
+  void resolve_args() override;
+  string_list_t parse_args(const string_list_t& args);
+  string_list_t parse_response_file(const std::string& filename);
 };
 }  // namespace bcache
 #endif  // BUILDCACHE_GCC_WRAPPER_HPP_

@@ -24,6 +24,7 @@
 #include <config/configuration.hpp>
 #include <sys/sys_utils.hpp>
 
+#include <fstream>
 #include <regex>
 #include <set>
 #include <stdexcept>
@@ -116,6 +117,43 @@ string_list_t make_preprocessor_cmd(const string_list_t& args,
 gcc_wrapper_t::gcc_wrapper_t(const string_list_t& args) : program_wrapper_t(args) {
 }
 
+void gcc_wrapper_t::resolve_args() {
+  // Iterate over all args and load any response files that we encounter.
+  m_resolved_args.clear();
+  m_resolved_args += parse_args(m_args);
+}
+
+string_list_t gcc_wrapper_t::parse_args(const string_list_t& args) {
+  string_list_t parsed_args;
+
+  for (const auto& arg : args) {
+    if (arg.substr(0, 1) == "@") {
+      parsed_args += parse_response_file(arg.substr(1));
+    } else {
+      parsed_args += arg;
+    }
+  }
+
+  return parsed_args;
+}
+
+string_list_t gcc_wrapper_t::parse_response_file(const std::string& filename) {
+  string_list_t parsed_file_contents;
+
+  std::ifstream response_file(filename);
+  if (response_file.is_open()) {
+    std::string line;
+    while (std::getline(response_file, line)) {
+      parsed_file_contents += parse_args(string_list_t::split_args(line));
+    }
+  } else {
+    // Unable to open the specified file.  GCC says to leave the argument parameter as-is.
+    parsed_file_contents += (std::string("@") + filename);
+  }
+
+  return parsed_file_contents;
+}
+
 bool gcc_wrapper_t::can_handle_command() {
   // Is this the right compiler?
   // Note: We keep the file extension part to support version strings in the executable file name,
@@ -149,13 +187,11 @@ std::string gcc_wrapper_t::preprocess_source() {
   // Check if this is a compilation command that we support.
   auto is_object_compilation = false;
   auto has_object_output = false;
-  for (auto arg : m_args) {
+  for (auto arg : m_resolved_args) {
     if (arg == "-c") {
       is_object_compilation = true;
     } else if (arg == "-o") {
       has_object_output = true;
-    } else if (arg.substr(0, 1) == "@") {
-      throw std::runtime_error("Response files are currently not supported.");
     }
   }
   if ((!is_object_compilation) || (!has_object_output)) {
@@ -164,7 +200,7 @@ std::string gcc_wrapper_t::preprocess_source() {
 
   // Run the preprocessor step.
   file::tmp_file_t preprocessed_file(sys::get_local_temp_folder(), ".i");
-  const auto preprocessor_args = make_preprocessor_cmd(m_args, preprocessed_file.path());
+  const auto preprocessor_args = make_preprocessor_cmd(m_resolved_args, preprocessed_file.path());
   auto result = sys::run(preprocessor_args);
   if (result.return_code != 0) {
     throw std::runtime_error("Preprocessing command was unsuccessful.");
@@ -183,7 +219,7 @@ string_list_t gcc_wrapper_t::get_relevant_arguments() {
 
   // Note: We always skip the first arg since we have handled it already.
   bool skip_next_arg = true;
-  for (auto arg : m_args) {
+  for (auto arg : m_resolved_args) {
     if (!skip_next_arg) {
       // Does this argument specify a file (we don't want to hash those).
       const bool is_arg_plus_file_name =
@@ -238,20 +274,20 @@ std::string gcc_wrapper_t::get_program_id() {
 std::map<std::string, expected_file_t> gcc_wrapper_t::get_build_files() {
   std::map<std::string, expected_file_t> files;
   auto found_object_file = false;
-  for (size_t i = 0u; i < m_args.size(); ++i) {
+  for (size_t i = 0u; i < m_resolved_args.size(); ++i) {
     const auto next_idx = i + 1u;
-    if ((m_args[i] == "-o") && (next_idx < m_args.size())) {
+    if ((m_resolved_args[i] == "-o") && (next_idx < m_resolved_args.size())) {
       if (found_object_file) {
         throw std::runtime_error("Only a single target object file can be specified.");
       }
-      files["object"] = {m_args[next_idx], true};
+      files["object"] = {m_resolved_args[next_idx], true};
       found_object_file = true;
     }
   }
   if (!found_object_file) {
     throw std::runtime_error("Unable to get the target object file.");
   }
-  if (has_coverage_output(m_args)) {
+  if (has_coverage_output(m_resolved_args)) {
     files["coverage"] = {file::change_extension(files["object"].path(), ".gcno"), true};
   }
   return files;

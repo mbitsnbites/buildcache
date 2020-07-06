@@ -241,6 +241,10 @@ private:
   static std::string unescape_arg(const std::string& arg) {
     std::string unescaped_arg;
 
+#ifdef _WIN32
+    // On Windows a backslash has semantic meaning and does not require unescaping.
+    unescaped_arg = arg;
+#else
     auto is_escaped = false;
     for (auto c : arg) {
       if ((c == '\\') && !is_escaped) {
@@ -252,7 +256,7 @@ private:
         is_escaped = false;
       }
     }
-
+#endif
     return unescaped_arg;
   }
 

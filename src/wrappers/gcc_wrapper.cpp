@@ -32,7 +32,7 @@
 namespace bcache {
 namespace {
 // Tick this to a new number if the format has changed in a non-backwards-compatible way.
-const std::string HASH_VERSION = "3";
+const std::string HASH_VERSION = "4";
 
 bool is_source_file(const std::string& arg) {
   const auto ext = lower_case(file::get_extension(arg));
@@ -85,6 +85,10 @@ string_list_t make_preprocessor_cmd(const string_list_t& args,
     auto drop_this_arg = drop_next_arg;
     drop_next_arg = false;
     if (arg == "-c") {
+      drop_this_arg = true;
+    } else if (arg == "-MD") {
+      drop_this_arg = true;
+    } else if (arg == "-MMD") {
       drop_this_arg = true;
     } else if (arg == "-o") {
       drop_this_arg = true;
@@ -274,6 +278,7 @@ std::string gcc_wrapper_t::get_program_id() {
 std::map<std::string, expected_file_t> gcc_wrapper_t::get_build_files() {
   std::map<std::string, expected_file_t> files;
   auto found_object_file = false;
+  auto generate_makefile_dependencies = false;
   for (size_t i = 0u; i < m_resolved_args.size(); ++i) {
     const auto next_idx = i + 1u;
     if ((m_resolved_args[i] == "-o") && (next_idx < m_resolved_args.size())) {
@@ -282,6 +287,8 @@ std::map<std::string, expected_file_t> gcc_wrapper_t::get_build_files() {
       }
       files["object"] = {m_resolved_args[next_idx], true};
       found_object_file = true;
+    } else if (m_resolved_args[i] == "-MD" || m_resolved_args[i] == "-MMD") {
+      generate_makefile_dependencies = true;
     }
   }
   if (!found_object_file) {
@@ -289,6 +296,9 @@ std::map<std::string, expected_file_t> gcc_wrapper_t::get_build_files() {
   }
   if (has_coverage_output(m_resolved_args)) {
     files["coverage"] = {file::change_extension(files["object"].path(), ".gcno"), true};
+  }
+  if (generate_makefile_dependencies) {
+    files["d"] = {file::change_extension(files["object"].path(), ".d"), true};
   }
   return files;
 }

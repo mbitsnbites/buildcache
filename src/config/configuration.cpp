@@ -56,6 +56,7 @@ bool s_compress = false;
 int32_t s_compress_level = -1;
 bool s_perf = false;
 bool s_disable = false;
+bool s_read_only = false;
 config::cache_accuracy_t s_accuracy = config::cache_accuracy_t::DEFAULT;
 config::compress_format_t s_compress_format = config::compress_format_t::DEFAULT;
 
@@ -281,6 +282,14 @@ void load_from_file(const std::string& file_name) {
     }
   }
 
+  // Get "read_only".
+  {
+    const auto* node = cJSON_GetObjectItemCaseSensitive(root, "read_only");
+    if (cJSON_IsBool(node)) {
+      s_read_only = cJSON_IsTrue(node);
+    }
+  }
+
   cJSON_Delete(root);
 }
 }  // namespace
@@ -496,6 +505,14 @@ void init() {
         s_compress_format = to_compress_format(format_env.as_string());
       }
     }
+
+    // Get the read only flag from the environment.
+    {
+      const env_var_t read_only_env("BUILDCACHE_READONLY");
+      if (read_only_env) {
+        s_read_only = read_only_env.as_bool();
+      }
+    }
   } catch (...) {
     // If we could not initialize the configuration, we can't proceed. We need to disable the cache.
     s_disable = true;
@@ -581,6 +598,10 @@ cache_accuracy_t accuracy() {
 
 compress_format_t compress_format() {
   return s_compress_format;
+}
+
+bool read_only() {
+  return s_read_only;
 }
 
 }  // namespace config

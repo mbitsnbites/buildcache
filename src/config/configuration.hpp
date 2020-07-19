@@ -114,6 +114,9 @@ bool perf();
 /// @returns true if BuildCache is disabled.
 bool disable();
 
+/// @returns true if the readonly mode is enabled.
+bool read_only();
+
 /// @returns the cache accuracy.
 cache_accuracy_t accuracy();
 

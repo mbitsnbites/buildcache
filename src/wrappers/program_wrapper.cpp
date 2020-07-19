@@ -142,7 +142,8 @@ bool program_wrapper_t::handle_command(int& return_code) {
     // Create a new entry in the cache.
     // Note: We do not want to create cache entries for failed program runs. We could, but that
     // would run the risk of caching intermittent faults for instance.
-    if (result.return_code == 0) {
+    // And we do not want to create cache entries when the readonly mode is enabled.
+    if (result.return_code == 0 && !config::read_only()) {
       // Add the entry to the cache.
       const cache_entry_t entry(
           file_ids,

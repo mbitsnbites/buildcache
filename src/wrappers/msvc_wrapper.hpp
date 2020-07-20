@@ -38,6 +38,7 @@ private:
   std::map<std::string, std::string> get_relevant_env_vars() override;
   std::string get_program_id() override;
   std::map<std::string, expected_file_t> get_build_files() override;
+  sys::run_result_t run_for_miss() override;
 
   string_list_t m_resolved_args;
 };

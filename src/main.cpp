@@ -193,7 +193,7 @@ std::unique_ptr<bcache::program_wrapper_t> find_suitable_wrapper(
                 << (bcache::config::perf() ? "true" : "false") << "\n";
       std::cout << "  BUILDCACHE_DISABLE:                "
                 << (bcache::config::disable() ? "true" : "false") << "\n";
-      std::cout << "  BUILDCACHE_READONLY:                "
+      std::cout << "  BUILDCACHE_READONLY:               "
                 << (bcache::config::read_only() ? "true" : "false") << "\n";
       std::cout << "  BUILDCACHE_ACCURACY:               "
                 << to_string(bcache::config::accuracy()) << "\n";

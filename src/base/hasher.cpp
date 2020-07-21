@@ -59,6 +59,17 @@ void hasher_t::update_from_file(const std::string& path) {
 }
 
 
+void hasher_t::update_from_files(const string_list_t& paths) {
+  for(const auto& path : paths) {
+    if (file::file_exists(path)) {
+      update_from_file(path);
+    } else {
+      throw std::runtime_error("External file not found : " + path);
+    }
+  }
+}
+
+
 void hasher_t::update_from_file_deterministic(const std::string& path) {
   const auto file_data = file::read(path);
   if (is_ar_data(file_data)) {

@@ -103,6 +103,15 @@ protected:
   /// affect program output.
   virtual std::map<std::string, std::string> get_relevant_env_vars();
 
+
+  /// @brief Get relevant external files path for hashing.
+  /// @returns list of relevant external files
+  /// @throws runtime_error if the request could not be completed.
+  ///
+  /// @note The purpose of this function is to create a list of external files that may
+  /// affect program output. (files that are not part of the command arguments)
+  virtual string_list_t get_relevant_external_files();
+
   /// @brief Get a string that uniquely identifies the program.
   /// @returns a program ID string.
   /// @throws runtime_error if the request could not be completed.

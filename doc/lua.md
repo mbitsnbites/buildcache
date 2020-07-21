@@ -38,6 +38,7 @@ documentation):
 | preprocess_source () | The preprocessed source code (e.g. for C/C++) | An empty string |
 | get_relevant_arguments () | Arguments that can affect the build output | All arguments |
 | get_relevant_env_vars () | Environment variables that can affect the build output | An empty table |
+| get_relevant_external_files () | A list of external files that can affect program execution| An empty table |
 | get_program_id () | A unique program identification | The MD4 hash of the program binary |
 | get_build_files () | A table of build result files | An empty table |
 | run_for_miss () | A `sys::run_result_t` compatible table | *See note\** |

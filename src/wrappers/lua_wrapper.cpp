@@ -524,6 +524,14 @@ std::map<std::string, std::string> lua_wrapper_t::get_relevant_env_vars() {
   }
 }
 
+string_list_t lua_wrapper_t::get_relevant_external_files() {
+  if (m_runner.call("get_relevant_external_files")) {
+    return pop_string_list(m_runner.state());
+  } else {
+    return program_wrapper_t::get_relevant_external_files();
+  }
+}
+
 std::string lua_wrapper_t::get_program_id() {
   if (m_runner.call("get_program_id")) {
     return pop_string(m_runner.state());

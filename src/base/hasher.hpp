@@ -20,6 +20,8 @@
 #ifndef BUILDCACHE_HASHER_HPP_
 #define BUILDCACHE_HASHER_HPP_
 
+#include <base/string_list.hpp>
+
 #include <cstdint>
 #include <map>
 #include <string>
@@ -80,6 +82,11 @@ public:
   /// @param path Path to a file that contains the data to hash.
   /// @throws runtime_error if the operation could not be completed.
   void update_from_file(const std::string& path);
+
+  /// @brief Update the hash with more data.
+  /// @param paths list of paths to a files that contains the data to hash.
+  /// @throws runtime_error if the operation could not be completed.
+  void update_from_files(const string_list_t& paths);
 
   /// @brief Update the hash with more data.
   ///

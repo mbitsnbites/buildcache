@@ -91,10 +91,11 @@ bool program_wrapper_t::handle_command(int& return_code) {
     hasher.update(preprocess_source());
     PERF_STOP(PREPROCESS);
 
-    // Hash the (filtered) command line flags and environment variables.
+    // Hash the (filtered) command line flags, environment variables and external files.
     PERF_START(FILTER_ARGS);
     hasher.update(get_relevant_arguments().join(" ", true));
     hasher.update(get_relevant_env_vars());
+    hasher.update_from_files(get_relevant_external_files());
     PERF_STOP(FILTER_ARGS);
 
     // Hash the program identification (version string or similar).
@@ -197,6 +198,12 @@ std::map<std::string, std::string> program_wrapper_t::get_relevant_env_vars() {
   // Default: There are no relevant environment variables.
   std::map<std::string, std::string> env_vars;
   return env_vars;
+}
+
+string_list_t program_wrapper_t::get_relevant_external_files() {
+  // Default: There are no relevant external files.
+  string_list_t external_files;
+  return external_files;
 }
 
 std::string program_wrapper_t::get_program_id() {

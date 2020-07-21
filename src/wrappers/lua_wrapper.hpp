@@ -72,6 +72,7 @@ private:
   std::string preprocess_source() override;
   string_list_t get_relevant_arguments() override;
   std::map<std::string, std::string> get_relevant_env_vars() override;
+  string_list_t get_relevant_external_files() override;
   std::string get_program_id() override;
   std::map<std::string, expected_file_t> get_build_files() override;
   sys::run_result_t run_for_miss() override;

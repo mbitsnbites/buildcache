@@ -28,6 +28,7 @@ The following options control the behavior of BuildCache:
 | `BUILDCACHE_PERF` | `perf` | Enable performance logging | false |
 | `BUILDCACHE_DISABLE` | `disable` | Disable caching (bypass BuildCache) | false |
 | `BUILDCACHE_ACCURACY` | `accuracy` | Caching accuracy (see below) | DEFAULT |
+| `BUILDCACHE_READONLY` | `read_only` | Only read and use the cache without updating it | false |
 
 Note: Currently, only the TI C6x back end supports the `cache_link_commands`
 option.

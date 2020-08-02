@@ -114,6 +114,9 @@ bool perf();
 /// @returns true if BuildCache is disabled.
 bool disable();
 
+/// @returns true if a "terminate on a miss" mode is enabled.
+bool terminate_on_miss();
+
 /// @returns the cache accuracy.
 cache_accuracy_t accuracy();
 

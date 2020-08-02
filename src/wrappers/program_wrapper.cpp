@@ -123,6 +123,16 @@ bool program_wrapper_t::handle_command(int& return_code) {
       return true;
     } else {
       debug::log(debug::INFO) << "Cache miss (" << hash.as_string() << ")";
+
+      //If the "terminate on a miss" mode is enabled and we didn't find
+      //an entry in the cache, we exit
+      if(config::terminate_on_miss()) {
+        for (const auto& file : expected_files) {
+          std::cout << file.second.path() << '\n';
+        }
+        std::cout << "Terminate on a miss!\n";
+        std::exit(0);
+      }
     }
 
     // Run the actual program command to produce the build file(s).

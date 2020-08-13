@@ -508,7 +508,7 @@ void init() {
 
     // Get the read only flag from the environment.
     {
-      const env_var_t read_only_env("BUILDCACHE_READONLY");
+      const env_var_t read_only_env("BUILDCACHE_READ_ONLY");
       if (read_only_env) {
         s_read_only = read_only_env.as_bool();
       }

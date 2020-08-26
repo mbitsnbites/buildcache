@@ -21,6 +21,7 @@
 
 #include <base/debug_utils.hpp>
 #include <base/file_utils.hpp>
+#include <base/string_utils.hpp>
 #include <base/unicode_utils.hpp>
 #include <config/configuration.hpp>
 
@@ -39,10 +40,6 @@
 
 namespace bcache {
 namespace {
-bool starts_with(const std::string& str, const std::string& sub_str) {
-  return str.substr(0, sub_str.size()) == sub_str;
-}
-
 bool has_debug_symbols(const string_list_t& args) {
   // The default behavior is to enable debugging.
   //   C6x default (sprui04b.pdf, 3.3.6):   --symdebug:dwarf

@@ -66,8 +66,11 @@ const std::string& config_file();
 /// @returns the Lua search paths.
 const string_list_t& lua_paths();
 
-/// @returns the compiler exectution prefix command.
+/// @returns the compiler execution prefix command.
 const std::string& prefix();
+
+/// @returns the executable to impersonate.
+const std::string& impersonate();
 
 /// @returns the remote cache service address.
 const std::string& remote();

@@ -42,6 +42,7 @@ std::string s_dir;
 std::string s_config_file;
 string_list_t s_lua_paths;
 std::string s_prefix;
+std::string s_impersonate;
 std::string s_remote;
 std::string s_s3_access;
 std::string s_s3_secret;
@@ -151,6 +152,14 @@ void load_from_file(const std::string& file_name) {
     const auto* node = cJSON_GetObjectItemCaseSensitive(root, "prefix");
     if (cJSON_IsString(node) && node->valuestring != nullptr) {
       s_prefix = std::string(node->valuestring);
+    }
+  }
+
+  // Get "impersonate".
+  {
+    const auto* node = cJSON_GetObjectItemCaseSensitive(root, "impersonate");
+    if (cJSON_IsString(node) && node->valuestring != nullptr) {
+      s_impersonate = std::string(node->valuestring);
     }
   }
 
@@ -366,6 +375,14 @@ void init() {
       }
     }
 
+    // Get the executable to impersonate from the environment.
+    {
+      const env_var_t impersonate_env("BUILDCACHE_IMPERSONATE");
+      if (impersonate_env) {
+        s_impersonate = impersonate_env.as_string();
+      }
+    }
+
     // Get the remote cache address from the environment.
     {
       const env_var_t remote_env("BUILDCACHE_REMOTE");
@@ -534,6 +551,10 @@ const string_list_t& lua_paths() {
 
 const std::string& prefix() {
   return s_prefix;
+}
+
+const std::string& impersonate() {
+  return s_impersonate;
 }
 
 const std::string& remote() {

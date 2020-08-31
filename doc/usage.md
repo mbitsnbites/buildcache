@@ -43,6 +43,24 @@ BuildCache[52286] (DEBUG) Invoked as symlink: gcc
 …
 ```
 
+## Impersonating a wrapped tool
+
+Setting `BUILDACHE_IMPERSONATE` forces BuildCache to operate as a tool wrapper,
+using the value of the property as the tool to wrap. This allows pointing build
+systems directly at the buildcache executable instead of using symbolic links.
+Note that when this setting has a non-default value BuildCache commands cannot
+be used - since any arguments are always forwarded to the wrapped tool.
+
+For example:
+
+```cmd
+set BUILDACHE_IMPERSONATE=cl.exe
+rem Wraps "cl.exe -s", probably not desired!
+buildcache -s
+rem Wraps execution of "cl.exe /c hello.cpp"
+buildcache /c hello.cpp
+```
+
 ## Using with icecream
 
 [icecream](https://github.com/icecc/icecream) (or ICECC) is a tool for
@@ -101,6 +119,7 @@ For usage with command line MSBuild or in Visual Studio, BuildCache must be conf
 * Set `BUILDCACHE_DIR` environment variable to `C:\ProgramData\buildcache`.
   * or [one of the folders ignored by file tracking](https://github.com/microsoft/msbuild/blob/9eb5d09e6cd262375e37a15a779d56ab274167c8/src/Utilities/TrackedDependencies/FileTracker.cs#L208).
 * Create a symlink named `cl.exe` pointing to your `buildcache.exe`.
+  * Alternatively, set `BUILDCACHE_IMPERSONATE` to `cl.exe`.
 
 Additionally, several default project settings have to be changed:
 

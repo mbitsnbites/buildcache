@@ -196,8 +196,8 @@ std::unique_ptr<bcache::program_wrapper_t> find_suitable_wrapper(
                 << (bcache::config::disable() ? "true" : "false") << "\n";
       std::cout << "  BUILDCACHE_READ_ONLY:              "
                 << (bcache::config::read_only() ? "true" : "false") << "\n";
-      std::cout << "  BUILDCACHE_ACCURACY:               "
-                << to_string(bcache::config::accuracy()) << "\n";
+      std::cout << "  BUILDCACHE_ACCURACY:               " << to_string(bcache::config::accuracy())
+                << "\n";
     }
   } catch (const std::exception& e) {
     std::cerr << "*** Unexpected error: " << e.what() << "\n";
@@ -312,7 +312,9 @@ std::unique_ptr<bcache::program_wrapper_t> find_suitable_wrapper(
       // to run the original command. At the same time this is a protection against endless symlink
       // recursion. Figure something out!
       PERF_START(FIND_EXECUTABLE);
-      const auto true_exe_path = bcache::file::find_executable(args[0], BUILDCACHE_EXE_NAME);
+      const auto& exe_path =
+          bcache::config::impersonate().empty() ? args[0] : bcache::config::impersonate();
+      const auto true_exe_path = bcache::file::find_executable(exe_path, BUILDCACHE_EXE_NAME);
       PERF_STOP(FIND_EXECUTABLE);
 
       // Replace the command with the true exe path. Most of the following operations rely on having
@@ -406,9 +408,10 @@ int main(int argc, const char** argv) {
     bcache::debug::log(bcache::debug::FATAL) << "An exception occurred.";
   }
 
-  // Handle symlink invokation.
+  // Handle symlink invocation, or case where user has explicitly set the compiler.
   if (bcache::lower_case(bcache::file::get_file_part(std::string(argv[0]), false)) !=
-      BUILDCACHE_EXE_NAME) {
+          BUILDCACHE_EXE_NAME ||
+      !bcache::config::impersonate().empty()) {
     bcache::debug::log(bcache::debug::DEBUG) << "Invoked as symlink: " << argv[0];
     wrap_compiler_and_exit(argc, &argv[0]);
   }

@@ -165,26 +165,27 @@ target_include_directories(cpp-base64 INTERFACE .)
 #---------------------------------------------------------------------------------------------------
 # Hiredis
 #---------------------------------------------------------------------------------------------------
-add_library(hiredis
+set(hiredis_sources
+  hiredis/alloc.c
   hiredis/async.c
-  hiredis/async.h
   hiredis/dict.c
-  hiredis/dict.h
-  hiredis/fmacros.h
   hiredis/hiredis.c
-  hiredis/hiredis.h
   hiredis/net.c
-  hiredis/net.h
   hiredis/read.c
-  hiredis/read.h
   hiredis/sds.c
-  hiredis/sds.h
-  hiredis/sdsalloc.h
   hiredis/sockcompat.c
-  hiredis/sockcompat.h
-  hiredis/sslio.c
-  hiredis/sslio.h
   )
+# hiredis SSL support requires OpenSSL
+# for now, disable on windows
+if(NOT (WIN32 OR MINGW))
+  find_package(OpenSSL)
+  if(OPENSSL_FOUND)
+    list(APPEND hiredis_sources
+      hiredis/ssl.c
+      )
+  endif()
+endif()
+add_library(hiredis ${hiredis_sources})
 target_include_directories(hiredis INTERFACE .)
 set_property(TARGET hiredis PROPERTY C_STANDARD 99)
 if(WIN32 OR MINGW)

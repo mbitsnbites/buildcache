@@ -34,6 +34,9 @@ add_library(doctest
   doctest/doctest_main.cpp
   )
 target_include_directories(doctest INTERFACE .)
+if(MINGW)
+  target_link_libraries(doctest mingw_stdthreads)
+endif()
 
 #---------------------------------------------------------------------------------------------------
 # cJSON
@@ -195,8 +198,9 @@ endif()
 # mingw-std-threads (implements std::thread for MinGW).
 #---------------------------------------------------------------------------------------------------
 if(MINGW)
-  add_library(mingw_std_threads INTERFACE)
-  target_include_directories(mingw_std_threads INTERFACE .)
+  option(MINGW_STDTHREADS_GENERATE_STDHEADERS "" ON)
+  add_subdirectory(mingw-std-threads)
+  target_include_directories(mingw_stdthreads INTERFACE .)
 endif()
 
 #---------------------------------------------------------------------------------------------------

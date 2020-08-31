@@ -41,11 +41,7 @@
 #include <windows.h>
 #include <shellapi.h>
 #include <shlobj.h>
-#ifdef USE_MINGW_THREADS
-#include <mingw-std-threads/mingw.thread.h>
-#else
 #include <thread>
-#endif  // USE_MINGW_THREADS
 #undef ERROR
 #undef log
 #else

@@ -17,16 +17,16 @@
 //  3. This notice may not be removed or altered from any source distribution.
 //--------------------------------------------------------------------------------------------------
 
-#include <base/file_utils.hpp>
-
 #include <base/debug_utils.hpp>
 #include <base/env_utils.hpp>
+#include <base/file_utils.hpp>
 #include <base/string_list.hpp>
 #include <base/unicode_utils.hpp>
 
 #include <cstdint>
 #include <cstdio>
 #include <ctime>
+
 #include <algorithm>
 #include <atomic>
 #include <stdexcept>
@@ -39,11 +39,11 @@
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
-#include <windows.h>
 #include <direct.h>
 #include <shlobj.h>
-#include <userenv.h>
 #include <sys/utime.h>
+#include <userenv.h>
+#include <windows.h>
 #undef ERROR
 #undef log
 #else
@@ -51,15 +51,15 @@
 #include <dirent.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/types.h>
-#include <sys/stat.h>
 #include <unistd.h>
 #include <utime.h>
 #endif
 
-#include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 
 // S_ISDIR/S_ISREG are not defined by MSVC, but _S_IFDIR/_S_IFREG are.
 #if defined(_WIN32) && !defined(S_ISDIR)
@@ -349,13 +349,13 @@ std::string resolve_path(const std::string& path) {
                             FILE_SHARE_READ | FILE_SHARE_WRITE,
                             nullptr,
                             OPEN_EXISTING,
-                            FILE_ATTRIBUTE_NORMAL, 
+                            FILE_ATTRIBUTE_NORMAL,
                             nullptr);
   if (INVALID_HANDLE_VALUE != handle) {
     std::wstring resolved_path;
     auto resolved_size = GetFinalPathNameByHandleW(handle, nullptr, 0, FILE_NAME_NORMALIZED);
-    resolved_path.resize(resolved_size - 1); // terminating null character is added automatically
-    
+    resolved_path.resize(resolved_size - 1);  // terminating null character is added automatically
+
     GetFinalPathNameByHandleW(handle, &resolved_path[0], resolved_size, FILE_NAME_NORMALIZED);
     CloseHandle(handle);
     if (resolved_path.substr(0, 4) == LR"(\\?\)") {
@@ -699,10 +699,11 @@ void append(const std::string& data, const std::string& path) {
   }
 
   // Write the data.
+  const DWORD bytes_to_write = static_cast<DWORD>(data.size());
   DWORD bytes_written;
   const auto success =
-      (WriteFile(handle, data.c_str(), data.size(), &bytes_written, nullptr) != FALSE);
-  if (!success || bytes_written != static_cast<DWORD>(data.size())) {
+      (WriteFile(handle, data.c_str(), bytes_to_write, &bytes_written, nullptr) != FALSE);
+  if (!success || bytes_written != bytes_to_write) {
     CloseHandle(handle);
     throw std::runtime_error("Unable to write to the file.");
   }

@@ -17,12 +17,11 @@
 //  3. This notice may not be removed or altered from any source distribution.
 //--------------------------------------------------------------------------------------------------
 
-#include <cache/s3_cache_provider.hpp>
-
 #include <base/compressor.hpp>
 #include <base/debug_utils.hpp>
 #include <base/file_utils.hpp>
 #include <base/hmac.hpp>
+#include <cache/s3_cache_provider.hpp>
 #include <config/configuration.hpp>
 
 #ifdef _WIN32
@@ -35,8 +34,8 @@
 #endif
 
 #include <cpp-base64/base64.h>
-
 #include <ctime>
+
 #include <sstream>
 #include <stdexcept>
 
@@ -212,12 +211,12 @@ std::string s3_cache_provider_t::get_data(const std::string& key) {
                                           "Authorization: AWS " + m_access + ":" + signature});
 
   // A successful response must have the code 200.
-  if (response.code != 200) {
+  if (response.status != http::Response::Ok) {
     std::ostringstream ss;
-    if (response.code == 404) {
+    if (response.status == http::Response::NotFound) {
       ss << "File not found on S3 remote: " << key;
     } else {
-      ss << "S3 remote responded (" << response.code << "): " << response.body.data()
+      ss << "S3 remote responded (" << response.status << "): " << response.body.data()
          << " (URL: " << url << ")";
     }
     throw std::runtime_error(ss.str());
@@ -255,9 +254,9 @@ void s3_cache_provider_t::set_data(const std::string& key, const std::string& da
                                           "Authorization: AWS " + m_access + ":" + signature});
 
   // A successful response must have the code 200 or 201.
-  if (response.code != 200 && response.code != 201) {
+  if (response.status != http::Response::Ok && response.status != http::Response::Created) {
     std::ostringstream ss;
-    ss << "S3 remote responded (" << response.code << "): " << response.body.data()
+    ss << "S3 remote responded (" << response.status << "): " << response.body.data()
        << " (URL: " << url << ")";
     throw std::runtime_error(ss.str());
   }

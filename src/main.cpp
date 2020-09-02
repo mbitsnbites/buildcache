@@ -239,7 +239,7 @@ std::unique_ptr<bcache::program_wrapper_t> find_suitable_wrapper(
   // Print a list of third party components.
   std::cout << "\nThird party components:\n";
 #ifdef ENABLE_S3
-  std::cout << "  cpp-base64 1.01.00\n";
+  std::cout << "  cpp-base64 2.rc.04\n";
 #endif
   std::cout << "  cJSON " << CJSON_VERSION_MAJOR << "." << CJSON_VERSION_MINOR << "."
             << CJSON_VERSION_PATCH << "\n";

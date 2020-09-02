@@ -21,12 +21,13 @@
 #define BUILDCACHE_HASHER_HPP_
 
 #include <cstdint>
+
 #include <map>
+#include <stdexcept>
 #include <string>
 
-extern "C" {
-#include <md4/md4.h>
-}
+#define XXH_INLINE_ALL
+#include <xxHash/xxhash.h>
 
 namespace bcache {
 
@@ -35,7 +36,15 @@ class hasher_t {
 public:
   /// @brief A helper class for storing the data hash.
   class hash_t {
+    friend class hasher_t;
+
   public:
+    hash_t() {}
+
+    bool operator!=(const hash_t& other) const {
+      return memcmp(m_data, other.m_data, sizeof(m_data)) != 0;
+    }
+
     uint8_t* data() {
       return &m_data[0];
     }
@@ -48,22 +57,31 @@ public:
     /// @returns A hexadecimal string representation of the given hash.
     const std::string as_string() const;
 
-  private:
     // The hash size is 128 bits.
     static const size_t SIZE = 16u;
 
-    uint8_t m_data[SIZE];
+  private:
+    hash_t(const XXH128_hash_t& other) {
+      static_assert(sizeof(m_data) == sizeof(other), "Unexpected digest size.");
+      memcpy(&m_data[0], &other, sizeof(m_data));
+    }
+
+    uint8_t m_data[SIZE]{};
   };
 
   hasher_t() {
-    MD4_Init(&m_ctx);
+    if (XXH3_128bits_reset(&m_ctx) == XXH_ERROR) {
+      throw std::runtime_error("Hash init failure.");
+    }
   }
 
   /// @brief Update the hash with more data.
   /// @param data Pointer to the data to hash.
   /// @param size The number of bytes to hash.
   void update(const void* data, const size_t size) {
-    MD4_Update(&m_ctx, data, static_cast<unsigned long>(size));
+    if (XXH3_128bits_update(&m_ctx, data, size) == XXH_ERROR) {
+      throw std::runtime_error("Hash update failure.");
+    }
   }
 
   /// @brief Update the hash with more data.
@@ -93,17 +111,15 @@ public:
   /// @returns the result of the hash.
   /// @note This method must only be called once.
   hash_t final() {
-    hash_t result;
-    MD4_Final(result.data(), &m_ctx);
-    return result;
+    return XXH3_128bits_digest(&m_ctx);
   }
 
 private:
   /// @brief Update the hash with data from an AR archive.
   /// @param data The raw AR data.
-  void update_from_ar_data(const std::string &data);
+  void update_from_ar_data(const std::string& data);
 
-  MD4_CTX m_ctx;
+  alignas(64) XXH3_state_t m_ctx;
 };
 
 }  // namespace bcache

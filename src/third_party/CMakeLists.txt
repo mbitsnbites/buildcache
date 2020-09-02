@@ -47,12 +47,10 @@ add_library(cjson
 target_include_directories(cjson INTERFACE .)
 
 #---------------------------------------------------------------------------------------------------
-# MD4
+# xxHash
 #---------------------------------------------------------------------------------------------------
-add_library(md4
-  md4/md4.c
-  )
-target_include_directories(md4 INTERFACE .)
+add_library(xxhash INTERFACE)
+target_include_directories(xxhash INTERFACE .)
 
 #---------------------------------------------------------------------------------------------------
 # lz4

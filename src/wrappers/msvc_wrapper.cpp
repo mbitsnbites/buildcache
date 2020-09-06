@@ -17,16 +17,17 @@
 //  3. This notice may not be removed or altered from any source distribution.
 //--------------------------------------------------------------------------------------------------
 
-#include <wrappers/msvc_wrapper.hpp>
-
 #include <base/debug_utils.hpp>
 #include <base/env_utils.hpp>
 #include <base/unicode_utils.hpp>
 #include <config/configuration.hpp>
+#include <sys/filetracker.hpp>
 #include <sys/sys_utils.hpp>
+#include <wrappers/msvc_wrapper.hpp>
 
 #include <codecvt>
 #include <cstdlib>
+
 #include <fstream>
 #include <locale>
 #include <stdexcept>
@@ -282,7 +283,11 @@ std::map<std::string, expected_file_t> msvc_wrapper_t::get_build_files() {
 sys::run_result_t msvc_wrapper_t::run_for_miss() {
   // Capture printed source file name (stdout) in cache entry.
   scoped_unset_env_t scoped_off(ENV_VS_OUTPUT_REDIRECTION);
-  return program_wrapper_t::run_for_miss();
+  // Allow FileTracker for the duration of the compilation command.
+  filetracker::resume();
+  auto result = program_wrapper_t::run_for_miss();
+  filetracker::suspend();
+  return result;
 }
 
 }  // namespace bcache

@@ -18,11 +18,17 @@
 #---------------------------------------------------------------------------------------------------
 
 set(SYS_SRCS
+  filetracker.hpp
   perf_utils.cpp
   perf_utils.hpp
   sys_utils.cpp
   sys_utils.hpp
   )
+if(WIN32 OR MINGW)
+  list(APPEND SYS_SRCS
+    filetracker.cpp
+    )
+endif()
 
 add_library(sys ${SYS_SRCS})
 target_link_libraries(sys base config)

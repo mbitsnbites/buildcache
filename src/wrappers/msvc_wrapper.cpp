@@ -17,19 +17,26 @@
 //  3. This notice may not be removed or altered from any source distribution.
 //--------------------------------------------------------------------------------------------------
 
-#include <wrappers/msvc_wrapper.hpp>
-
 #include <base/debug_utils.hpp>
 #include <base/env_utils.hpp>
+#include <base/string_utils.hpp>
 #include <base/unicode_utils.hpp>
 #include <config/configuration.hpp>
 #include <sys/sys_utils.hpp>
+#include <wrappers/msvc_wrapper.hpp>
 
 #include <codecvt>
 #include <cstdlib>
+#ifdef _WIN32
+#define NO_STRICT
+#include <windows.h>
+#endif
+
 #include <fstream>
 #include <locale>
 #include <stdexcept>
+
+#pragma comment(lib, "version.lib")
 
 namespace bcache {
 namespace {
@@ -114,6 +121,94 @@ string_list_t make_preprocessor_cmd(const string_list_t& args) {
   }
 
   return preprocess_args;
+}
+
+struct Version {
+  uint16_t major;
+  uint16_t minor;
+  uint16_t build;
+  uint16_t qfe;
+  Version(uint64_t rhs) {
+    major = static_cast<uint16_t>(rhs >> 48);
+    minor = static_cast<uint16_t>(rhs >> 32);
+    build = static_cast<uint16_t>(rhs >> 16);
+    qfe = static_cast<uint16_t>(rhs);
+  }
+};
+
+struct CompilerVersion {
+  std::string host_arch;
+  std::string target_arch;
+  std::string file_version;
+};
+
+#ifdef _WIN32
+bool GetFileVersion(const std::string& path, std::string* version_str) {
+  auto path_w = utf8_to_ucs2(path);
+  DWORD handle;
+  DWORD data_len = GetFileVersionInfoSizeW(path_w.c_str(), &handle);
+  if (!data_len) {
+    return false;
+  }
+  std::vector<uint8_t> block(data_len);
+  if (!GetFileVersionInfoW(path_w.c_str(), 0, data_len, block.data())) {
+    return false;
+  }
+  void* buf;
+  UINT buf_len;
+  if (!VerQueryValueW(block.data(), LR"(\)", &buf, &buf_len)) {
+    return false;
+  }
+  auto info = static_cast<VS_FIXEDFILEINFO*>(buf);
+  Version version = (static_cast<uint64_t>(info->dwFileVersionMS) << 32) | info->dwFileVersionLS;
+  std::stringstream ss;
+  ss << version.major << "." << version.minor << "." << version.build << "." << version.qfe;
+  *version_str = ss.str();
+  return true;
+}
+#endif
+
+CompilerVersion GetCompilerVersion(const std::string& compiler_path) {
+  CompilerVersion version;
+  const auto path_split = split(compiler_path, '\\');
+  const auto path_num_parts = path_split.size();
+  bool path_valid = false;
+  // Try to get host/target architectures from env vars (only populated if in vcvars-like env).
+  // Fallback to trying to parse from the executable path.
+  env_var_t vscmd_host_arch("VSCMD_ARG_HOST_ARCH");
+  if (vscmd_host_arch) {
+    version.host_arch = vscmd_host_arch.as_string();
+  } else if (path_num_parts >= 3 && starts_with(path_split[path_num_parts - 3], "Host")) {
+    version.host_arch = path_split[path_num_parts - 3].substr(4);
+    path_valid = true;
+  }
+  env_var_t vscmd_target_arch("VSCMD_ARG_TGT_ARCH");
+  if (vscmd_target_arch) {
+    version.target_arch = vscmd_target_arch.as_string();
+  } else if (path_valid) {
+    version.target_arch = path_split[path_num_parts - 2];
+  }
+  if (version.host_arch.empty() || version.target_arch.empty()) {
+    throw std::runtime_error("Failed to get compiler host/target architecture.");
+  }
+#ifdef _WIN32
+  // Note: The file version does NOT necessarily match the version in compiler_path.
+  if (!GetFileVersion(compiler_path, &version.file_version)) {
+    throw std::runtime_error("Failed to get compiler file version.");
+  }
+#else
+  // VCToolsVersion (if present) and the value in compiler_path should match each other, but not
+  // necessarily the version in cl.exe MUI resources.
+  env_var_t vc_tools_version("VCToolsVersion");
+  if (vc_tools_version) {
+    version.file_version = vc_tools_version.as_string();
+  } else if (path_num_parts >= 5 && path_valid) {
+    version.file_version = path_split[path_num_parts - 5];
+  } else {
+    throw std::runtime_error("Failed to get compiler version.");
+  }
+#endif
+  return version;
 }
 }  // namespace
 
@@ -246,19 +341,9 @@ std::string msvc_wrapper_t::get_program_id() {
   // TODO(m): Add things like executable file size too.
 
   // Get the version string for the compiler.
-  // Just calling "cl.exe" will return the version information. Note, though, that the version
-  // information is given on stderr.
-  scoped_unset_env_t scoped_off(ENV_VS_OUTPUT_REDIRECTION);
+  auto version = GetCompilerVersion(m_args[0]);
 
-  string_list_t version_args;
-  version_args += m_args[0];
-
-  const auto result = sys::run(version_args, true);
-  if (result.std_err.empty()) {
-    throw std::runtime_error("Unable to get the compiler version information string.");
-  }
-
-  return HASH_VERSION + result.std_err;
+  return HASH_VERSION + version.host_arch + version.target_arch + version.file_version;
 }
 
 std::map<std::string, expected_file_t> msvc_wrapper_t::get_build_files() {

@@ -17,33 +17,41 @@
 //  3. This notice may not be removed or altered from any source distribution.
 //--------------------------------------------------------------------------------------------------
 
-#ifndef BUILDCACHE_UNICODE_UTILS_HPP_
-#define BUILDCACHE_UNICODE_UTILS_HPP_
+#ifndef BUILDCACHE_FILETRACKER_HPP_
+#define BUILDCACHE_FILETRACKER_HPP_
 
-#include <string>
+#include <base/string_list.hpp>
+#include <wrappers/program_wrapper.hpp>
 
 namespace bcache {
-/// @brief Convert a UCS-2 string to a UTF-8 string.
-/// @param str16 The UCS-2 encoded wide character string.
-/// @returns a UTF-8 encoded string.
-std::string ucs2_to_utf8(const std::wstring& str16);
+namespace filetracker {
+/// @brief Re-enable FileTracker monitoring. Should be used before performing a fallback action
+/// which may produce outputs that the build system needs to be aware of.
+void release_suppression();
 
-/// @brief Convert a UTF-8 string to a UCS-2 string.
-/// @param str8 The UTF-8 encoded string.
-/// @returns a UCS-2 encoded wide charater string.
-std::wstring utf8_to_ucs2(const std::string& str8);
+class tracking_log_t {
+public:
+  tracking_log_t();
+  bool enabled() const {
+    return m_enabled;
+  };
+  build_files_t get_build_files(const std::string& filename) const;
+  void add_source(const std::string& path);
+  void finalize_sources();
+  void write_logs(const std::string& source,
+                  const build_files_t& build_files,
+                  const string_list_t& dependencies) const;
 
-/// @brief Convert the string to lower case.
-/// @param str The string to convert.
-/// @returns a lower case version of the input string.
-/// @note This function currently only works on the ASCII subset of Unicode.
-std::string lower_case(const std::string& str);
+private:
+  std::string fullpath(const std::string& path) const;
 
-/// @brief Convert the string to upper case.
-/// @param str The string to convert.
-/// @returns an upper case version of the input string.
-/// @note This function currently only works on the ASCII subset of Unicode.
-std::string upper_case(const std::string& str);
+  bool m_enabled;
+  std::string m_intermediate_dir;
+  std::string m_toolchain;
+  string_list_t m_sources;
+  std::string m_root;
+};
+}  // namespace filetracker
 }  // namespace bcache
 
-#endif  // BUILDCACHE_UNICODE_UTILS_HPP_
+#endif  // BUILDCACHE_FILETRACKER_HPP_

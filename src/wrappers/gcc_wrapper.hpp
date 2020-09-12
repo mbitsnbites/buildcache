@@ -32,11 +32,11 @@ public:
 
 protected:
   string_list_t get_capabilities() override;
-  std::string preprocess_source() override;
+  pp_sources_t preprocess_source() override;
   string_list_t get_relevant_arguments() override;
   std::map<std::string, std::string> get_relevant_env_vars() override;
   std::string get_program_id() override;
-  std::map<std::string, expected_file_t> get_build_files() override;
+  build_files_t get_build_files(const pp_key_t& key) override;
 };
 }  // namespace bcache
 #endif  // BUILDCACHE_GCC_WRAPPER_HPP_

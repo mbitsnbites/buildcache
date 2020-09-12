@@ -44,17 +44,17 @@
 //     +- ...
 //--------------------------------------------------------------------------------------------------
 
-#include <cache/local_cache.hpp>
-
 #include <base/compressor.hpp>
 #include <base/debug_utils.hpp>
 #include <base/file_utils.hpp>
 #include <base/serializer_utils.hpp>
+#include <cache/local_cache.hpp>
 #include <config/configuration.hpp>
 #include <sys/perf_utils.hpp>
 
 #include <chrono>
 #include <cstdlib>
+
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
@@ -369,7 +369,7 @@ void local_cache_t::get_file(const hasher_t::hash_t& hash,
     file::copy(source_path, target_path);
   }
 
-  // Touch retrieved file to ensure that the file timestamp is up to date, 
+  // Touch retrieved file to ensure that the file timestamp is up to date,
   // and that it is picked up by build system file trackers such as MSBuild.
   file::touch(target_path);
 }

@@ -41,5 +41,5 @@ add_library(wrappers
   )
 target_link_libraries(wrappers base config sys cache lua)
 if(MINGW)
-  target_link_libraries(wrappers version)
+  target_link_libraries(wrappers)
 endif()

@@ -17,13 +17,12 @@
 //  3. This notice may not be removed or altered from any source distribution.
 //--------------------------------------------------------------------------------------------------
 
-#include <wrappers/ti_common_wrapper.hpp>
-
 #include <base/debug_utils.hpp>
 #include <base/file_utils.hpp>
 #include <base/string_utils.hpp>
 #include <base/unicode_utils.hpp>
 #include <config/configuration.hpp>
+#include <wrappers/ti_common_wrapper.hpp>
 
 #include <algorithm>
 #include <regex>
@@ -131,7 +130,7 @@ void ti_common_wrapper_t::resolve_args() {
   }
 }
 
-std::string ti_common_wrapper_t::preprocess_source() {
+pp_sources_t ti_common_wrapper_t::preprocess_source() {
   // Check what kind of compilation command this is.
   bool is_object_compilation = false;
   bool is_link = false;
@@ -161,7 +160,7 @@ std::string ti_common_wrapper_t::preprocess_source() {
     }
 
     // Read and return the preprocessed file.
-    return file::read(preprocessed_file.path());
+    return {{{}, file::read(preprocessed_file.path())}};
   } else if (is_link && has_output_file) {
     // Hash all the input files.
     hasher_t hasher;
@@ -176,7 +175,7 @@ std::string ti_common_wrapper_t::preprocess_source() {
         }
       }
     }
-    return hasher.final().as_string();
+    return {{{}, hasher.final().as_string()}};
   }
 
   throw std::runtime_error("Unsupported complation command.");
@@ -234,8 +233,8 @@ std::string ti_common_wrapper_t::get_program_id() {
   return result.std_out;
 }
 
-std::map<std::string, expected_file_t> ti_common_wrapper_t::get_build_files() {
-  std::map<std::string, expected_file_t> files;
+build_files_t ti_common_wrapper_t::get_build_files(const pp_key_t& key) {
+  build_files_t files;
   std::string output_file;
   std::string dep_file;
   std::string map_file;

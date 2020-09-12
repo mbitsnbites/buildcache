@@ -116,6 +116,10 @@ public:
     return m_args.size();
   }
 
+  bool empty() const {
+    return m_args.size() == 0;
+  }
+
   iterator begin() {
     return m_args.begin();
   }

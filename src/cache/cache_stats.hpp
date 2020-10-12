@@ -89,25 +89,25 @@ public:
     cache_stats_t st;
     st.m_local_hit_count = 1;
     st.m_local_miss_count = 0;
-    return std::move(st);
+    return st;
   }
   static cache_stats_t local_miss() noexcept {
     cache_stats_t st;
     st.m_local_hit_count = 0;
     st.m_local_miss_count = 1;
-    return std::move(st);
+    return st;
   }
   static cache_stats_t remote_miss() noexcept {
     cache_stats_t st;
     st.m_remote_hit_count = 0;
     st.m_remote_miss_count = 1;
-    return std::move(st);
+    return st;
   }
   static cache_stats_t remote_hit() noexcept {
     cache_stats_t st;
     st.m_remote_hit_count = 1;
     st.m_remote_miss_count = 0;
-    return std::move(st);
+    return st;
   }
   void dump(std::ostream& os, const std::string& prefix) const;
 

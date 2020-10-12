@@ -154,7 +154,7 @@ std::string decompress(const std::string& compressed_str) {
   if (compressed_str.size() < static_cast<std::string::size_type>(COMPR_HEADER_SIZE)) {
     throw std::runtime_error("Missing header in compressed data.");
   }
-  if (compressed_str.size() > std::numeric_limits<int>::max()) {
+  if (compressed_str.size() > static_cast<size_t>(std::numeric_limits<int>::max())) {
     throw std::runtime_error("Too large input buffer for decompression.");
   }
 
@@ -197,7 +197,7 @@ std::string decompress(const std::string& compressed_str) {
     }
   }
 
-  if (size != original_size) {
+  if (size != static_cast<size_t>(original_size)) {
     throw std::runtime_error("Unable to decompress the data.");
   }
 

@@ -68,9 +68,6 @@ const std::string CACHE_ENTRY_FILE_NAME = ".entry";
 const std::string FILE_LOCK_SUFFIX = ".lock";
 const std::string STATS_FILE_NAME = "stats.json";
 
-// The version of the entry file serialization data format.
-const int32_t ENTRY_DATA_FORMAT_VERSION = 2;
-
 std::string cache_entry_file_lock_path(const std::string& cache_entry_path) {
   return cache_entry_path + FILE_LOCK_SUFFIX;
 }

@@ -294,7 +294,7 @@ std::unique_ptr<bcache::program_wrapper_t> find_suitable_wrapper(
     std::cerr << "*** Unexpected error.\n";
     return_code = 1;
   }
-  std::exit(0);
+  std::exit(return_code);
 }
 
 [[noreturn]] void wrap_compiler_and_exit(int argc, const char** argv) {

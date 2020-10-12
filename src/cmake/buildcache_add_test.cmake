@@ -35,5 +35,5 @@ function(buildcache_add_test)
 
   add_executable(${_NAME} ${_SOURCES})
   target_link_libraries(${_NAME} ${_LIBRARIES} doctest)
-  add_test(${_NAME} ${_NAME})
+  add_test(NAME ${_NAME} COMMAND ${_NAME})
 endfunction()

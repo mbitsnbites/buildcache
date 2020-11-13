@@ -87,6 +87,9 @@ bool disable();
 /// @returns true if BuildCache should use hard links when possible.
 bool hard_links();
 
+/// @returns a list of extra files to hash.
+string_list_t hash_extra_files();
+
 /// @returns the executable to impersonate.
 const std::string& impersonate();
 

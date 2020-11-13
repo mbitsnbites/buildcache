@@ -91,6 +91,13 @@ bool program_wrapper_t::handle_command(int& return_code) {
     // Start a hash.
     hasher_t hasher;
 
+    // Add additional file contents to the resulting hash.
+    PERF_START(HASH_EXTRA_FILES);
+    for (const auto& extra_file : bcache::config::hash_extra_files()) {
+      hasher.update_from_file(extra_file);
+    }
+    PERF_STOP(HASH_EXTRA_FILES);
+
     // Hash the preprocessed file contents.
     PERF_START(PREPROCESS);
     hasher.update(preprocess_source());

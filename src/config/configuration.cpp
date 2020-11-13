@@ -58,6 +58,7 @@ int32_t s_debug = -1;
 bool s_disable = false;
 std::string s_dir;
 bool s_hard_links = false;
+string_list_t s_hash_extra_files;
 std::string s_impersonate;
 std::string s_log_file;
 string_list_t s_lua_paths;
@@ -203,6 +204,15 @@ void load_from_file(const std::string& file_name) {
     const auto* node = cJSON_GetObjectItemCaseSensitive(root, "hard_links");
     if (cJSON_IsBool(node)) {
       s_hard_links = cJSON_IsTrue(node);
+    }
+  }
+
+  {
+    const auto* node = cJSON_GetObjectItemCaseSensitive(root, "hash_extra_files");
+    cJSON* child_node;
+    cJSON_ArrayForEach(child_node, node) {
+      const auto str = std::string(child_node->valuestring);
+      s_hash_extra_files += str;
     }
   }
 
@@ -427,6 +437,13 @@ void init() {
     }
 
     {
+      const env_var_t env("BUILDCACHE_HASH_EXTRA_FILES");
+      if (env) {
+        s_hash_extra_files = string_list_t(env.as_string(), PATH_DELIMITER) + s_hash_extra_files;
+      }
+    }
+
+    {
       const env_var_t env("BUILDCACHE_IMPERSONATE");
       if (env) {
         s_impersonate = env.as_string();
@@ -591,6 +608,10 @@ bool disable() {
 
 bool hard_links() {
   return s_hard_links;
+}
+
+string_list_t hash_extra_files() {
+  return s_hash_extra_files;
 }
 
 const std::string& impersonate() {

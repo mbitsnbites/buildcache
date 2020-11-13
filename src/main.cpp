@@ -182,6 +182,8 @@ std::unique_ptr<bcache::program_wrapper_t> find_suitable_wrapper(
               << (bcache::config::disable() ? "true" : "false") << "\n";
     std::cout << "  BUILDCACHE_HARD_LINKS:             "
               << (bcache::config::hard_links() ? "true" : "false") << "\n";
+    std::cout << "  BUILDCACHE_HASH_EXTRA_FILES:       "
+              << bcache::config::hash_extra_files().join(PATH_DELIMITER, false) << "\n";
     std::cout << "  BUILDCACHE_IMPERSONATE:            " << bcache::config::impersonate() << "\n";
     std::cout << "  BUILDCACHE_LOG_FILE:               " << bcache::config::log_file() << "\n";
     std::cout << "  BUILDCACHE_LUA_PATH:               "

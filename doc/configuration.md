@@ -18,6 +18,7 @@ The following options control the behavior of BuildCache:
 | `BUILDCACHE_DIR` | - | The cache root directory | `$HOME/.buildcache` |
 | `BUILDCACHE_DISABLE` | `disable` | Disable caching (bypass BuildCache) | false |
 | `BUILDCACHE_HARD_LINKS` | `hard_links` | Allow the use of hard links when caching | false |
+| `BUILDCACHE_HASH_EXTRA_FILES` | `hash_extra_files` | Extra file(s) whose content to add to the hash | None |
 | `BUILDCACHE_IMPERSONATE` | `impersonate` | Explicitly set the executable to wrap | None |
 | `BUILDCACHE_LOG_FILE` | `log_file` | Log file path (empty for stdout) | None |
 | `BUILDCACHE_LUA_PATH` | `lua_paths` | Extra path(s) to Lua wrappers | None |
@@ -154,3 +155,25 @@ level for the compressor.
 
 Note: The "compress" setting must be set to true in order to utilize this
 setting.
+
+## BUILDCACHE_HASH_EXTRA_FILES
+
+When calculating the hash of a translation unit, buildcache tries to take all
+factors affecting the output into account. This includes things like the command line
+or the preprocessed source. But sometimes there are additional factors
+buildcache does not know about.
+
+For example the Clang compiler has an option to read an exclusion list for
+the sanitizers (`-fsanitize-blacklist`). This file affects the compilation
+output but buildcache is not aware of that. By passing the file
+name in the `BUILDCACHE_HASH_EXTRA_FILES` configuration option, its content
+will be added to the translation unit hash and taken into account when
+doing a cache lookup.
+
+Another use case is the versioning of the cache content. Using the above example,
+you may have tainted your cache as you forgot about the sanitizer
+exclusion list in your first run. One solution would now be to drop the whole cache.
+But in case of a shared remote cache, this might affect other caching tools and you
+might not even be able to zap the remote cache. Creating a text file with a simple
+versioning number and adding that to the `BUILDCACHE_HASH_EXTRA_FILES` will then
+effectively abandon the previous cache output.

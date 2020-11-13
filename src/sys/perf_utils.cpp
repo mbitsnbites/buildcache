@@ -88,6 +88,7 @@ void report() {
     std::cerr << "Preprocess:            " << perf_us_t(ID_PREPROCESS) << "\n";
     std::cerr << "Filter arguments:      " << perf_us_t(ID_FILTER_ARGS) << "\n";
     std::cerr << "Get program id:        " << perf_us_t(ID_GET_PRG_ID) << "\n";
+    std::cerr << "Hash extra files:      " << perf_us_t(ID_HASH_EXTRA_FILES) << "\n";
     std::cerr << "Cache lookup:          " << perf_us_t(ID_CACHE_LOOKUP) << "\n";
     std::cerr << "Retreive cached files: " << perf_us_t(ID_RETRIEVE_CACHED_FILES) << "\n";
     std::cerr << "Get build files:       " << perf_us_t(ID_GET_BUILD_FILES) << "\n";

@@ -44,6 +44,7 @@ enum id_t {
   ID_RUN_FOR_FALLBACK = 15,
   ID_UPDATE_STATS = 16,
   ID_TOTAL = 17,
+  ID_HASH_EXTRA_FILES = 18,
   NUM_PERF_IDS
 };
 

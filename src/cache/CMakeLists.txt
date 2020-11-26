@@ -29,6 +29,8 @@ set(CACHE_SRCS
   data_store.hpp
   local_cache.cpp
   local_cache.hpp
+  http_cache_provider.cpp
+  http_cache_provider.hpp
   redis_cache_provider.cpp
   redis_cache_provider.hpp
   remote_cache.cpp
@@ -50,9 +52,9 @@ if(HAS_S3)
 endif()
 
 add_library(cache ${CACHE_SRCS})
-target_link_libraries(cache base config hiredis)
+target_link_libraries(cache base config hiredis HTTPRequest)
 if(HAS_S3)
-  target_link_libraries(cache cpp-base64 HTTPRequest)
+  target_link_libraries(cache cpp-base64)
   target_compile_definitions(cache PUBLIC ENABLE_S3)
 endif()
 

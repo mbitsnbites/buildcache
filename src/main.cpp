@@ -246,6 +246,7 @@ std::unique_ptr<bcache::program_wrapper_t> find_suitable_wrapper(
   std::cout << "\nSupported back ends:\n";
   std::cout << "  local - Local file system based cache (level 1)\n";
   std::cout << "  Redis - Remote in-memory cache (level 2)\n";
+  std::cout << "  HTTP  - Remote webdav cache (level 2)\n";
 #ifdef ENABLE_S3
   std::cout << "  S3    - Remote object storage based cache (level 2)\n";
 #endif

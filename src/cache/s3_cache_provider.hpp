@@ -20,62 +20,26 @@
 #ifndef BUILDCACHE_S3_CACHE_PROVIDER_HPP_
 #define BUILDCACHE_S3_CACHE_PROVIDER_HPP_
 
-#include <cache/remote_cache_provider.hpp>
+#include <cache/http_cache_provider.hpp>
 
 namespace bcache {
 
-class s3_cache_provider_t : public remote_cache_provider_t {
+class s3_cache_provider_t : public http_cache_provider_t {
 public:
-  s3_cache_provider_t();
-  ~s3_cache_provider_t() override;
-
-  // Implementation of the remote_cache_provider_t interface.
+  // Override S3 specific parts of the http_cache_provider_t.
   bool connect(const std::string& host_description) override;
-  bool is_connected() const override;
-  cache_entry_t lookup(const hasher_t::hash_t& hash) override;
-  void add(const hasher_t::hash_t& hash,
-           const cache_entry_t& entry,
-           const std::map<std::string, expected_file_t>& expected_files) override;
-  void get_file(const hasher_t::hash_t& hash,
-                const std::string& source_id,
-                const std::string& target_path,
-                const bool is_compressed) override;
 
 private:
-  /// @brief Disconnect (usually as a result of an error).
-  void disconnect();
-
   /// @brief Sign a string (to create an AWS authorization string).
   /// @param str The string to sign.
   /// @returns the signature of the string.
-  std::string sign_string(const std::string& str);
+  std::string sign_string(const std::string& str) const;
 
-  /// @brief Get the full URL for a given object.
-  /// @param key The full name of the object.
-  /// @returns the full URL for the object.
-  std::string get_object_url(const std::string& key);
-
-  /// @brief Get a binary data blob from the remote cache.
-  /// @param key The unique key that identifies the data.
-  /// @returns the data as a string object.
-  /// @throws runtime_error if the data could not be retrieved (e.g. the key does not exist in the
-  /// remote cache).
-  std::string get_data(const std::string& key);
-
-  /// @brief Set a binary data blob in the remote cache.
-  /// @param key The unique key that identifies the data.
-  /// @param data The data as a string object.
-  /// @throws runtime_error if the data could not be retrieved (e.g. the key does not exist in the
-  /// remote cache).
-  void set_data(const std::string& key, const std::string& data);
+  std::vector<std::string> get_header(const std::string& method,
+                                      const std::string& key) const override;
 
   std::string m_access;
   std::string m_secret;
-  std::string m_host;
-  std::string m_path;
-  int m_port;
-
-  bool m_ready_for_action = false;
 };
 
 }  // namespace bcache

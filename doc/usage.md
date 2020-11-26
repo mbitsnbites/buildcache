@@ -93,6 +93,16 @@ Example:
 $ BUILDCACHE_REMOTE=redis://my-redis-server:6379 buildcache g++ -c -O2 hello.cpp -o hello.o
 ```
 
+### HTTP
+
+The HTTP storage backend works with any HTTP server which allows `GET` and `PUT`
+requests on the configured path.
+
+Example:
+```bash
+$ BUILDCACHE_REMOTE=http://my-http-server:9000/my-buildcache-path buildcache g++ -c -O2 hello.cpp -o hello.o
+```
+
 ### S3
 
 [S3](https://en.wikipedia.org/wiki/Amazon_S3) is an open HTTP based protocol

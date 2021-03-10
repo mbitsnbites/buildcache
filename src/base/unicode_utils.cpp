@@ -147,9 +147,13 @@ std::wstring utf8_to_ucs2(const std::string& str8) {
 }
 #else
 std::string ucs2_to_utf8(const std::wstring& str16) {
+  return ucs2_to_utf8(str16.c_str(), str16.c_str() + str16.length());
+}
+
+std::string ucs2_to_utf8(const wchar_t* begin, const wchar_t* end) {
   std::string result;
-  const auto* cursor = str16.c_str();
-  const auto* const end = str16.c_str() + str16.length();
+  result.reserve(static_cast<size_t>(std::max(static_cast<int>(end - begin), 0)));
+  auto cursor = begin;
   while (end > cursor) {
     char utf8_sequence[] = {0, 0, 0, 0, 0};
     ucs2_char_to_utf8_char(*cursor, utf8_sequence);

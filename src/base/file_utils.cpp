@@ -407,15 +407,19 @@ std::string get_user_home_dir() {
   std::string user_home;
   HANDLE token = nullptr;
   if (SUCCEEDED(OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &token))) {
-    // Query the necessary buffer size and allocate memory for it.
-    DWORD buf_size = 0;
-    GetUserProfileDirectoryW(token, nullptr, &buf_size);
-    std::vector<WCHAR> buf(buf_size);
-
-    // Get the actual path.
-    if (SUCCEEDED(GetUserProfileDirectoryW(token, buf.data(), &buf_size))) {
-      user_home = ucs2_to_utf8(std::wstring(buf.data(), buf.size() - 1));
+    // For the most cases MAX_PATH + 1 is enough.
+    WCHAR buf_array[MAX_PATH + 1];
+    DWORD buf_size = std::extent<decltype(buf_array)>::value;
+    if (SUCCEEDED(GetUserProfileDirectoryW(token, buf_array, &buf_size))) {
+      user_home = ucs2_to_utf8(buf_array, buf_array + buf_size - 1);  // minus terminating null char
+    } else {
+      // Array is too small, allocate bigger buffer
+      std::wstring buf_str(buf_size - 1, 0);  // terminating null character is added automatically
+      if (SUCCEEDED(GetUserProfileDirectoryW(token, &buf_str[0], &buf_size))) {
+        user_home = ucs2_to_utf8(buf_str);
+      }
     }
+
     CloseHandle(token);
   }
   return user_home;

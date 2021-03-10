@@ -359,10 +359,15 @@ std::string get_dir_part(const std::string& path) {
 
 std::string get_temp_dir() {
 #if defined(_WIN32)
-  WCHAR buf[MAX_PATH + 1] = {0};
-  DWORD path_len = GetTempPathW(MAX_PATH + 1, buf);
-  if (path_len > 0) {
-    return canonicalize_path(ucs2_to_utf8(std::wstring(buf, path_len)));
+  WCHAR buf_arr[MAX_PATH + 1];
+  const DWORD buf_arr_size = std::extent<decltype(buf_arr)>::value;
+  const DWORD path_len = GetTempPathW(buf_arr_size, buf_arr);
+  if (path_len > 0 && path_len < buf_arr_size) {
+    return canonicalize_path(ucs2_to_utf8(std::wstring(buf_arr, path_len)));
+  } else if (path_len > 0) {
+    std::wstring buf_str(path_len - 1, 0);  // terminating null character is added automatically
+    GetTempPathW(path_len, &buf_str[0]);
+    return canonicalize_path(ucs2_to_utf8(buf_str));
   }
   return std::string();
 #else

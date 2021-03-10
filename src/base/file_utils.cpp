@@ -260,38 +260,39 @@ std::string append_path(const std::string& path, const char* append) {
 
 std::string canonicalize_path(const std::string& path) {
 #ifdef _WIN32
-  std::string result = path;
-
-  // Start by converting forward slashes to back slashes (GetFullPathNameW does not do that).
-  for (size_t i = 0; i < result.size(); ++i) {
-    const auto c = result[i];
-    result[i] = (c == '/') ? '\\' : c;
-  }
+  std::string result;
 
   // Use a Win32 API function to resolve as much as possible. Unfortunately there does not seem to
   // be a single Win32 API function that can give sane results (hence the pre/post processing).
   {
-    wchar_t buf[MAX_PATH];
-    const DWORD l = GetFullPathNameW(utf8_to_ucs2(result).c_str(), MAX_PATH, &buf[0], NULL);
-    if (l == 0 || l >= MAX_PATH) {
+    const std::wstring ucs2 = utf8_to_ucs2(path);
+    wchar_t buf[MAX_PATH + 1];
+    const DWORD buf_size = std::extent<decltype(buf)>::value;
+    const DWORD full_path_size = GetFullPathNameW(ucs2.c_str(), buf_size, &buf[0], NULL);
+    if (full_path_size > 0 && full_path_size < buf_size) {
+      result = ucs2_to_utf8(buf, buf + full_path_size);
+    } else if (full_path_size >= buf_size) {
+      // Buffer is too small, dynamically allocate bigger buffer.
+      std::wstring final_path(full_path_size - 1, 0);  // terminating null ch is added automatically
+      GetFullPathNameW(ucs2.c_str(), full_path_size, &final_path[0], NULL);
+      result = ucs2_to_utf8(final_path);
+    } else {
       throw std::runtime_error("Unable to canonicalize the path " + result);
     }
-    result = ucs2_to_utf8(std::wstring(buf));
   }
 
-  // Drop trailing back slash.
-  {
-    const auto last = static_cast<int>(result.length()) - 1;
+  if (!result.empty()) {
+    // Drop trailing back slash.
+    const size_t last = result.size() - 1;
     if (last >= 2 && result[last] == '\\' && result[last - 1] != ':') {
-      result = result.substr(0, last);
+      result.pop_back();
+    }
+    // Convert drive letters to uppercase.
+    if (result.length() >= 2U && result[1] == ':') {
+      result[0] = static_cast<char>(std::toupper(result[0]));
     }
   }
 
-  // Convert drive letters to uppercase.
-  if (result.length() >= 2U && result[1] == ':') {
-    const auto drive_char = result.substr(0, 1);
-    result[0] = upper_case(drive_char)[0];
-  }
 #else
   std::string result = path;
 

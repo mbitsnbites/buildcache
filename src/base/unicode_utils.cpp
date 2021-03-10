@@ -128,6 +128,15 @@ std::string ucs2_to_utf8(const std::wstring& str16) {
   }
 }
 
+std::string ucs2_to_utf8(const wchar_t* str16_first, const wchar_t* str16_last) {
+  std::wstring_convert<std::codecvt_utf8<wchar_t> > conv;
+  try {
+    return conv.to_bytes(str16_first, str16_last);
+  } catch (...) {
+    return std::string();
+  }
+}
+
 std::wstring utf8_to_ucs2(const std::string& str8) {
   std::wstring_convert<std::codecvt_utf8<wchar_t> > conv;
   try {

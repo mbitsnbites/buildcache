@@ -466,13 +466,22 @@ std::string resolve_path(const std::string& path) {
                              nullptr);
   if (INVALID_HANDLE_VALUE != handle) {
     std::wstring resolved_path;
-    auto resolved_size = GetFinalPathNameByHandleW(handle, nullptr, 0, FILE_NAME_NORMALIZED);
-    resolved_path.resize(resolved_size - 1);  // terminating null character is added automatically
-
-    GetFinalPathNameByHandleW(handle, &resolved_path[0], resolved_size, FILE_NAME_NORMALIZED);
+    wchar_t buffer[MAX_PATH + 1];
+    const DWORD buf_size = std::extent<decltype(buffer)>::value;
+    auto resolved_size = GetFinalPathNameByHandleW(handle, buffer, buf_size, FILE_NAME_NORMALIZED);
+    if (resolved_size < buf_size) {
+      // In this case the resolved_size doesn't include terminating null character.
+      resolved_path.assign(buffer, resolved_size);
+    } else {
+      // Array is too small to fit the path, allocate buffer dynamically to fit the path.
+      resolved_path.resize(resolved_size - 1);  // terminating null character is added automatically
+      GetFinalPathNameByHandleW(handle, &resolved_path[0], resolved_size, FILE_NAME_NORMALIZED);
+    }
     CloseHandle(handle);
-    if (resolved_path.substr(0, 4) == LR"(\\?\)") {
-      resolved_path = resolved_path.substr(4);
+    const std::wstring prefix(LR"(\\?\)");
+    const bool may_has_prefix = resolved_path.size() >= prefix.size();
+    if (may_has_prefix && resolved_path.compare(0, prefix.size(), prefix) == 0) {
+      resolved_path = resolved_path.substr(prefix.size());
     }
     return ucs2_to_utf8(resolved_path);
   }

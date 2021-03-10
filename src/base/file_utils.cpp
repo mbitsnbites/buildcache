@@ -362,9 +362,11 @@ std::string get_temp_dir() {
   WCHAR buf_arr[MAX_PATH + 1];
   const DWORD buf_arr_size = std::extent<decltype(buf_arr)>::value;
   const DWORD path_len = GetTempPathW(buf_arr_size, buf_arr);
-  if (path_len > 0 && path_len < buf_arr_size) {
-    return canonicalize_path(ucs2_to_utf8(std::wstring(buf_arr, path_len)));
-  } else if (path_len > 0) {
+  if (path_len > 0) {
+    if (path_len < buf_arr_size) {
+      return canonicalize_path(ucs2_to_utf8(buf_arr, buf_arr + path_len));
+    }
+    // Else buffer isn't enough to fit the path, dynamically allocate bigger buffer.
     std::wstring buf_str(path_len - 1, 0);  // terminating null character is added automatically
     GetTempPathW(path_len, &buf_str[0]);
     return canonicalize_path(ucs2_to_utf8(buf_str));
@@ -476,12 +478,12 @@ std::string resolve_path(const std::string& path) {
                              nullptr);
   if (INVALID_HANDLE_VALUE != handle) {
     std::wstring resolved_path;
-    wchar_t buffer[MAX_PATH + 1];
-    const DWORD buf_size = std::extent<decltype(buffer)>::value;
-    auto resolved_size = GetFinalPathNameByHandleW(handle, buffer, buf_size, FILE_NAME_NORMALIZED);
+    WCHAR buf_arr[MAX_PATH + 1];
+    const DWORD buf_size = std::extent<decltype(buf_arr)>::value;
+    auto resolved_size = GetFinalPathNameByHandleW(handle, buf_arr, buf_size, FILE_NAME_NORMALIZED);
     if (resolved_size < buf_size) {
       // In this case the resolved_size doesn't include terminating null character.
-      resolved_path.assign(buffer, resolved_size);
+      resolved_path.assign(buf_arr, resolved_size);
     } else {
       // Array is too small to fit the path, allocate buffer dynamically to fit the path.
       resolved_path.resize(resolved_size - 1);  // terminating null character is added automatically

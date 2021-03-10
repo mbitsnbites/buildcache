@@ -128,10 +128,10 @@ std::string ucs2_to_utf8(const std::wstring& str16) {
   }
 }
 
-std::string ucs2_to_utf8(const wchar_t* str16_first, const wchar_t* str16_last) {
+std::string ucs2_to_utf8(const wchar_t* begin, const wchar_t* end) {
   std::wstring_convert<std::codecvt_utf8<wchar_t> > conv;
   try {
-    return conv.to_bytes(str16_first, str16_last);
+    return conv.to_bytes(begin, end);
   } catch (...) {
     return std::string();
   }
@@ -153,7 +153,7 @@ std::string ucs2_to_utf8(const std::wstring& str16) {
 std::string ucs2_to_utf8(const wchar_t* begin, const wchar_t* end) {
   std::string result;
   result.reserve(static_cast<size_t>(std::max(static_cast<int>(end - begin), 0)));
-  auto cursor = begin;
+  const auto* cursor = begin;
   while (end > cursor) {
     char utf8_sequence[] = {0, 0, 0, 0, 0};
     ucs2_char_to_utf8_char(*cursor, utf8_sequence);

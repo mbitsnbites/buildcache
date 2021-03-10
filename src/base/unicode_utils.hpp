@@ -29,10 +29,10 @@ namespace bcache {
 std::string ucs2_to_utf8(const std::wstring& str16);
 
 /// @brief Convert a UCS-2 string to a UTF-8 string.
-/// @param str16_first The UCS-2 encoded wide character string first character.
-/// @param str16_last The UCS-2 encoded wide character string last character.
+/// @param begin The begin of the UCS-2 encoded wide character string.
+/// @param end The end of the UCS-2 encoded wide character string.
 /// @returns a UTF-8 encoded string.
-std::string ucs2_to_utf8(const wchar_t* str16_first, const wchar_t* str16_last);
+std::string ucs2_to_utf8(const wchar_t* begin, const wchar_t* end);
 
 /// @brief Convert a UTF-8 string to a UCS-2 string.
 /// @param str8 The UTF-8 encoded string.

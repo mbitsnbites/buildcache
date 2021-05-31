@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['s3_5fcache_5fprovider_5ft_258',['s3_cache_provider_t',['../classbcache_1_1s3__cache__provider__t.html',1,'bcache']]],
-  ['scoped_5fset_5fenv_5ft_259',['scoped_set_env_t',['../classbcache_1_1scoped__set__env__t.html',1,'bcache']]],
-  ['scoped_5funset_5fenv_5ft_260',['scoped_unset_env_t',['../classbcache_1_1scoped__unset__env__t.html',1,'bcache']]],
-  ['scoped_5fwork_5fdir_5ft_261',['scoped_work_dir_t',['../classbcache_1_1file_1_1scoped__work__dir__t.html',1,'bcache::file']]],
-  ['string_5flist_5ft_262',['string_list_t',['../classbcache_1_1string__list__t.html',1,'bcache']]]
+  ['redis_5fcache_5fprovider_5ft_255',['redis_cache_provider_t',['../classbcache_1_1redis__cache__provider__t.html',1,'bcache']]],
+  ['remote_5fcache_5fprovider_5ft_256',['remote_cache_provider_t',['../classbcache_1_1remote__cache__provider__t.html',1,'bcache']]],
+  ['remote_5fcache_5ft_257',['remote_cache_t',['../classbcache_1_1remote__cache__t.html',1,'bcache']]],
+  ['run_5fresult_5ft_258',['run_result_t',['../structbcache_1_1sys_1_1run__result__t.html',1,'bcache::sys']]],
+  ['runner_5ft_259',['runner_t',['../classbcache_1_1lua__wrapper__t_1_1runner__t.html',1,'bcache::lua_wrapper_t']]]
 ];

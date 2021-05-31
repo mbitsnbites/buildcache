@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['zero_5fstats_219',['zero_stats',['../classbcache_1_1local__cache__t.html#ae3ecdb915d5c553bd91e8e0ed0aa280b',1,'bcache::local_cache_t']]],
-  ['zstd_220',['ZSTD',['../namespacebcache_1_1config.html#a7612e4ffda908f03234288061a12a575a8406cc2302e19183037b61249546b234',1,'bcache::config']]]
+  ['walk_5fdirectory_217',['walk_directory',['../namespacebcache_1_1file.html#a36e2a2a480d13bf5c12d4ca5984043e4',1,'bcache::file']]],
+  ['write_218',['write',['../namespacebcache_1_1file.html#a3325412a810438ab9f625b3343b127d7',1,'bcache::file']]],
+  ['write_5fatomic_219',['write_atomic',['../namespacebcache_1_1file.html#ad0c6aa84ae1a785a02a98298a5ec6214',1,'bcache::file']]]
 ];

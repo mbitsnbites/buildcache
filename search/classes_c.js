@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['ti_5farm_5fcgt_5fwrapper_5ft_263',['ti_arm_cgt_wrapper_t',['../classbcache_1_1ti__arm__cgt__wrapper__t.html',1,'bcache']]],
-  ['ti_5farp32_5fwrapper_5ft_264',['ti_arp32_wrapper_t',['../classbcache_1_1ti__arp32__wrapper__t.html',1,'bcache']]],
-  ['ti_5fc6x_5fwrapper_5ft_265',['ti_c6x_wrapper_t',['../classbcache_1_1ti__c6x__wrapper__t.html',1,'bcache']]],
-  ['ti_5fcommon_5fwrapper_5ft_266',['ti_common_wrapper_t',['../classbcache_1_1ti__common__wrapper__t.html',1,'bcache']]],
-  ['tmp_5ffile_5ft_267',['tmp_file_t',['../classbcache_1_1file_1_1tmp__file__t.html',1,'bcache::file']]]
+  ['s3_5fcache_5fprovider_5ft_260',['s3_cache_provider_t',['../classbcache_1_1s3__cache__provider__t.html',1,'bcache']]],
+  ['scoped_5fset_5fenv_5ft_261',['scoped_set_env_t',['../classbcache_1_1scoped__set__env__t.html',1,'bcache']]],
+  ['scoped_5funset_5fenv_5ft_262',['scoped_unset_env_t',['../classbcache_1_1scoped__unset__env__t.html',1,'bcache']]],
+  ['scoped_5fwork_5fdir_5ft_263',['scoped_work_dir_t',['../classbcache_1_1file_1_1scoped__work__dir__t.html',1,'bcache::file']]],
+  ['string_5flist_5ft_264',['string_list_t',['../classbcache_1_1string__list__t.html',1,'bcache']]]
 ];

@@ -210,9 +210,18 @@ Functions</h2></td></tr>
 <tr class="memitem:a062bfd0e0fb1580f6d4adb1cbcee7cd3"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebcache.html#a062bfd0e0fb1580f6d4adb1cbcee7cd3">ucs2_to_utf8</a> (const std::wstring &amp;str16)</td></tr>
 <tr class="memdesc:a062bfd0e0fb1580f6d4adb1cbcee7cd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a UCS-2 string to a UTF-8 string.  <a href="namespacebcache.html#a062bfd0e0fb1580f6d4adb1cbcee7cd3">More...</a><br /></td></tr>
 <tr class="separator:a062bfd0e0fb1580f6d4adb1cbcee7cd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c83dbea40004c9ca75147edf56b0578"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebcache.html#a5c83dbea40004c9ca75147edf56b0578">ucs2_to_utf8</a> (const wchar_t *begin, const wchar_t *end)</td></tr>
+<tr class="memdesc:a5c83dbea40004c9ca75147edf56b0578"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a UCS-2 string to a UTF-8 string.  <a href="namespacebcache.html#a5c83dbea40004c9ca75147edf56b0578">More...</a><br /></td></tr>
+<tr class="separator:a5c83dbea40004c9ca75147edf56b0578"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af926321cfe4ef6bedbeac39ca818095b"><td class="memItemLeft" align="right" valign="top">std::wstring&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebcache.html#af926321cfe4ef6bedbeac39ca818095b">utf8_to_ucs2</a> (const std::string &amp;str8)</td></tr>
 <tr class="memdesc:af926321cfe4ef6bedbeac39ca818095b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a UTF-8 string to a UCS-2 string.  <a href="namespacebcache.html#af926321cfe4ef6bedbeac39ca818095b">More...</a><br /></td></tr>
 <tr class="separator:af926321cfe4ef6bedbeac39ca818095b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5831aadd9518b98684f6abd31ae529f1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebcache.html#a5831aadd9518b98684f6abd31ae529f1">lower_case</a> (const int code)</td></tr>
+<tr class="memdesc:a5831aadd9518b98684f6abd31ae529f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert the character to lower case.  <a href="namespacebcache.html#a5831aadd9518b98684f6abd31ae529f1">More...</a><br /></td></tr>
+<tr class="separator:a5831aadd9518b98684f6abd31ae529f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada610453b15e8e0427ea137a1cf0d979"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebcache.html#ada610453b15e8e0427ea137a1cf0d979">upper_case</a> (const int code)</td></tr>
+<tr class="memdesc:ada610453b15e8e0427ea137a1cf0d979"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert the character to upper case.  <a href="namespacebcache.html#ada610453b15e8e0427ea137a1cf0d979">More...</a><br /></td></tr>
+<tr class="separator:ada610453b15e8e0427ea137a1cf0d979"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a48a987268cf4fd64bb4e29272e2a14"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebcache.html#a1a48a987268cf4fd64bb4e29272e2a14">lower_case</a> (const std::string &amp;str)</td></tr>
 <tr class="memdesc:a1a48a987268cf4fd64bb4e29272e2a14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert the string to lower case.  <a href="namespacebcache.html#a1a48a987268cf4fd64bb4e29272e2a14">More...</a><br /></td></tr>
 <tr class="separator:a1a48a987268cf4fd64bb4e29272e2a14"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -291,8 +300,36 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>get_date_rfc26
 
 </div>
 </div>
+<a id="a5831aadd9518b98684f6abd31ae529f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5831aadd9518b98684f6abd31ae529f1">&#9670;&nbsp;</a></span>lower_case() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int bcache::lower_case </td>
+          <td>(</td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>code</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Convert the character to lower case. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">code</td><td>The character to convert. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a lower case version of the input character. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This function currently only works on the ASCII subset of Unicode. </dd></dl>
+
+</div>
+</div>
 <a id="a1a48a987268cf4fd64bb4e29272e2a14"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1a48a987268cf4fd64bb4e29272e2a14">&#9670;&nbsp;</a></span>lower_case()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a48a987268cf4fd64bb4e29272e2a14">&#9670;&nbsp;</a></span>lower_case() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -476,7 +513,7 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>get_date_rfc26
 </div>
 </div>
 <a id="a062bfd0e0fb1580f6d4adb1cbcee7cd3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a062bfd0e0fb1580f6d4adb1cbcee7cd3">&#9670;&nbsp;</a></span>ucs2_to_utf8()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a062bfd0e0fb1580f6d4adb1cbcee7cd3">&#9670;&nbsp;</a></span>ucs2_to_utf8() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -495,6 +532,44 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>get_date_rfc26
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">str16</td><td>The UCS-2 encoded wide character string. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a UTF-8 encoded string. </dd></dl>
+
+</div>
+</div>
+<a id="a5c83dbea40004c9ca75147edf56b0578"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c83dbea40004c9ca75147edf56b0578">&#9670;&nbsp;</a></span>ucs2_to_utf8() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string bcache::ucs2_to_utf8 </td>
+          <td>(</td>
+          <td class="paramtype">const wchar_t *&#160;</td>
+          <td class="paramname"><em>begin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const wchar_t *&#160;</td>
+          <td class="paramname"><em>end</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Convert a UCS-2 string to a UTF-8 string. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">begin</td><td>The begin of the UCS-2 encoded wide character string. </td></tr>
+    <tr><td class="paramname">end</td><td>The end of the UCS-2 encoded wide character string. </td></tr>
   </table>
   </dd>
 </dl>
@@ -528,8 +603,36 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>get_date_rfc26
 
 </div>
 </div>
+<a id="ada610453b15e8e0427ea137a1cf0d979"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada610453b15e8e0427ea137a1cf0d979">&#9670;&nbsp;</a></span>upper_case() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int bcache::upper_case </td>
+          <td>(</td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>code</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Convert the character to upper case. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">code</td><td>The character to convert. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>an upper case version of the input character. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This function currently only works on the ASCII subset of Unicode. </dd></dl>
+
+</div>
+</div>
 <a id="a110b509a7ee7ec0235eb5e1cd1149e46"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a110b509a7ee7ec0235eb5e1cd1149e46">&#9670;&nbsp;</a></span>upper_case()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a110b509a7ee7ec0235eb5e1cd1149e46">&#9670;&nbsp;</a></span>upper_case() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">

@@ -144,7 +144,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_has_lock</b> = fals
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A scoped exclusive global lock class. </p>
 <p>This lock class is intended to be used for granular synchronization of multiple processes that need to access a specific part of a file system, such as a single file or a folder. Locks are expected to be held for a very short time period (typically only for a fraction of a second), during operations such as file renames or writes.</p>
-<p>When the lock is created, a global named system object is created (if necessary) and acquired. Once the lock goes out of scope, the system object is released. If this is the last process that releases the lock, the system object is deleted.</p>
+<p>When the lock is created, a global named system object is created (if necessary) and acquired. Once the lock goes out of scope, the system object is released.</p>
+<p>After a lock is no longer used by any process, the named system object may or may not be left on the system (depending on the underlying implementation). It is thus up to the user of the lock to guarantee that the necessary cleanup is performed.</p>
 <p>Two system object types are supported:</p>
 <dl class="section user"><dt>Remote locks</dt><dd>A remote lock is implemented as a lock file that will safely synchronize access to any file system, even a remote network share.</dd></dl>
 <dl class="section user"><dt>Local locks</dt><dd>A local lock may be implemented as a system synchronization object (e.g. a named mutex or semaphore), that is only guaranteed to be safe for synchronizing file system access on a local system.</dd></dl>
@@ -214,7 +215,7 @@ On some systems, local locks are implemented as remote locks. </dd></dl>
 </div><div class="memdoc">
 
 <p>Release the lock. </p>
-<p>This releases the lock that was held. The sycnhronization object (if any) is deleted if this is the last process that holds a lock. </p>
+<p>This releases the lock that was held. </p>
 
 </div>
 </div>

@@ -95,68 +95,68 @@ $(function() {
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacebcache.html">bcache</a> {</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">namespace </span>file {</div>
-<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="classbcache_1_1file_1_1file__lock__t.html">   58</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbcache_1_1file_1_1file__lock__t.html">file_lock_t</a> {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="classbcache_1_1file_1_1file__lock__t.html#ad463d17289b4f5e05c27f11776f01928">   61</a></span>&#160;  <a class="code" href="classbcache_1_1file_1_1file__lock__t.html#ad463d17289b4f5e05c27f11776f01928">file_lock_t</a>() {</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  }</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  <span class="keyword">explicit</span> <a class="code" href="classbcache_1_1file_1_1file__lock__t.html#ad463d17289b4f5e05c27f11776f01928">file_lock_t</a>(<span class="keyword">const</span> std::string&amp; path, <span class="keyword">const</span> <span class="keywordtype">bool</span> remote_lock);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  <span class="comment">// Support move semantics.</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  <a class="code" href="classbcache_1_1file_1_1file__lock__t.html#ad463d17289b4f5e05c27f11776f01928">file_lock_t</a>(<a class="code" href="classbcache_1_1file_1_1file__lock__t.html">file_lock_t</a>&amp;&amp; other) noexcept;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  <a class="code" href="classbcache_1_1file_1_1file__lock__t.html">file_lock_t</a>&amp; operator=(<a class="code" href="classbcache_1_1file_1_1file__lock__t.html">file_lock_t</a>&amp;&amp; other) noexcept;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  <a class="code" href="classbcache_1_1file_1_1file__lock__t.html#ad463d17289b4f5e05c27f11776f01928">file_lock_t</a>(<span class="keyword">const</span> <a class="code" href="classbcache_1_1file_1_1file__lock__t.html">file_lock_t</a>&amp; other) = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  <a class="code" href="classbcache_1_1file_1_1file__lock__t.html">file_lock_t</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classbcache_1_1file_1_1file__lock__t.html">file_lock_t</a>&amp; other) = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  <a class="code" href="classbcache_1_1file_1_1file__lock__t.html#a8350a64fc9784dc0cc3d602e1ba29643">~file_lock_t</a>();</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno"><a class="line" href="classbcache_1_1file_1_1file__lock__t.html#acec45dd643662afd214f10313b010a93">   84</a></span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="classbcache_1_1file_1_1file__lock__t.html#acec45dd643662afd214f10313b010a93">has_lock</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordflow">return</span> m_has_lock;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  }</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor">#if defined(_WIN32)</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  <span class="comment">// WIN32 API HANDLE type is void*.</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  <span class="keyword">using</span> file_handle_t = <span class="keywordtype">void</span>*;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  <span class="keyword">using</span> mutex_handle_t = <span class="keywordtype">void</span>*;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  <span class="comment">// POSIX file descriptor type is int.</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;  <span class="keyword">using</span> file_handle_t = int;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;  <span class="keyword">using</span> mutex_handle_t = <span class="keywordtype">void</span>*;  <span class="comment">// dummy</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;  <span class="keyword">static</span> file_handle_t invalid_file_handle() {</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="preprocessor">#if defined(_WIN32)</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">void</span>*<span class="keyword">&gt;</span>(-1);  <span class="comment">// INVALID_HANDLE_VALUE</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordflow">return</span> -1;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;  }</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  <span class="keyword">static</span> mutex_handle_t invalid_mutex_handle() {</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="preprocessor">#if defined(_WIN32)</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="classbcache_1_1file_1_1file__lock__t.html">   61</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbcache_1_1file_1_1file__lock__t.html">file_lock_t</a> {</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="classbcache_1_1file_1_1file__lock__t.html#ad463d17289b4f5e05c27f11776f01928">   64</a></span>&#160;  <a class="code" href="classbcache_1_1file_1_1file__lock__t.html#ad463d17289b4f5e05c27f11776f01928">file_lock_t</a>() {</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  }</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  <span class="keyword">explicit</span> <a class="code" href="classbcache_1_1file_1_1file__lock__t.html#ad463d17289b4f5e05c27f11776f01928">file_lock_t</a>(<span class="keyword">const</span> std::string&amp; path, <span class="keyword">const</span> <span class="keywordtype">bool</span> remote_lock);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  <span class="comment">// Support move semantics.</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  <a class="code" href="classbcache_1_1file_1_1file__lock__t.html#ad463d17289b4f5e05c27f11776f01928">file_lock_t</a>(<a class="code" href="classbcache_1_1file_1_1file__lock__t.html">file_lock_t</a>&amp;&amp; other) noexcept;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  <a class="code" href="classbcache_1_1file_1_1file__lock__t.html">file_lock_t</a>&amp; operator=(<a class="code" href="classbcache_1_1file_1_1file__lock__t.html">file_lock_t</a>&amp;&amp; other) noexcept;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <a class="code" href="classbcache_1_1file_1_1file__lock__t.html#ad463d17289b4f5e05c27f11776f01928">file_lock_t</a>(<span class="keyword">const</span> <a class="code" href="classbcache_1_1file_1_1file__lock__t.html">file_lock_t</a>&amp; other) = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  <a class="code" href="classbcache_1_1file_1_1file__lock__t.html">file_lock_t</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classbcache_1_1file_1_1file__lock__t.html">file_lock_t</a>&amp; other) = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  <a class="code" href="classbcache_1_1file_1_1file__lock__t.html#a8350a64fc9784dc0cc3d602e1ba29643">~file_lock_t</a>();</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="classbcache_1_1file_1_1file__lock__t.html#acec45dd643662afd214f10313b010a93">   86</a></span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="classbcache_1_1file_1_1file__lock__t.html#acec45dd643662afd214f10313b010a93">has_lock</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">return</span> m_has_lock;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  }</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">#if defined(_WIN32)</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  <span class="comment">// WIN32 API HANDLE type is void*.</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  <span class="keyword">using</span> file_handle_t = <span class="keywordtype">void</span>*;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  <span class="keyword">using</span> mutex_handle_t = <span class="keywordtype">void</span>*;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;  <span class="comment">// POSIX file descriptor type is int.</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  <span class="keyword">using</span> file_handle_t = int;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;  <span class="keyword">using</span> mutex_handle_t = <span class="keywordtype">void</span>*;  <span class="comment">// dummy</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;  <span class="keyword">static</span> file_handle_t invalid_file_handle() {</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="preprocessor">#if defined(_WIN32)</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">void</span>*<span class="keyword">&gt;</span>(-1);  <span class="comment">// INVALID_HANDLE_VALUE</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  }</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;  <span class="keyword">static</span> mutex_handle_t invalid_mutex_handle() {</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">#if defined(_WIN32)</span></div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  }</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;  std::string m_path;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;  file_handle_t m_file_handle = invalid_file_handle();</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;  mutex_handle_t m_mutex_handle = invalid_mutex_handle();</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  <span class="keywordtype">bool</span> m_has_lock = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;};</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;}  <span class="comment">// namespace file</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;}  <span class="comment">// namespace bcache</span></div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor">#endif  // BUILDCACHE_FILE_LOCK_HPP_</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;  }</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;  std::string m_path;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  file_handle_t m_file_handle = invalid_file_handle();</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;  mutex_handle_t m_mutex_handle = invalid_mutex_handle();</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;  <span class="keywordtype">bool</span> m_has_lock = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;};</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;}  <span class="comment">// namespace file</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;}  <span class="comment">// namespace bcache</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor">#endif  // BUILDCACHE_FILE_LOCK_HPP_</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclassbcache_1_1file_1_1file__lock__t_html_a8350a64fc9784dc0cc3d602e1ba29643"><div class="ttname"><a href="classbcache_1_1file_1_1file__lock__t.html#a8350a64fc9784dc0cc3d602e1ba29643">bcache::file::file_lock_t::~file_lock_t</a></div><div class="ttdeci">~file_lock_t()</div><div class="ttdoc">Release the lock.</div><div class="ttdef"><b>Definition:</b> file_lock.cpp:303</div></div>
+<div class="ttc" id="aclassbcache_1_1file_1_1file__lock__t_html_a8350a64fc9784dc0cc3d602e1ba29643"><div class="ttname"><a href="classbcache_1_1file_1_1file__lock__t.html#a8350a64fc9784dc0cc3d602e1ba29643">bcache::file::file_lock_t::~file_lock_t</a></div><div class="ttdeci">~file_lock_t()</div><div class="ttdoc">Release the lock.</div><div class="ttdef"><b>Definition:</b> file_lock.cpp:190</div></div>
 <div class="ttc" id="anamespacebcache_html"><div class="ttname"><a href="namespacebcache.html">bcache</a></div><div class="ttdoc">The top level namespace.</div><div class="ttdef"><b>Definition:</b> compressor.cpp:34</div></div>
-<div class="ttc" id="aclassbcache_1_1file_1_1file__lock__t_html_acec45dd643662afd214f10313b010a93"><div class="ttname"><a href="classbcache_1_1file_1_1file__lock__t.html#acec45dd643662afd214f10313b010a93">bcache::file::file_lock_t::has_lock</a></div><div class="ttdeci">bool has_lock() const</div><div class="ttdef"><b>Definition:</b> file_lock.hpp:84</div></div>
-<div class="ttc" id="aclassbcache_1_1file_1_1file__lock__t_html"><div class="ttname"><a href="classbcache_1_1file_1_1file__lock__t.html">bcache::file::file_lock_t</a></div><div class="ttdoc">A scoped exclusive global lock class.</div><div class="ttdef"><b>Definition:</b> file_lock.hpp:58</div></div>
-<div class="ttc" id="aclassbcache_1_1file_1_1file__lock__t_html_ad463d17289b4f5e05c27f11776f01928"><div class="ttname"><a href="classbcache_1_1file_1_1file__lock__t.html#ad463d17289b4f5e05c27f11776f01928">bcache::file::file_lock_t::file_lock_t</a></div><div class="ttdeci">file_lock_t()</div><div class="ttdoc">Create an empty (unlocked) lock object.</div><div class="ttdef"><b>Definition:</b> file_lock.hpp:61</div></div>
+<div class="ttc" id="aclassbcache_1_1file_1_1file__lock__t_html_acec45dd643662afd214f10313b010a93"><div class="ttname"><a href="classbcache_1_1file_1_1file__lock__t.html#acec45dd643662afd214f10313b010a93">bcache::file::file_lock_t::has_lock</a></div><div class="ttdeci">bool has_lock() const</div><div class="ttdef"><b>Definition:</b> file_lock.hpp:86</div></div>
+<div class="ttc" id="aclassbcache_1_1file_1_1file__lock__t_html"><div class="ttname"><a href="classbcache_1_1file_1_1file__lock__t.html">bcache::file::file_lock_t</a></div><div class="ttdoc">A scoped exclusive global lock class.</div><div class="ttdef"><b>Definition:</b> file_lock.hpp:61</div></div>
+<div class="ttc" id="aclassbcache_1_1file_1_1file__lock__t_html_ad463d17289b4f5e05c27f11776f01928"><div class="ttname"><a href="classbcache_1_1file_1_1file__lock__t.html#ad463d17289b4f5e05c27f11776f01928">bcache::file::file_lock_t::file_lock_t</a></div><div class="ttdeci">file_lock_t()</div><div class="ttdoc">Create an empty (unlocked) lock object.</div><div class="ttdef"><b>Definition:</b> file_lock.hpp:64</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

@@ -101,6 +101,9 @@ string_list_t make_preprocessor_cmd(const string_list_t& args,
     } else if (arg == "-o") {
       drop_this_arg = true;
       drop_next_arg = true;
+    } else if (arg == "-MF") {
+      drop_this_arg = true;
+      drop_next_arg = true;
     }
     if (!drop_this_arg) {
       preprocess_args += arg;

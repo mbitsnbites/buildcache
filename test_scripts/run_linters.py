@@ -88,16 +88,7 @@ def run_clang_tidy(build_path, fix):
     pool = ThreadPool()
     results = []
     for src in sources:
-        results.append(
-            pool.apply_async(
-                clang_tidy,
-                [
-                    src,
-                    build_path,
-                    fix,
-                ],
-            )
-        )
+        results.append(pool.apply_async(clang_tidy, [src, build_path, fix]))
 
     # Wait for all workers to finish.
     pool.close()
@@ -114,15 +105,7 @@ def run_clang_format(fix):
     pool = ThreadPool()
     results = []
     for src in sources:
-        results.append(
-            pool.apply_async(
-                clang_format,
-                [
-                    src,
-                    fix,
-                ],
-            )
-        )
+        results.append(pool.apply_async(clang_format, [src, fix]))
 
     # Wait for all workers to finish.
     pool.close()

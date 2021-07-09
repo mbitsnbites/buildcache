@@ -5,6 +5,7 @@
 total_success=true
 
 function run_test {
+  LOCALLOCKS=$1
   TESTFILE=/tmp/bc_file_lock_stresstest_data-$$
 
   rm -f "$TESTFILE"
@@ -17,15 +18,15 @@ function run_test {
   # Run four instances of the stresstest in parallel.
   echo "Starting four concurrent processes (${test_type})..."
   pids=""
-  for i in {1..4}; do
-    base/file_lock_stresstest "$TESTFILE" $1 &
+  for _ in {1..4}; do
+    base/file_lock_stresstest "$TESTFILE" "$LOCALLOCKS" &
     pids+=" $!"
   done
 
   # Wait for all processes to finish.
   got_error=false
   for p in $pids ; do
-    if ! wait $p ; then
+    if ! wait "$p" ; then
       got_error=true
     fi
   done

@@ -26,6 +26,7 @@ namespace bcache {
 /// @brief A program wrapper for GCC and GCC-like C/C++ compilers.
 class gcc_wrapper_t : public program_wrapper_t {
 public:
+  /// @brief Compatible mode.
   gcc_wrapper_t(const file::exe_path_t& exe_path, const string_list_t& args);
 
   bool can_handle_command() override;
@@ -40,14 +41,34 @@ protected:
   std::string preprocess_source() override;
   string_list_t get_implicit_input_files() override;
 
+  /// @brief Get whether -D flags are consumed during preprocess step
+  ///
+  /// Some compilers support an optimization to not expand macro definitions
+  /// during a preprocess step. When determining relevent arguments for hashing,
+  /// it is important to note whether the -D command line flag will be consumed
+  /// during preprocess and therefore result in changes to the preprocess output
+  /// or not.
+  /// @returns true if preprocess step will consume -D arguments
+  ///
+  /// @note Only used in preprocess mode
+  virtual bool uses_defines_in_preprocess() const;
+
   string_list_t m_resolved_args;
   string_list_t m_implicit_input_files;
 
 private:
+  enum class compatible_mode_t {
+    NOT_SPECIFIED = 0,  ///< Don't use any specific flags
+    GCC = 1,            ///< Can use GCC compatible flags
+    CLANG = 2,          ///< Can use Clang compatible flags
+  };
+  compatible_mode_t m_compatible_mode = compatible_mode_t::NOT_SPECIFIED;
+
   void resolve_args() override;
   string_list_t parse_args(const string_list_t& args);
   string_list_t parse_response_file(const std::string& filename);
   virtual string_list_t get_include_files(const std::string& std_err) const;
+  virtual string_list_t make_preprocessor_cmd(const std::string& preprocessed_file) const;
 };
 }  // namespace bcache
 #endif  // BUILDCACHE_GCC_WRAPPER_HPP_

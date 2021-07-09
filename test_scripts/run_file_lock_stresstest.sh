@@ -33,7 +33,7 @@ function run_test {
     rm -f "$TESTFILE"
 
     test_type="network share safe locks"
-    if [[ "$1" = "true" ]] ; then
+    if [[ "$1" = "true" ]]; then
         test_type="allow local locks"
     fi
 
@@ -47,8 +47,8 @@ function run_test {
 
     # Wait for all processes to finish.
     got_error=false
-    for p in $pids ; do
-        if ! wait "$p" ; then
+    for p in $pids; do
+        if ! wait "$p"; then
             got_error=true
         fi
     done
@@ -61,14 +61,14 @@ function run_test {
     rm -f "${TESTFILE}.lock"
 
     # Did we have an error exit status from any of the processes?
-    if $got_error ; then
+    if $got_error; then
         echo "*** FAIL: At least one of the processes failed."
         exit 1
     fi
 
     # Check the data file contents.
     EXPECTED_DATA="4000"
-    if [[ "${DATA}" = "${EXPECTED_DATA}" ]] ; then
+    if [[ "${DATA}" = "${EXPECTED_DATA}" ]]; then
         echo "The test passed!"
     else
         echo "*** FAIL: The count should be ${EXPECTED_DATA}, but is ${DATA}."
@@ -83,11 +83,10 @@ run_test false
 run_test true
 
 # Check the test result.
-if $total_success ; then
+if $total_success; then
     echo "All tests passed!"
     exit 0
 fi
 
 echo "*** FAIL: At least one of the tests failed."
 exit 1
-

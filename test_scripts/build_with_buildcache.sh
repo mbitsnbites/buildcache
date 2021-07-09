@@ -73,7 +73,8 @@ echo "BuildCache executable: ${BUILDCACHEEXE}"
 # Install BuildCache and symlinks to BuildCache for common compilers.
 SYMLINKSDIR="${BUILDCACHEDIR}/symlinks"
 echo "Install symlinks in: ${SYMLINKSDIR}"
-rm -rf "${SYMLINKSDIR}" ; mkdir -p "${SYMLINKSDIR}"
+rm -rf "${SYMLINKSDIR}"
+mkdir -p "${SYMLINKSDIR}"
 ln -s "${BUILDCACHEEXE}" "${SYMLINKSDIR}/cc${EXESUFFIX}"
 ln -s "${BUILDCACHEEXE}" "${SYMLINKSDIR}/c++${EXESUFFIX}"
 ln -s "${BUILDCACHEEXE}" "${SYMLINKSDIR}/gcc${EXESUFFIX}"
@@ -85,11 +86,13 @@ export PATH="${SYMLINKSDIR}:${BUILDCACHEDIR}:${PATH}"
 
 # Configure BuildCache.
 export BUILDCACHE_DIR=/tmp/.buildcache-$$
-rm -rf "${BUILDCACHE_DIR}" ; mkdir -p "${BUILDCACHE_DIR}"
+rm -rf "${BUILDCACHE_DIR}"
+mkdir -p "${BUILDCACHE_DIR}"
 export BUILDCACHE_DEBUG=2
 export BUILDCACHE_DIRECT_MODE=true
 export LOG_DIR=/tmp/.buildcache-logs-$$
-rm -rf "${LOG_DIR}" ; mkdir -p "${LOG_DIR}"
+rm -rf "${LOG_DIR}"
+mkdir -p "${LOG_DIR}"
 
 # Clone the project.
 PROJDIR="/tmp/proj-$$"
@@ -104,7 +107,8 @@ echo "======== First build (cold cache) ========"
 buildcache -C
 
 cd "${PROJDIR}"
-rm -rf "${BUILDDIR}" ; mkdir -p "${BUILDDIR}"
+rm -rf "${BUILDDIR}"
+mkdir -p "${BUILDDIR}"
 cd "${BUILDDIR}"
 cmake -G Ninja -DCMAKE_BUILD_TYPE=Release "${SRCDIR}"
 
@@ -115,7 +119,8 @@ cat "${LOG_DIR}/test-pass-1.log"
 
 echo "======== Second build (warm cache, direct mode OFF ) ========"
 cd "${PROJDIR}"
-rm -rf "${BUILDDIR}" ; mkdir -p "${BUILDDIR}"
+rm -rf "${BUILDDIR}"
+mkdir -p "${BUILDDIR}"
 cd "${BUILDDIR}"
 cmake -G Ninja -DCMAKE_BUILD_TYPE=Release "${SRCDIR}"
 
@@ -126,7 +131,8 @@ cat "${LOG_DIR}/test-pass-2.log"
 
 echo "======== Third build (warm cache, direct mode ON ) ========"
 cd "${PROJDIR}"
-rm -rf "${BUILDDIR}" ; mkdir -p "${BUILDDIR}"
+rm -rf "${BUILDDIR}"
+mkdir -p "${BUILDDIR}"
 cd "${BUILDDIR}"
 cmake -G Ninja -DCMAKE_BUILD_TYPE=Release "${SRCDIR}"
 

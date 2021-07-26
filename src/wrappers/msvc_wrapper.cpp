@@ -48,6 +48,11 @@ bool is_source_file(const std::string& arg) {
   return ((ext == ".cpp") || (ext == ".cc") || (ext == ".cxx") || (ext == ".c"));
 }
 
+bool is_pch_file(const std::string& file_ext) {
+  const auto ext = lower_case(file_ext);
+  return (ext == ".pch");
+}
+
 bool is_object_file(const std::string& file_ext) {
   const auto ext = lower_case(file_ext);
   return ((ext == ".obj") || (ext == ".o"));
@@ -206,6 +211,7 @@ string_list_t msvc_wrapper_t::get_capabilities() {
 std::map<std::string, expected_file_t> msvc_wrapper_t::get_build_files() {
   std::map<std::string, expected_file_t> files;
   auto found_object_file = false;
+  auto found_pch_file = false;
   for (const auto& arg : m_resolved_args) {
     if (arg_starts_with(arg, "Fo") && is_object_file(file::get_extension(arg))) {
       if (found_object_file) {
@@ -213,6 +219,13 @@ std::map<std::string, expected_file_t> msvc_wrapper_t::get_build_files() {
       }
       files["object"] = {drop_leading_colon(arg.substr(3)), true};
       found_object_file = true;
+    }
+    if (arg_starts_with(arg, "Fp") && is_pch_file(file::get_extension(arg))) {
+      if (found_pch_file) {
+        throw std::runtime_error("Only a single target pch file can be specified.");
+      }
+      files["pch"] = {drop_leading_colon(arg.substr(3)), true};
+      found_pch_file = true;
     }
   }
   if (!found_object_file) {

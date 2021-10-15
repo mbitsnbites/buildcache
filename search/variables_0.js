@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['return_5fcode_460',['return_code',['../structbcache_1_1sys_1_1run__result__t.html#aed74865d23a4d87f16b671bb643d7f0e',1,'bcache::sys::run_result_t']]]
+  ['m_5factive_5fcapabilities_463',['m_active_capabilities',['../classbcache_1_1program__wrapper__t.html#a96956664c5be778a26423cbaaa3ad631',1,'bcache::program_wrapper_t']]]
 ];

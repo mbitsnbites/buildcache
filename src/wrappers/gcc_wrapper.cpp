@@ -93,6 +93,7 @@ string_list_t make_preprocessor_cmd(const string_list_t& args,
 
   // Drop arguments that we do not want/need.
   bool drop_next_arg = false;
+  bool has_arch = false;
   for (auto it = args.begin(); it != args.end(); ++it) {
     auto arg = *it;
     auto drop_this_arg = drop_next_arg;
@@ -102,6 +103,14 @@ string_list_t make_preprocessor_cmd(const string_list_t& args,
     } else if (arg == "-o") {
       drop_this_arg = true;
       drop_next_arg = true;
+    } else if (arg == "-arch") {
+      // Drop all but first -arch argument
+      if (has_arch) {
+        drop_this_arg = true;
+        drop_next_arg = true;
+      } else {
+        has_arch = true;
+      }
     }
     if (!drop_this_arg) {
       preprocess_args += arg;

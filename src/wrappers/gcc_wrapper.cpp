@@ -358,7 +358,7 @@ std::string gcc_wrapper_t::preprocess_source() {
       m_resolved_args, preprocessed_file.path(), m_active_capabilities.direct_mode());
   auto result = sys::run(preprocessor_args);
   if (result.return_code != 0) {
-    throw std::runtime_error("Preprocessing command was unsuccessful.");
+    throw std::runtime_error("Preprocessing command was unsuccessful: " + result.std_err);
   }
 
   if (m_active_capabilities.direct_mode()) {

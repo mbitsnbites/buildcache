@@ -192,6 +192,8 @@ if(MSVC)
 endif()
 if(WIN32 OR MINGW)
   target_link_libraries(hiredis PRIVATE ws2_32)
+elseif(OPENSSL_FOUND)
+  target_link_libraries(hiredis PRIVATE OpenSSL::SSL)
 endif()
 
 #---------------------------------------------------------------------------------------------------

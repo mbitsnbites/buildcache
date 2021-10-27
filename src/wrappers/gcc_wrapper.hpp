@@ -47,6 +47,8 @@ private:
   string_list_t parse_args(const string_list_t& args);
   string_list_t parse_response_file(const std::string& filename);
   virtual string_list_t get_include_files(const std::string& std_err) const;
+  std::string run_preprocessor(const string_list_t& preprocessor_args,
+                               const file::tmp_file_t& preprocessed_file);
 
   string_list_t m_implicit_input_files;
 };

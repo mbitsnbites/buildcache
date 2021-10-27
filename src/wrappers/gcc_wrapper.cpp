@@ -337,25 +337,8 @@ string_list_t gcc_wrapper_t::get_input_files() {
   return input_files;
 }
 
-std::string gcc_wrapper_t::preprocess_source() {
-  // Check if this is a compilation command that we support.
-  auto is_object_compilation = false;
-  auto has_object_output = false;
-  for (const auto& arg : m_resolved_args) {
-    if (arg == "-c") {
-      is_object_compilation = true;
-    } else if (arg == "-o") {
-      has_object_output = true;
-    }
-  }
-  if ((!is_object_compilation) || (!has_object_output)) {
-    throw std::runtime_error("Unsupported complation command.");
-  }
-
-  // Run the preprocessor step.
-  file::tmp_file_t preprocessed_file(sys::get_local_temp_folder(), ".i");
-  const auto preprocessor_args = make_preprocessor_cmd(
-      m_resolved_args, preprocessed_file.path(), m_active_capabilities.direct_mode());
+std::string gcc_wrapper_t::run_preprocessor(const string_list_t& preprocessor_args,
+                                            const file::tmp_file_t& preprocessed_file) {
   auto result = sys::run(preprocessor_args);
   if (result.return_code != 0) {
     throw std::runtime_error("Preprocessing command was unsuccessful.");
@@ -363,11 +346,76 @@ std::string gcc_wrapper_t::preprocess_source() {
 
   if (m_active_capabilities.direct_mode()) {
     // Collect all the input files. They are reported in std_err.
-    m_implicit_input_files = get_include_files(result.std_err);
+    for (const auto& file : get_include_files(result.std_err)) {
+      auto already_listed_file = false;
+      for (const auto& existing_file : m_implicit_input_files) {
+        if (existing_file == file) {
+          already_listed_file = true;
+          break;
+        }
+      }
+
+      if (!already_listed_file) {
+        m_implicit_input_files += file;
+      }
+    }
   }
 
   // Read and return the preprocessed file.
   return file::read(preprocessed_file.path());
+}
+
+std::string gcc_wrapper_t::preprocess_source() {
+  // Check if this is a compilation command that we support.
+  auto is_object_compilation = false;
+  auto has_object_output = false;
+  string_list_t arch_args;
+
+  for (int i = 0; i < m_resolved_args.size(); i++) {
+    auto arg = m_resolved_args[i];
+    if (arg == "-c") {
+      is_object_compilation = true;
+    } else if (arg == "-o") {
+      has_object_output = true;
+    } else if (arg == "-arch" && i < m_resolved_args.size() - 1) {
+      arch_args += m_resolved_args[i + 1];
+    }
+  }
+  if ((!is_object_compilation) || (!has_object_output)) {
+    throw std::runtime_error("Unsupported complation command.");
+  }
+
+  std::string preprocessor_result;
+  file::tmp_file_t preprocessed_file(sys::get_local_temp_folder(), ".i");
+  const auto preprocessor_args = make_preprocessor_cmd(
+      m_resolved_args, preprocessed_file.path(), m_active_capabilities.direct_mode());
+
+  m_implicit_input_files = string_list_t();
+
+  // Run the preprocessor step.
+  if (arch_args.size() < 2) {
+    preprocessor_result = run_preprocessor(preprocessor_args, preprocessed_file);
+  } else {
+    // Run the preprocessor step once for each -arch arg.
+    for (const auto& arch_arg : arch_args) {
+      string_list_t run_args;
+
+      // Filter out other -arch args that don't match the current arch
+      bool skip_next = false;
+      for (int i = 0; i < preprocessor_args.size(); i++) {
+        if (skip_next) {
+          skip_next = false;
+        } else if (preprocessor_args[i] == "-arch" && preprocessor_args[i + 1] != arch_arg) {
+          skip_next = true;
+        } else {
+          run_args += preprocessor_args[i];
+        }
+      }
+      preprocessor_result += run_preprocessor(run_args, preprocessed_file);
+    }
+  }
+
+  return preprocessor_result;
 }
 
 string_list_t gcc_wrapper_t::get_implicit_input_files() {

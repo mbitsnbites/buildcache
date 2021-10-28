@@ -59,13 +59,12 @@ ln -s "${BUILDCACHEEXE}" "${SYMLINKSDIR}/clang${EXESUFFIX}"
 ln -s "${BUILDCACHEEXE}" "${SYMLINKSDIR}/clang++${EXESUFFIX}"
 ln -s "${BUILDCACHEEXE}" "${SYMLINKSDIR}/cl${EXESUFFIX}"
 export PATH="${SYMLINKSDIR}:${BUILDCACHEDIR}:${PATH}"
-
 export CMAKE_OSX_ARCHITECTURES="x86_64;arm64"
 
 # Configure BuildCache.
 export BUILDCACHE_DIR=/tmp/.buildcache-$$
 rm -rf "${BUILDCACHE_DIR}" ; mkdir -p "${BUILDCACHE_DIR}"
-export BUILDCACHE_DEBUG=2
+export BUILDCACHE_DEBUG=1
 export BUILDCACHE_DIRECT_MODE=true
 export LOG_DIR=/tmp/.buildcache-logs-$$
 rm -rf "${LOG_DIR}" ; mkdir -p "${LOG_DIR}"

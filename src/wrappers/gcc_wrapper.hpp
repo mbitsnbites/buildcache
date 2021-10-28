@@ -22,6 +22,8 @@
 
 #include <wrappers/program_wrapper.hpp>
 
+#include <set>
+
 namespace bcache {
 /// @brief A program wrapper for GCC and GCC-like C/C++ compilers.
 class gcc_wrapper_t : public program_wrapper_t {
@@ -46,11 +48,11 @@ private:
   void resolve_args() override;
   string_list_t parse_args(const string_list_t& args);
   string_list_t parse_response_file(const std::string& filename);
-  virtual string_list_t get_include_files(const std::string& std_err) const;
+  virtual std::set<std::string> get_include_files(const std::string& std_err) const;
   std::string run_preprocessor(const string_list_t& preprocessor_args,
                                const file::tmp_file_t& preprocessed_file);
 
-  string_list_t m_implicit_input_files;
+  std::set<std::string> m_implicit_input_files;
 };
 }  // namespace bcache
 #endif  // BUILDCACHE_GCC_WRAPPER_HPP_

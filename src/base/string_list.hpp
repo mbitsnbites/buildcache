@@ -21,6 +21,7 @@
 #define BUILDCACHE_STRING_LIST_HPP_
 
 #include <initializer_list>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -44,6 +45,11 @@ public:
   /// @brief Construct a list from a vector of strings.
   /// @param vec The strings to add to the string list object.
   string_list_t(const std::vector<std::string>& vec) : m_strings(vec) {
+  }
+
+  /// @brief Construct a list from a set of strings.
+  /// @param vec The strings to add to the string list object.
+  string_list_t(const std::set<std::string>& set) : m_strings(set.begin(), set.end()) {
   }
 
   /// @brief Construct a list from command line arguments.

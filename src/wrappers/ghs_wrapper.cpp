@@ -44,7 +44,7 @@ ghs_wrapper_t::ghs_wrapper_t(const file::exe_path_t& exe_path, const string_list
     : gcc_wrapper_t(exe_path, args) {
 }
 
-string_list_t ghs_wrapper_t::get_include_files(const std::string& std_err) const {
+std::set<std::string> ghs_wrapper_t::get_include_files(const std::string& std_err) const {
   // Turn the std_err string into a list of strings.
   // TODO(m): Is this correct on Windows for instance?
   string_list_t lines(std_err, "\n");
@@ -64,12 +64,7 @@ string_list_t ghs_wrapper_t::get_include_files(const std::string& std_err) const
     }
   }
 
-  // Convert the set of includes to a list of strings.
-  string_list_t result;
-  for (const auto& include : includes) {
-    result += include;
-  }
-  return result;
+  return includes;
 }
 
 bool ghs_wrapper_t::can_handle_command() {

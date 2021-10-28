@@ -120,7 +120,7 @@ string_list_t make_preprocessor_cmd(const string_list_t& args) {
   return preprocess_args;
 }
 
-string_list_t get_include_files(const std::string& std_err) {
+std::set<std::string> get_include_files(const std::string& std_err) {
   // Turn the std_err string into a list of strings.
   // TODO(m): Is this correct on Windows for instance?
   string_list_t lines(std_err, "\n");
@@ -142,12 +142,7 @@ string_list_t get_include_files(const std::string& std_err) {
     }
   }
 
-  // Convert the set of includes to a list of strings.
-  string_list_t result;
-  for (const auto& include : includes) {
-    result += include;
-  }
-  return result;
+  return includes;
 }
 }  // namespace
 

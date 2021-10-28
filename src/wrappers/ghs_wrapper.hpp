@@ -33,7 +33,7 @@ public:
   bool can_handle_command() override;
 
 private:
-  string_list_t get_include_files(const std::string& std_err) const override;
+  std::set<std::string> get_include_files(const std::string& std_err) const override;
 
   string_list_t get_capabilities() override;
   std::string get_program_id() override;

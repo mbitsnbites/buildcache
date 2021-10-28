@@ -173,7 +173,7 @@ string_list_t gcc_wrapper_t::parse_response_file(const std::string& filename) {
   return parsed_file_contents;
 }
 
-string_list_t gcc_wrapper_t::get_include_files(const std::string& std_err) const {
+std::set<std::string> gcc_wrapper_t::get_include_files(const std::string& std_err) const {
   // Turn the std_err string into a list of strings.
   // TODO(m): Is this correct on Windows for instance?
   string_list_t lines(std_err, "\n");
@@ -193,12 +193,7 @@ string_list_t gcc_wrapper_t::get_include_files(const std::string& std_err) const
     }
   }
 
-  // Convert the set of includes to a list of strings.
-  string_list_t result;
-  for (const auto& include : includes) {
-    result += include;
-  }
-  return result;
+  return includes;
 }
 
 bool gcc_wrapper_t::can_handle_command() {
@@ -346,19 +341,8 @@ std::string gcc_wrapper_t::run_preprocessor(const string_list_t& preprocessor_ar
 
   if (m_active_capabilities.direct_mode()) {
     // Collect all the input files. They are reported in std_err.
-    for (const auto& file : get_include_files(result.std_err)) {
-      auto already_listed_file = false;
-      for (const auto& existing_file : m_implicit_input_files) {
-        if (existing_file == file) {
-          already_listed_file = true;
-          break;
-        }
-      }
-
-      if (!already_listed_file) {
-        m_implicit_input_files += file;
-      }
-    }
+    auto include_files = get_include_files(result.std_err);
+    m_implicit_input_files.insert(include_files.begin(), include_files.end());
   }
 
   // Read and return the preprocessed file.
@@ -390,7 +374,7 @@ std::string gcc_wrapper_t::preprocess_source() {
   const auto preprocessor_args = make_preprocessor_cmd(
       m_resolved_args, preprocessed_file.path(), m_active_capabilities.direct_mode());
 
-  m_implicit_input_files = string_list_t();
+  m_implicit_input_files = std::set<std::string>();
 
   // Run the preprocessor step.
   if (arch_args.size() < 2) {

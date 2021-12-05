@@ -94,77 +94,82 @@ $(function() {
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;base/string_list.hpp&gt;</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;cstdint&gt;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;map&gt;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacebcache.html">bcache</a> {</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="classbcache_1_1hasher__t.html">   33</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbcache_1_1hasher__t.html">hasher_t</a> {</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="classbcache_1_1hasher__t_1_1hash__t.html">   36</a></span>&#160;  <span class="keyword">class </span><a class="code" href="classbcache_1_1hasher__t_1_1hash__t.html">hash_t</a> {</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    uint8_t* data() {</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;      <span class="keywordflow">return</span> &amp;m_data[0];</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    }</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">const</span> uint8_t* data()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;      <span class="keywordflow">return</span> &amp;m_data[0];</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    }</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    std::string <a class="code" href="classbcache_1_1hasher__t_1_1hash__t.html#a27f94416da14cb48a888caa124d67567">as_string</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="comment">// The hash size is 128 bits.</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> SIZE = 16U;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    uint8_t m_data[SIZE]{};</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  };</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <a class="code" href="classbcache_1_1hasher__t.html">hasher_t</a>();</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  ~<a class="code" href="classbcache_1_1hasher__t.html">hasher_t</a>();</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <a class="code" href="classbcache_1_1hasher__t.html">hasher_t</a>(<span class="keyword">const</span> <a class="code" href="classbcache_1_1hasher__t.html">hasher_t</a>&amp; other);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  <a class="code" href="classbcache_1_1hasher__t.html">hasher_t</a>&amp; <a class="code" href="classbcache_1_1hasher__t.html#a8c7a75f654308052c0f58407ebfc3a70">operator=</a>(<span class="keyword">const</span> <a class="code" href="classbcache_1_1hasher__t.html">hasher_t</a>&amp; other);</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbcache_1_1hasher__t.html#ae331ac97170f7aac77c970c783d94280">update</a>(<span class="keyword">const</span> <span class="keywordtype">void</span>* data, <span class="keyword">const</span> <span class="keywordtype">size_t</span> size);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;cstring&gt;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;map&gt;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacebcache.html">bcache</a> {</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="classbcache_1_1hasher__t.html">   34</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbcache_1_1hasher__t.html">hasher_t</a> {</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="classbcache_1_1hasher__t_1_1hash__t.html">   37</a></span>&#160;  <span class="keyword">class </span><a class="code" href="classbcache_1_1hasher__t_1_1hash__t.html">hash_t</a> {</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    uint8_t* data() {</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;      <span class="keywordflow">return</span> &amp;m_data[0];</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    }</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">const</span> uint8_t* data()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;      <span class="keywordflow">return</span> &amp;m_data[0];</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    }</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> <a class="code" href="classbcache_1_1hasher__t_1_1hash__t.html">hash_t</a>&amp; other)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      <span class="keywordflow">return</span> std::memcmp(m_data, other.m_data, SIZE) == 0;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    }</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    std::string <a class="code" href="classbcache_1_1hasher__t_1_1hash__t.html#a27f94416da14cb48a888caa124d67567">as_string</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="comment">// The hash size is 128 bits.</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> SIZE = 16U;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    uint8_t m_data[SIZE]{};</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  };</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <a class="code" href="classbcache_1_1hasher__t.html">hasher_t</a>();</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  ~<a class="code" href="classbcache_1_1hasher__t.html">hasher_t</a>();</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  <a class="code" href="classbcache_1_1hasher__t.html">hasher_t</a>(<span class="keyword">const</span> <a class="code" href="classbcache_1_1hasher__t.html">hasher_t</a>&amp; other);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  <a class="code" href="classbcache_1_1hasher__t.html">hasher_t</a>&amp; <a class="code" href="classbcache_1_1hasher__t.html#a8c7a75f654308052c0f58407ebfc3a70">operator=</a>(<span class="keyword">const</span> <a class="code" href="classbcache_1_1hasher__t.html">hasher_t</a>&amp; other);</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno"><a class="line" href="classbcache_1_1hasher__t.html#a1093b0aca721750117edf67a66d0c1e4">   75</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbcache_1_1hasher__t.html#a1093b0aca721750117edf67a66d0c1e4">update</a>(<span class="keyword">const</span> std::string&amp; text) {</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <a class="code" href="classbcache_1_1hasher__t.html#ae331ac97170f7aac77c970c783d94280">update</a>(text.data(), text.size());</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  }</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbcache_1_1hasher__t.html#ae331ac97170f7aac77c970c783d94280">update</a>(<span class="keyword">const</span> <a class="code" href="classbcache_1_1string__list__t.html">string_list_t</a>&amp; data);</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbcache_1_1hasher__t.html#ae331ac97170f7aac77c970c783d94280">update</a>(<span class="keyword">const</span> std::map&lt;std::string, std::string&gt;&amp; data);</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbcache_1_1hasher__t.html#a93bd284f771c473ce2804b4650113c2a">update_from_file</a>(<span class="keyword">const</span> std::string&amp; path);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbcache_1_1hasher__t.html#ae331ac97170f7aac77c970c783d94280">update</a>(<span class="keyword">const</span> <span class="keywordtype">void</span>* data, <span class="keyword">const</span> <span class="keywordtype">size_t</span> size);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
+<div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="classbcache_1_1hasher__t.html#a1093b0aca721750117edf67a66d0c1e4">   80</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbcache_1_1hasher__t.html#a1093b0aca721750117edf67a66d0c1e4">update</a>(<span class="keyword">const</span> std::string&amp; text) {</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <a class="code" href="classbcache_1_1hasher__t.html#ae331ac97170f7aac77c970c783d94280">update</a>(text.data(), text.size());</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  }</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbcache_1_1hasher__t.html#ae331ac97170f7aac77c970c783d94280">update</a>(<span class="keyword">const</span> <a class="code" href="classbcache_1_1string__list__t.html">string_list_t</a>&amp; data);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbcache_1_1hasher__t.html#ae331ac97170f7aac77c970c783d94280">update</a>(<span class="keyword">const</span> std::map&lt;std::string, std::string&gt;&amp; data);</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbcache_1_1hasher__t.html#af041774bad0808fc167e577877b895a4">update_from_file_deterministic</a>(<span class="keyword">const</span> std::string&amp; path);</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbcache_1_1hasher__t.html#ab09ef974f18206e0a9ab2af52885a989">inject_separator</a>();</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;  hash_t <span class="keyword">final</span>();</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbcache_1_1hasher__t.html#a93bd284f771c473ce2804b4650113c2a">update_from_file</a>(<span class="keyword">const</span> std::string&amp; path);</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbcache_1_1hasher__t.html#af041774bad0808fc167e577877b895a4">update_from_file_deterministic</a>(<span class="keyword">const</span> std::string&amp; path);</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbcache_1_1hasher__t.html#ab09ef974f18206e0a9ab2af52885a989">inject_separator</a>();</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbcache_1_1hasher__t.html#a29a64f087f46f5fb81ad1c02444fafdf">update_from_ar_data</a>(<span class="keyword">const</span> std::string&amp; data);</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;  hash_t <span class="keyword">final</span>();</div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;  <span class="comment">// This is in fact an XXH3_state_t pointer, but we don&#39;t want to include xxhash.h in this</span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;  <span class="comment">// header (to avoid leaking inlined code and to avoid namespace pollution).</span></div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  <span class="keywordtype">void</span>* m_state = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;};</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbcache_1_1hasher__t.html#a29a64f087f46f5fb81ad1c02444fafdf">update_from_ar_data</a>(<span class="keyword">const</span> std::string&amp; data);</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;}  <span class="comment">// namespace bcache</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="preprocessor">#endif  // BUILDCACHE_HASHER_HPP_</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;  <span class="comment">// This is in fact an XXH3_state_t pointer, but we don&#39;t want to include xxhash.h in this</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;  <span class="comment">// header (to avoid leaking inlined code and to avoid namespace pollution).</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;  <span class="keywordtype">void</span>* m_state = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;};</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;}  <span class="comment">// namespace bcache</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor">#endif  // BUILDCACHE_HASHER_HPP_</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclassbcache_1_1hasher__t_html_a8c7a75f654308052c0f58407ebfc3a70"><div class="ttname"><a href="classbcache_1_1hasher__t.html#a8c7a75f654308052c0f58407ebfc3a70">bcache::hasher_t::operator=</a></div><div class="ttdeci">hasher_t &amp; operator=(const hasher_t &amp;other)</div><div class="ttdoc">Copy the hash state to an existing hasher_t object.</div><div class="ttdef"><b>Definition:</b> hasher.cpp:82</div></div>
 <div class="ttc" id="aclassbcache_1_1hasher__t_html_af041774bad0808fc167e577877b895a4"><div class="ttname"><a href="classbcache_1_1hasher__t.html#af041774bad0808fc167e577877b895a4">bcache::hasher_t::update_from_file_deterministic</a></div><div class="ttdeci">void update_from_file_deterministic(const std::string &amp;path)</div><div class="ttdoc">Update the hash with more data.</div><div class="ttdef"><b>Definition:</b> hasher.cpp:120</div></div>
-<div class="ttc" id="aclassbcache_1_1hasher__t_1_1hash__t_html"><div class="ttname"><a href="classbcache_1_1hasher__t_1_1hash__t.html">bcache::hasher_t::hash_t</a></div><div class="ttdoc">A helper class for storing the data hash.</div><div class="ttdef"><b>Definition:</b> hasher.hpp:36</div></div>
-<div class="ttc" id="aclassbcache_1_1hasher__t_html_a1093b0aca721750117edf67a66d0c1e4"><div class="ttname"><a href="classbcache_1_1hasher__t.html#a1093b0aca721750117edf67a66d0c1e4">bcache::hasher_t::update</a></div><div class="ttdeci">void update(const std::string &amp;text)</div><div class="ttdoc">Update the hash with more data.</div><div class="ttdef"><b>Definition:</b> hasher.hpp:75</div></div>
+<div class="ttc" id="aclassbcache_1_1hasher__t_1_1hash__t_html"><div class="ttname"><a href="classbcache_1_1hasher__t_1_1hash__t.html">bcache::hasher_t::hash_t</a></div><div class="ttdoc">A helper class for storing the data hash.</div><div class="ttdef"><b>Definition:</b> hasher.hpp:37</div></div>
+<div class="ttc" id="aclassbcache_1_1hasher__t_html_a1093b0aca721750117edf67a66d0c1e4"><div class="ttname"><a href="classbcache_1_1hasher__t.html#a1093b0aca721750117edf67a66d0c1e4">bcache::hasher_t::update</a></div><div class="ttdeci">void update(const std::string &amp;text)</div><div class="ttdoc">Update the hash with more data.</div><div class="ttdef"><b>Definition:</b> hasher.hpp:80</div></div>
 <div class="ttc" id="anamespacebcache_html"><div class="ttname"><a href="namespacebcache.html">bcache</a></div><div class="ttdoc">The top level namespace.</div><div class="ttdef"><b>Definition:</b> compressor.cpp:34</div></div>
 <div class="ttc" id="aclassbcache_1_1string__list__t_html"><div class="ttname"><a href="classbcache_1_1string__list__t.html">bcache::string_list_t</a></div><div class="ttdoc">A convenient vector of strings container with support functions for program argument handling.</div><div class="ttdef"><b>Definition:</b> string_list.hpp:30</div></div>
-<div class="ttc" id="aclassbcache_1_1hasher__t_html"><div class="ttname"><a href="classbcache_1_1hasher__t.html">bcache::hasher_t</a></div><div class="ttdoc">A class for hashing data.</div><div class="ttdef"><b>Definition:</b> hasher.hpp:33</div></div>
+<div class="ttc" id="aclassbcache_1_1hasher__t_html"><div class="ttname"><a href="classbcache_1_1hasher__t.html">bcache::hasher_t</a></div><div class="ttdoc">A class for hashing data.</div><div class="ttdef"><b>Definition:</b> hasher.hpp:34</div></div>
 <div class="ttc" id="aclassbcache_1_1hasher__t_html_ae331ac97170f7aac77c970c783d94280"><div class="ttname"><a href="classbcache_1_1hasher__t.html#ae331ac97170f7aac77c970c783d94280">bcache::hasher_t::update</a></div><div class="ttdeci">void update(const void *data, const size_t size)</div><div class="ttdoc">Update the hash with more data.</div><div class="ttdef"><b>Definition:</b> hasher.cpp:88</div></div>
 <div class="ttc" id="aclassbcache_1_1hasher__t_1_1hash__t_html_a27f94416da14cb48a888caa124d67567"><div class="ttname"><a href="classbcache_1_1hasher__t_1_1hash__t.html#a27f94416da14cb48a888caa124d67567">bcache::hasher_t::hash_t::as_string</a></div><div class="ttdeci">std::string as_string() const</div><div class="ttdoc">Convert a hash to a hexadecimal string.</div><div class="ttdef"><b>Definition:</b> hasher.cpp:47</div></div>
 <div class="ttc" id="aclassbcache_1_1hasher__t_html_ab09ef974f18206e0a9ab2af52885a989"><div class="ttname"><a href="classbcache_1_1hasher__t.html#ab09ef974f18206e0a9ab2af52885a989">bcache::hasher_t::inject_separator</a></div><div class="ttdeci">void inject_separator()</div><div class="ttdoc">Update the hash with a separator sequence.</div><div class="ttdef"><b>Definition:</b> hasher.cpp:130</div></div>

@@ -122,6 +122,16 @@ string_list_t make_preprocessor_cmd(const string_list_t& args, bool use_direct_m
   return preprocess_args;
 }
 
+// trim from both ends (in place)
+static inline std::string& trim(std::string& s) {
+  s.erase(s.begin(),
+          std::find_if(s.begin(), s.end(), [](unsigned char ch) { return !std::isspace(ch); }));
+  s.erase(
+      std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) { return !std::isspace(ch); }).base(),
+      s.end());
+  return s;
+}
+
 string_list_t get_include_files(const std::string& std_err) {
   // Turn the std_err string into a list of strings.
   // TODO(m): Is this correct on Windows for instance?
@@ -129,18 +139,16 @@ string_list_t get_include_files(const std::string& std_err) {
 
   // Extract all unique include paths. Include path references in std_err start with the prefix
   // "Note: including file:", followed by one or more space characters, and finally the full path.
-  // In the regex wealso trim trailing whitespaces from the path, just for good measure.
   //
   // See: https://docs.microsoft.com/en-us/cpp/build/reference/showincludes-list-include-files
-  const std::regex incpath_re("\\s*Note: including file:\\s+(.*[^\\s])\\s*");
   std::set<std::string> includes;
+  constexpr char INCPATH_LINE[] = "Note: including file:";
+  constexpr size_t INCPATH_LINE_SIZE = sizeof(INCPATH_LINE);
   for (const auto& line : lines) {
-    std::smatch match;
-    if (std::regex_match(line, match, incpath_re)) {
-      if (match.size() == 2) {
-        const auto& include = match[1].str();
-        includes.insert(file::resolve_path(include));
-      }
+    size_t it = line.find(INCPATH_LINE);
+    if (it != std::string::npos) {
+      std::string include = trim(line.substr(it + INCPATH_LINE_SIZE));
+      includes.insert(file::resolve_path(include));
     }
   }
 
@@ -197,6 +205,10 @@ bool msvc_wrapper_t::can_handle_command() {
   // Is this the right compiler?
   const auto cmd = lower_case(file::get_file_part(m_exe_path.real_path(), false));
   return (cmd == "cl");
+}
+
+const string_list_t& msvc_wrapper_t::get_resolved_args() {
+  return m_resolved_args;
 }
 
 string_list_t msvc_wrapper_t::get_capabilities() {

@@ -207,10 +207,6 @@ bool msvc_wrapper_t::can_handle_command() {
   return (cmd == "cl");
 }
 
-const string_list_t& msvc_wrapper_t::get_resolved_args() {
-  return m_resolved_args;
-}
-
 string_list_t msvc_wrapper_t::get_capabilities() {
   // direct_mode - We support direct mode.
   // hard_links  - We can use hard links since MSVC will never overwrite already existing files.

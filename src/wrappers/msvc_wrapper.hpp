@@ -30,6 +30,10 @@ public:
 
   bool can_handle_command() override;
 
+  const string_list_t& get_resolved_args() override {
+      return m_resolved_args;
+  }
+
 private:
   void resolve_args() override;
   string_list_t get_capabilities() override;

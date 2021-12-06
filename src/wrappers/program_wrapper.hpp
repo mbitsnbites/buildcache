@@ -48,6 +48,10 @@ public:
   /// @returns true if this wrapper can handle the command.
   virtual bool can_handle_command() = 0;
 
+  virtual const string_list_t& get_resolved_args() {
+    return m_args;
+  };
+
 protected:
   /// @brief A helper class for managing wrapper capabilities.
   class capabilities_t {

@@ -120,8 +120,9 @@ bool program_wrapper_t::handle_command(int& return_code) {
           dm_hasher.inject_separator();
 
           // Hash the complete command line, as we need things like defines that are usually
-          // filtered by get_relevant_arguments().
-          dm_hasher.update(m_args);
+          // filtered by get_relevant_arguments(). Response files still need to be
+          // expanded so m_args cannot be used directly.
+          dm_hasher.update(get_resolved_args());
 
           // Hash all the input files.
           PERF_START(HASH_INPUT_FILES);

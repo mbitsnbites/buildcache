@@ -116,6 +116,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a63fe51a3c2b732db4b47a45f1ac5b5f0"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbcache_1_1program__wrapper__t.html#a63fe51a3c2b732db4b47a45f1ac5b5f0">can_handle_command</a> ()=0</td></tr>
 <tr class="memdesc:a63fe51a3c2b732db4b47a45f1ac5b5f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if this class implements a wrapper for the given command.  <a href="classbcache_1_1program__wrapper__t.html#a63fe51a3c2b732db4b47a45f1ac5b5f0">More...</a><br /></td></tr>
 <tr class="separator:a63fe51a3c2b732db4b47a45f1ac5b5f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab375e5e96862d94a529f66488b7bc621"><td class="memItemLeft" align="right" valign="top"><a id="ab375e5e96862d94a529f66488b7bc621"></a>
+virtual const <a class="el" href="classbcache_1_1string__list__t.html">string_list_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get_resolved_args</b> ()</td></tr>
+<tr class="separator:ab375e5e96862d94a529f66488b7bc621"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -244,7 +247,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p>Reimplemented in <a class="el" href="classbcache_1_1lua__wrapper__t.html#a9e0d8615395320a237c590afbe4bdca1">bcache::lua_wrapper_t</a>, <a class="el" href="classbcache_1_1qcc__wrapper__t.html#a52fa54d4b3083e57e125cc932e5fc379">bcache::qcc_wrapper_t</a>, <a class="el" href="classbcache_1_1ccc__analyzer__wrapper__t.html#a32f4112cf83e11be5a93634481171d0a">bcache::ccc_analyzer_wrapper_t</a>, <a class="el" href="classbcache_1_1msvc__wrapper__t.html#ad3a2305f54d6389b50f84612783e1ef9">bcache::msvc_wrapper_t</a>, <a class="el" href="classbcache_1_1gcc__wrapper__t.html#acac27d6705031eca4d85cdcce919cfb8">bcache::gcc_wrapper_t</a>, and <a class="el" href="classbcache_1_1ti__common__wrapper__t.html#a6c842d1652a498a422d43c4f2ecf83b0">bcache::ti_common_wrapper_t</a>.</p>
+<p>Reimplemented in <a class="el" href="classbcache_1_1lua__wrapper__t.html#a9e0d8615395320a237c590afbe4bdca1">bcache::lua_wrapper_t</a>, <a class="el" href="classbcache_1_1msvc__wrapper__t.html#ad3a2305f54d6389b50f84612783e1ef9">bcache::msvc_wrapper_t</a>, <a class="el" href="classbcache_1_1gcc__wrapper__t.html#acac27d6705031eca4d85cdcce919cfb8">bcache::gcc_wrapper_t</a>, <a class="el" href="classbcache_1_1qcc__wrapper__t.html#a52fa54d4b3083e57e125cc932e5fc379">bcache::qcc_wrapper_t</a>, <a class="el" href="classbcache_1_1ti__common__wrapper__t.html#a6c842d1652a498a422d43c4f2ecf83b0">bcache::ti_common_wrapper_t</a>, and <a class="el" href="classbcache_1_1ccc__analyzer__wrapper__t.html#a32f4112cf83e11be5a93634481171d0a">bcache::ccc_analyzer_wrapper_t</a>.</p>
 
 </div>
 </div>
@@ -293,7 +296,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>Capabilites are "opt-in". If this method is not implemented or returns an empty list, all capabilites will be treated as "not supported". </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classbcache_1_1lua__wrapper__t.html#ac660c24e20f5e6d29bb7fef445bc24fc">bcache::lua_wrapper_t</a>, <a class="el" href="classbcache_1_1ghs__wrapper__t.html#a456359b0e73e471145f0bcaab64af8ed">bcache::ghs_wrapper_t</a>, <a class="el" href="classbcache_1_1qcc__wrapper__t.html#a01e280e6fc88abf0917e445fa18bddc7">bcache::qcc_wrapper_t</a>, <a class="el" href="classbcache_1_1msvc__wrapper__t.html#aba49979af179456c65bbc0d2d6ab19c9">bcache::msvc_wrapper_t</a>, and <a class="el" href="classbcache_1_1gcc__wrapper__t.html#ada4ad470136101baaa5237ce67ba99fa">bcache::gcc_wrapper_t</a>.</p>
+<p>Reimplemented in <a class="el" href="classbcache_1_1lua__wrapper__t.html#ac660c24e20f5e6d29bb7fef445bc24fc">bcache::lua_wrapper_t</a>, <a class="el" href="classbcache_1_1msvc__wrapper__t.html#aba49979af179456c65bbc0d2d6ab19c9">bcache::msvc_wrapper_t</a>, <a class="el" href="classbcache_1_1gcc__wrapper__t.html#ada4ad470136101baaa5237ce67ba99fa">bcache::gcc_wrapper_t</a>, <a class="el" href="classbcache_1_1ghs__wrapper__t.html#a456359b0e73e471145f0bcaab64af8ed">bcache::ghs_wrapper_t</a>, and <a class="el" href="classbcache_1_1qcc__wrapper__t.html#a01e280e6fc88abf0917e445fa18bddc7">bcache::qcc_wrapper_t</a>.</p>
 
 </div>
 </div>
@@ -405,7 +408,7 @@ Only used in direct mode. </dd></dl>
   </dd>
 </dl>
 
-<p>Reimplemented in <a class="el" href="classbcache_1_1lua__wrapper__t.html#aa39516cf2b428d6faf34a8d5fa3de804">bcache::lua_wrapper_t</a>, <a class="el" href="classbcache_1_1ghs__wrapper__t.html#a9214873cadd7b58613ad31baa4440fb0">bcache::ghs_wrapper_t</a>, <a class="el" href="classbcache_1_1qcc__wrapper__t.html#ad31e7c5eb9e0556d7e4cb05f8d5db89c">bcache::qcc_wrapper_t</a>, <a class="el" href="classbcache_1_1msvc__wrapper__t.html#a0eebfccdfca8219a935f9b03885a1d7e">bcache::msvc_wrapper_t</a>, <a class="el" href="classbcache_1_1gcc__wrapper__t.html#a598d51b46004ab2539eabbd32a21d620">bcache::gcc_wrapper_t</a>, <a class="el" href="classbcache_1_1clang__cl__wrapper__t.html#ad9e68ed24dcc9545beeeb2e3acd350ad">bcache::clang_cl_wrapper_t</a>, and <a class="el" href="classbcache_1_1ti__common__wrapper__t.html#a9fb7d01cdab4dde2e03a71f9d17fdcb6">bcache::ti_common_wrapper_t</a>.</p>
+<p>Reimplemented in <a class="el" href="classbcache_1_1lua__wrapper__t.html#aa39516cf2b428d6faf34a8d5fa3de804">bcache::lua_wrapper_t</a>, <a class="el" href="classbcache_1_1msvc__wrapper__t.html#a0eebfccdfca8219a935f9b03885a1d7e">bcache::msvc_wrapper_t</a>, <a class="el" href="classbcache_1_1gcc__wrapper__t.html#a598d51b46004ab2539eabbd32a21d620">bcache::gcc_wrapper_t</a>, <a class="el" href="classbcache_1_1ghs__wrapper__t.html#a9214873cadd7b58613ad31baa4440fb0">bcache::ghs_wrapper_t</a>, <a class="el" href="classbcache_1_1qcc__wrapper__t.html#ad31e7c5eb9e0556d7e4cb05f8d5db89c">bcache::qcc_wrapper_t</a>, <a class="el" href="classbcache_1_1ti__common__wrapper__t.html#a9fb7d01cdab4dde2e03a71f9d17fdcb6">bcache::ti_common_wrapper_t</a>, and <a class="el" href="classbcache_1_1clang__cl__wrapper__t.html#ad9e68ed24dcc9545beeeb2e3acd350ad">bcache::clang_cl_wrapper_t</a>.</p>
 
 </div>
 </div>
@@ -442,7 +445,7 @@ Only used in direct mode. </dd></dl>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>The purpose of this function is to create a list of arguments that is suitable for hashing (i.e. uniquely identifying) the program options. As such, things like absolute file paths and compilation defines should be excluded (since they are resolved in the preprocess step). </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classbcache_1_1lua__wrapper__t.html#a058c41a7d8cc3033aad6a113ce834291">bcache::lua_wrapper_t</a>, <a class="el" href="classbcache_1_1ghs__wrapper__t.html#a4227ce8f6ecdfa38802206f87c10c4f3">bcache::ghs_wrapper_t</a>, <a class="el" href="classbcache_1_1msvc__wrapper__t.html#a3a075f79cf47efc57842d4c6b94a645d">bcache::msvc_wrapper_t</a>, <a class="el" href="classbcache_1_1gcc__wrapper__t.html#ae33c911d512fc43237a5899a04363d8d">bcache::gcc_wrapper_t</a>, and <a class="el" href="classbcache_1_1ti__common__wrapper__t.html#ad44c29cf9ad58b02b80813133d024ddf">bcache::ti_common_wrapper_t</a>.</p>
+<p>Reimplemented in <a class="el" href="classbcache_1_1lua__wrapper__t.html#a058c41a7d8cc3033aad6a113ce834291">bcache::lua_wrapper_t</a>, <a class="el" href="classbcache_1_1msvc__wrapper__t.html#a3a075f79cf47efc57842d4c6b94a645d">bcache::msvc_wrapper_t</a>, <a class="el" href="classbcache_1_1gcc__wrapper__t.html#ae33c911d512fc43237a5899a04363d8d">bcache::gcc_wrapper_t</a>, <a class="el" href="classbcache_1_1ghs__wrapper__t.html#a4227ce8f6ecdfa38802206f87c10c4f3">bcache::ghs_wrapper_t</a>, and <a class="el" href="classbcache_1_1ti__common__wrapper__t.html#ad44c29cf9ad58b02b80813133d024ddf">bcache::ti_common_wrapper_t</a>.</p>
 
 </div>
 </div>
@@ -479,7 +482,7 @@ Only used in direct mode. </dd></dl>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>The purpose of this function is to create a list of environment variables that may affect program output. </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classbcache_1_1lua__wrapper__t.html#a94961aff035d67fc14e7f7a87a1b449a">bcache::lua_wrapper_t</a>, <a class="el" href="classbcache_1_1ghs__wrapper__t.html#af9465575580fd4b919903fbf080db5cf">bcache::ghs_wrapper_t</a>, <a class="el" href="classbcache_1_1qcc__wrapper__t.html#af7e5571e5c95dbb2f1a7e831cb5c974e">bcache::qcc_wrapper_t</a>, <a class="el" href="classbcache_1_1msvc__wrapper__t.html#a70418b258d1a258357e1f820f8fd789f">bcache::msvc_wrapper_t</a>, <a class="el" href="classbcache_1_1gcc__wrapper__t.html#a156bee0a91ff03608f2d3ee91940aae2">bcache::gcc_wrapper_t</a>, and <a class="el" href="classbcache_1_1ccc__analyzer__wrapper__t.html#a58bea0280d173bf2beec87ccd22534bf">bcache::ccc_analyzer_wrapper_t</a>.</p>
+<p>Reimplemented in <a class="el" href="classbcache_1_1lua__wrapper__t.html#a94961aff035d67fc14e7f7a87a1b449a">bcache::lua_wrapper_t</a>, <a class="el" href="classbcache_1_1msvc__wrapper__t.html#a70418b258d1a258357e1f820f8fd789f">bcache::msvc_wrapper_t</a>, <a class="el" href="classbcache_1_1gcc__wrapper__t.html#a156bee0a91ff03608f2d3ee91940aae2">bcache::gcc_wrapper_t</a>, <a class="el" href="classbcache_1_1ghs__wrapper__t.html#af9465575580fd4b919903fbf080db5cf">bcache::ghs_wrapper_t</a>, <a class="el" href="classbcache_1_1qcc__wrapper__t.html#af7e5571e5c95dbb2f1a7e831cb5c974e">bcache::qcc_wrapper_t</a>, and <a class="el" href="classbcache_1_1ccc__analyzer__wrapper__t.html#a58bea0280d173bf2beec87ccd22534bf">bcache::ccc_analyzer_wrapper_t</a>.</p>
 
 </div>
 </div>

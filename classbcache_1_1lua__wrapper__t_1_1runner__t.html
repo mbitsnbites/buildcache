@@ -80,9 +80,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a877df7c9f6ccd87805c67b967ab1df50"><td class="memItemLeft" align="right" valign="top"><a id="a877df7c9f6ccd87805c67b967ab1df50"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>runner_t</b> (const std::string &amp;script_path, const <a class="el" href="classbcache_1_1string__list__t.html">string_list_t</a> &amp;args)</td></tr>
 <tr class="separator:a877df7c9f6ccd87805c67b967ab1df50"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4219e5a376419e0d5e89f5faa77414b2"><td class="memItemLeft" align="right" valign="top"><a id="a4219e5a376419e0d5e89f5faa77414b2"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>call</b> (const std::string &amp;func)</td></tr>
+<tr class="memitem:a4219e5a376419e0d5e89f5faa77414b2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbcache_1_1lua__wrapper__t_1_1runner__t.html#a4219e5a376419e0d5e89f5faa77414b2">call</a> (const std::string &amp;func)</td></tr>
+<tr class="memdesc:a4219e5a376419e0d5e89f5faa77414b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call a Lua function.  <a href="classbcache_1_1lua__wrapper__t_1_1runner__t.html#a4219e5a376419e0d5e89f5faa77414b2">More...</a><br /></td></tr>
 <tr class="separator:a4219e5a376419e0d5e89f5faa77414b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0759586086d567af20ab79e8135cf0c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbcache_1_1string__list__t.html">string_list_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbcache_1_1lua__wrapper__t_1_1runner__t.html#ac0759586086d567af20ab79e8135cf0c">get_resolved_args</a> ()</td></tr>
+<tr class="separator:ac0759586086d567af20ab79e8135cf0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa93fa5a216b9e66ac058e89d9b24cc95"><td class="memItemLeft" align="right" valign="top"><a id="aa93fa5a216b9e66ac058e89d9b24cc95"></a>
 const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>script</b> () const</td></tr>
 <tr class="separator:aa93fa5a216b9e66ac058e89d9b24cc95"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -120,6 +122,52 @@ const <a class="el" href="classbcache_1_1string__list__t.html">string_list_t</a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_script</b></td></tr>
 <tr class="separator:abca24a0d352eaecbf6cdfc44c5ba5fa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a4219e5a376419e0d5e89f5faa77414b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4219e5a376419e0d5e89f5faa77414b2">&#9670;&nbsp;</a></span>call()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool bcache::lua_wrapper_t::runner_t::call </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>func</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Call a Lua function. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">func</td><td>The name of the function. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if the call was successful (i.e. the Lua function is defined). </dd></dl>
+
+</div>
+</div>
+<a id="ac0759586086d567af20ab79e8135cf0c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0759586086d567af20ab79e8135cf0c">&#9670;&nbsp;</a></span>get_resolved_args()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbcache_1_1string__list__t.html">string_list_t</a> bcache::lua_wrapper_t::runner_t::get_resolved_args </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>the contents of the ARGS Lua variable. </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>wrappers/<a class="el" href="lua__wrapper_8hpp_source.html">lua_wrapper.hpp</a></li>
 <li>wrappers/lua_wrapper.cpp</li>

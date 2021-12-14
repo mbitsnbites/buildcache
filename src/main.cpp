@@ -428,8 +428,8 @@ void print_help(const char* program_name) {
 }  // namespace
 
 int main(int argc, const char** argv) {
-  int startArgAt = 1;
-  for ( ;startArgAt < argc; ++startArgAt) {
+  int startArgAt = 0;
+  while (++startArgAt < argc) {
     std::string arg_str(argv[startArgAt]);
     if (compare_arg(arg_str, "-p", "--path-to-config") && startArgAt + 1 < argc) {
       bcache::config::set_explicit_config_file_path(std::string(argv[++startArgAt]));

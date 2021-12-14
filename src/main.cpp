@@ -407,6 +407,7 @@ void print_help(const char* program_name) {
   std::cout << "Usage:\n";
   std::cout << "    " << program_name << " [options]\n";
   std::cout << "    " << program_name << " compiler [compiler-options]\n";
+  std::cout << "    " << program_name << " [configuration-options] compiler [compiler-options]\n";
   std::cout << "\n";
   std::cout << "Options:\n";
   std::cout << "    -C, --clear           clear the local cache (except configuration)\n";
@@ -414,6 +415,10 @@ void print_help(const char* program_name) {
   std::cout << "    -c, --show-config     show current configuration\n";
   std::cout << "    -z, --zero-stats      zero statistics counters\n";
   std::cout << "    -e, --edit-config     edit the configuration file\n";
+  std::cout << "\n";
+  std::cout << "Configuration options:\n";
+  std::cout << "    -p, --path-to-config  full path to the configuration file (overrides default)\n";
+  std::cout << "    -h, --path-to-home    path to BuildCache home dir (overrides default)\n";
   std::cout << "\n";
   std::cout << "    -h, --help            print this help text\n";
   std::cout << "    -V, --version         print version and copyright information\n";
@@ -423,6 +428,19 @@ void print_help(const char* program_name) {
 }  // namespace
 
 int main(int argc, const char** argv) {
+
+  int startArgAt = 1;
+  for (;startArgAt < argc; ++startArgAt)
+  {
+    std::string arg_str(argv[startArgAt]);
+    if (compare_arg(arg_str, "-p", "--path-to-config") && startArgAt + 1 < argc) {
+      bcache::config::set_explicit_config_file_path(std::string(argv[++startArgAt]));
+    } else if (compare_arg(arg_str, "-h", "--path-to-home") && startArgAt + 1 < argc) {
+      bcache::config::set_explicit_home_dir(std::string(argv[++startArgAt]));
+    } else
+      break;
+  }
+
   try {
     // Initialize the configuration.
     bcache::config::init();
@@ -440,7 +458,7 @@ int main(int argc, const char** argv) {
   const auto& impersonate = bcache::config::impersonate();
   if (!impersonate.empty()) {
     bcache::debug::log(bcache::debug::DEBUG) << "Impersonating: " << impersonate;
-    argv[0] = impersonate.c_str();
+    argv[startArgAt] = impersonate.c_str();
     wrap_compiler_and_exit(argc, &argv[0]);
   }
 
@@ -451,13 +469,14 @@ int main(int argc, const char** argv) {
     wrap_compiler_and_exit(argc, &argv[0]);
   }
 
-  if (argc < 2) {
+  // Check if we have commands left
+  if (startArgAt >= argc) {
     print_help(argv[0]);
     std::exit(1);
   }
 
   // Check if we are running any BuildCache commands.
-  const std::string arg_str(argv[1]);
+  const std::string arg_str(argv[startArgAt]);
   if (compare_arg(arg_str, "-C", "--clear")) {
     clear_cache_and_exit();
   } else if (compare_arg(arg_str, "-s", "--show-stats")) {
@@ -480,5 +499,5 @@ int main(int argc, const char** argv) {
   }
 
   // We got this far, so we're running as a compiler wrapper.
-  wrap_compiler_and_exit(argc - 1, &argv[1]);
+  wrap_compiler_and_exit(argc - startArgAt, &argv[startArgAt]);
 }

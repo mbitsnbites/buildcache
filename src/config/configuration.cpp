@@ -47,6 +47,8 @@ const auto PATH_DELIMITER = std::string(1, PATH_DELIMITER_CHR);
 
 // The configuration file for this configuration.
 std::string s_config_file;
+std::string explicit_config_file_path;
+std::string explicit_home_dir;
 
 // Configuration options.
 config::cache_accuracy_t s_accuracy = config::cache_accuracy_t::DEFAULT;
@@ -85,6 +87,12 @@ std::string to_lower(const std::string& str) {
 }
 
 std::string get_dir() {
+  // Is the explicit home dir set?
+  {
+    if (!explicit_home_dir.empty())
+      return explicit_home_dir;
+  }
+
   // Is the environment variable BUILDCACHE_DIR defined?
   {
     const env_var_t dir_env("BUILDCACHE_DIR");
@@ -107,7 +115,11 @@ std::string get_dir() {
 }
 
 std::string get_config_file(const std::string& dir) {
-  return file::append_path(dir, CONFIGURATION_FILE_NAME);
+  if (!explicit_config_file_path.empty()) {
+    return explicit_config_file_path;
+  } else {
+    return file::append_path(dir, CONFIGURATION_FILE_NAME);
+  }
 }
 
 config::cache_accuracy_t to_cache_accuracy(const std::string& str) {
@@ -376,6 +388,14 @@ std::string to_string(const compress_format_t format) {
     default:
       return "?";
   }
+}
+
+void set_explicit_home_dir(const std::string& path) {
+  explicit_home_dir = path;
+}
+
+void set_explicit_config_file_path(const std::string& path) {
+  explicit_config_file_path = path;
 }
 
 void init() {

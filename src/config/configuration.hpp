@@ -60,6 +60,12 @@ void init();
 /// @returns the BuildCache configuration file.
 const std::string& config_file();
 
+/// @brief sets explicit full path to config file
+void set_explicit_config_file_path(const std::string& path);
+
+/// @brief sets explicit full path to BuildCache home directory
+void set_explicit_home_dir(const std::string& path);
+
 /// @returns the cache accuracy.
 cache_accuracy_t accuracy();
 

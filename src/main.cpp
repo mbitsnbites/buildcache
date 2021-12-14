@@ -417,8 +417,8 @@ void print_help(const char* program_name) {
   std::cout << "    -e, --edit-config     edit the configuration file\n";
   std::cout << "\n";
   std::cout << "Configuration options:\n";
-  std::cout << "    -p, --path-to-config  full path to the configuration file (overrides default)\n";
-  std::cout << "    -h, --path-to-home    path to BuildCache home dir (overrides default)\n";
+  std::cout << "    -p, --path-to-config  full path to the configuration file\n";
+  std::cout << "    -h, --path-to-home    path to BuildCache home dir\n";
   std::cout << "\n";
   std::cout << "    -h, --help            print this help text\n";
   std::cout << "    -V, --version         print version and copyright information\n";
@@ -428,17 +428,16 @@ void print_help(const char* program_name) {
 }  // namespace
 
 int main(int argc, const char** argv) {
-
   int startArgAt = 1;
-  for (;startArgAt < argc; ++startArgAt)
-  {
+  for ( ;startArgAt < argc; ++startArgAt) {
     std::string arg_str(argv[startArgAt]);
     if (compare_arg(arg_str, "-p", "--path-to-config") && startArgAt + 1 < argc) {
       bcache::config::set_explicit_config_file_path(std::string(argv[++startArgAt]));
     } else if (compare_arg(arg_str, "-h", "--path-to-home") && startArgAt + 1 < argc) {
       bcache::config::set_explicit_home_dir(std::string(argv[++startArgAt]));
-    } else
+    } else {
       break;
+    }
   }
 
   try {

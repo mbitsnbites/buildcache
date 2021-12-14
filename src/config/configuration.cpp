@@ -89,8 +89,9 @@ std::string to_lower(const std::string& str) {
 std::string get_dir() {
   // Is the explicit home dir set?
   {
-    if (!explicit_home_dir.empty())
+    if (!explicit_home_dir.empty()) {
       return explicit_home_dir;
+    }
   }
 
   // Is the environment variable BUILDCACHE_DIR defined?
@@ -117,9 +118,8 @@ std::string get_dir() {
 std::string get_config_file(const std::string& dir) {
   if (!explicit_config_file_path.empty()) {
     return explicit_config_file_path;
-  } else {
-    return file::append_path(dir, CONFIGURATION_FILE_NAME);
   }
+  return file::append_path(dir, CONFIGURATION_FILE_NAME);
 }
 
 config::cache_accuracy_t to_cache_accuracy(const std::string& str) {

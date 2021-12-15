@@ -28,6 +28,8 @@ set(BASE_SRC
   file_utils.hpp
   hasher.cpp
   hasher.hpp
+  io_worker.cpp
+  io_worker.hpp
   file_lock.cpp
   file_lock.hpp
   serializer_utils.cpp
@@ -57,8 +59,11 @@ if(HAS_HMAC)
     )
 endif()
 
+# We need C++ threads.
+find_package(Threads REQUIRED)
+
 add_library(base ${BASE_SRC})
-target_link_libraries(base xxhash lz4 zstd)
+target_link_libraries(base xxhash lz4 zstd ${CMAKE_THREAD_LIBS_INIT})
 if(WIN32 OR MINGW)
   target_link_libraries(base userenv)
 elseif(OPENSSL_FOUND)

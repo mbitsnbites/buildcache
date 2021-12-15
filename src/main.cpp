@@ -18,6 +18,7 @@
 //--------------------------------------------------------------------------------------------------
 
 #include <base/debug_utils.hpp>
+#include <base/io_worker.hpp>
 #include <base/string_list.hpp>
 #include <base/unicode_utils.hpp>
 #include <cache/local_cache.hpp>
@@ -387,6 +388,9 @@ std::unique_ptr<bcache::program_wrapper_t> find_suitable_wrapper(
     return_code = 1;
   }
 
+  // Let the worker finish it's work.
+  bcache::io_worker::stop();
+
   PERF_STOP(TOTAL);
 
   // Report performance timings.
@@ -423,6 +427,10 @@ void print_help(const char* program_name) {
 }  // namespace
 
 int main(int argc, const char** argv) {
+  // Before anything else, set up the I/O worker (which handles things like deferred file close).
+  bcache::io_worker::start();
+  std::atexit(bcache::io_worker::stop);
+
   try {
     // Initialize the configuration.
     bcache::config::init();

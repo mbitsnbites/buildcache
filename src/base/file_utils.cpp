@@ -20,6 +20,7 @@
 #include <base/debug_utils.hpp>
 #include <base/env_utils.hpp>
 #include <base/file_utils.hpp>
+#include <base/io_worker.hpp>
 #include <base/string_list.hpp>
 #include <base/unicode_utils.hpp>
 
@@ -707,9 +708,9 @@ void copy(const std::string& from_path, const std::string& to_path) {
           break;
         }
       }
-      std::fclose(to_file);
+      bcache::io_worker::enqueue_fclose(to_file);
     }
-    std::fclose(from_file);
+    bcache::io_worker::enqueue_fclose(from_file);
   }
 #endif
 
@@ -801,7 +802,7 @@ std::string read(const std::string& path) {
   }
 
   // Close the file.
-  std::fclose(f);
+  bcache::io_worker::enqueue_fclose(f);
 
   if (bytes_left != 0U) {
     throw std::runtime_error("Unable to read the file.");
@@ -836,7 +837,7 @@ void write(const std::string& data, const std::string& path) {
   }
 
   // Close the file.
-  std::fclose(f);
+  bcache::io_worker::enqueue_fclose(f);
 
   if (bytes_left != 0U) {
     throw std::runtime_error("Unable to write the file.");
@@ -910,7 +911,7 @@ void append(const std::string& data, const std::string& path) {
   }
 
   // Close the file.
-  std::fclose(f);
+  bcache::io_worker::enqueue_fclose(f);
 
   if (bytes_left != 0U) {
     throw std::runtime_error("Unable to write the file.");

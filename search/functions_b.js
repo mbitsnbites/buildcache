@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['open_5fin_5fdefault_5feditor_390',['open_in_default_editor',['../namespacebcache_1_1sys.html#a0db080ad9a48428057b2961a965b388b',1,'bcache::sys']]],
-  ['operator_20bool_391',['operator bool',['../classbcache_1_1env__var__t.html#a5c31a7b71176da54520a15d1cb9a0a01',1,'bcache::env_var_t::operator bool()'],['../classbcache_1_1cache__entry__t.html#a7bb75a16edf718c5b2d26d319aad056b',1,'bcache::cache_entry_t::operator bool()'],['../classbcache_1_1direct__mode__manifest__t.html#ad3635ed264dd2244d39dae5fab92f7e5',1,'bcache::direct_mode_manifest_t::operator bool()']]],
-  ['operator_3d_392',['operator=',['../classbcache_1_1hasher__t.html#a8c7a75f654308052c0f58407ebfc3a70',1,'bcache::hasher_t']]]
+  ['max_5fcache_5fsize_399',['max_cache_size',['../namespacebcache_1_1config.html#a8bdba5202e605504c0e100e78874a60f',1,'bcache::config']]],
+  ['max_5flocal_5fentry_5fsize_400',['max_local_entry_size',['../namespacebcache_1_1config.html#a9856585a6226fb1d6530f93d57873abe',1,'bcache::config']]],
+  ['max_5fremote_5fentry_5fsize_401',['max_remote_entry_size',['../namespacebcache_1_1config.html#a65d6d743212f9a468b5a54d7e830837d',1,'bcache::config']]],
+  ['modify_5ftime_402',['modify_time',['../classbcache_1_1file_1_1file__info__t.html#a6670bf316b9f784361f3a9731c6aaafe',1,'bcache::file::file_info_t']]],
+  ['move_403',['move',['../namespacebcache_1_1file.html#a5cc9b3da102d5e9008c7b0e7ec3b15e8',1,'bcache::file']]]
 ];

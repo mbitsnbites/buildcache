@@ -1,24 +1,12 @@
 var searchData=
 [
-  ['read_401',['read',['../namespacebcache_1_1file.html#a5d3a7bb8723c7e3dc1d9d38f442a1ca0',1,'bcache::file']]],
-  ['read_5fonly_402',['read_only',['../namespacebcache_1_1config.html#a43c8ac15c058168f725e330ded6ec638',1,'bcache::config']]],
-  ['read_5fonly_5fremote_403',['read_only_remote',['../namespacebcache_1_1config.html#aa68fa46206797d92cf551f7ef969c13e',1,'bcache::config']]],
-  ['real_5fpath_404',['real_path',['../classbcache_1_1file_1_1exe__path__t.html#aefabdf43a96a218e895913dad38b7028',1,'bcache::file::exe_path_t']]],
-  ['redis_5fpassword_405',['redis_password',['../namespacebcache_1_1config.html#a0ab4ae244b97afcd930d267546e2e7a3',1,'bcache::config']]],
-  ['redis_5fusername_406',['redis_username',['../namespacebcache_1_1config.html#a17b12e24b4115ea579429d2eb1825bb2',1,'bcache::config']]],
-  ['remote_407',['remote',['../namespacebcache_1_1config.html#a623c38bc42bc97be6d82b3b1dd1c1751',1,'bcache::config']]],
-  ['remote_5fcache_5ft_408',['remote_cache_t',['../classbcache_1_1remote__cache__t.html#ab666e5f8098304d8a9c419bbf3066a14',1,'bcache::remote_cache_t']]],
-  ['remote_5flocks_409',['remote_locks',['../namespacebcache_1_1config.html#a245523693d149ae1a9404aa34d7a404a',1,'bcache::config']]],
-  ['remove_5fdir_410',['remove_dir',['../namespacebcache_1_1file.html#a6f59583866ec4de2dd17e79f3ba94341',1,'bcache::file']]],
-  ['remove_5ffile_411',['remove_file',['../namespacebcache_1_1file.html#ac39267af95d0f69c6183e7f4f80ef528',1,'bcache::file']]],
-  ['remove_5fitem_412',['remove_item',['../classbcache_1_1data__store__t.html#af94b42e9960ef22359dc9664684b4e80',1,'bcache::data_store_t']]],
-  ['report_413',['report',['../namespacebcache_1_1perf.html#a5e42c106243eb612e9d7e97a0d37e62c',1,'bcache::perf']]],
-  ['required_414',['required',['../classbcache_1_1expected__file__t.html#a6a23c77101bf82508e0b4e26d0a9710c',1,'bcache::expected_file_t']]],
-  ['resolve_5fargs_415',['resolve_args',['../classbcache_1_1gcc__wrapper__t.html#ad4271295222a7e8860f345c1078fdf00',1,'bcache::gcc_wrapper_t::resolve_args()'],['../classbcache_1_1lua__wrapper__t.html#aa180066b47cc1cb2c76f7acea15ac33b',1,'bcache::lua_wrapper_t::resolve_args()'],['../classbcache_1_1msvc__wrapper__t.html#a37435b06d2dc2b7e67237171cdce3ca4',1,'bcache::msvc_wrapper_t::resolve_args()'],['../classbcache_1_1program__wrapper__t.html#af49df0801fc873f1a67fe7cdcf1b2bd0',1,'bcache::program_wrapper_t::resolve_args()'],['../classbcache_1_1ti__common__wrapper__t.html#afb57e273c1888c27a74ce1887dc1296d',1,'bcache::ti_common_wrapper_t::resolve_args()']]],
-  ['resolve_5fpath_416',['resolve_path',['../namespacebcache_1_1file.html#a013be258fc4ac72df776d96145e25181',1,'bcache::file']]],
-  ['return_5fcode_417',['return_code',['../classbcache_1_1cache__entry__t.html#a55bf7878cf68239b878059af53ce401e',1,'bcache::cache_entry_t']]],
-  ['rstrip_418',['rstrip',['../namespacebcache.html#acc57f3b0f9450f27980fb9bae248b119',1,'bcache']]],
-  ['run_419',['run',['../namespacebcache_1_1sys.html#a361fefd8d65a6bb99d4eb4a85930f60d',1,'bcache::sys']]],
-  ['run_5ffor_5fmiss_420',['run_for_miss',['../classbcache_1_1ccc__analyzer__wrapper__t.html#ae509df24fd75df235408d163afb46b42',1,'bcache::ccc_analyzer_wrapper_t::run_for_miss()'],['../classbcache_1_1lua__wrapper__t.html#a6b4d9cc336efbe1274b6a9870d4a5fc5',1,'bcache::lua_wrapper_t::run_for_miss()'],['../classbcache_1_1msvc__wrapper__t.html#a2c60fe8992000c356eadaff1b2e96070',1,'bcache::msvc_wrapper_t::run_for_miss()'],['../classbcache_1_1program__wrapper__t.html#a334ae1431df25633f3c56de9ae9f8f3c',1,'bcache::program_wrapper_t::run_for_miss()']]],
-  ['run_5fwith_5fprefix_421',['run_with_prefix',['../namespacebcache_1_1sys.html#a60e8d113be2d2b53a2fb279821a91b0b',1,'bcache::sys']]]
+  ['parse_5fhost_5fdescription_407',['parse_host_description',['../classbcache_1_1remote__cache__provider__t.html#a474f036f559bcbc02bb11f57c2177c41',1,'bcache::remote_cache_provider_t']]],
+  ['path_408',['path',['../classbcache_1_1file_1_1file__info__t.html#aa89ee6b07cdf8e5e8b7c14e473e7e9ba',1,'bcache::file::file_info_t::path()'],['../classbcache_1_1expected__file__t.html#a79e4989885522146a29454aaa722d795',1,'bcache::expected_file_t::path()']]],
+  ['perf_409',['perf',['../namespacebcache_1_1config.html#a5faf1ed0a00cf440683a894fb5049b47',1,'bcache::config']]],
+  ['perform_5fhousekeeping_410',['perform_housekeeping',['../classbcache_1_1local__cache__t.html#a8b8bf1d1c6fe37e8956f2a95ef923f23',1,'bcache::local_cache_t']]],
+  ['pop_5fback_411',['pop_back',['../classbcache_1_1string__list__t.html#a04014585f56fa10c37722bed7d0f280f',1,'bcache::string_list_t']]],
+  ['prefix_412',['prefix',['../namespacebcache_1_1config.html#a5c37a092cdb47f7858e066a6b9241322',1,'bcache::config']]],
+  ['preprocess_5fsource_413',['preprocess_source',['../classbcache_1_1gcc__wrapper__t.html#a156d11e23db60ae6b46e5f489be54622',1,'bcache::gcc_wrapper_t::preprocess_source()'],['../classbcache_1_1lua__wrapper__t.html#a56975a3c180125c01f0defb7ac9af79e',1,'bcache::lua_wrapper_t::preprocess_source()'],['../classbcache_1_1msvc__wrapper__t.html#ad58f84f3077d970f79e8fbab1e7830ac',1,'bcache::msvc_wrapper_t::preprocess_source()'],['../classbcache_1_1program__wrapper__t.html#a992586320232e81bee04bae7c1a8dc53',1,'bcache::program_wrapper_t::preprocess_source()'],['../classbcache_1_1ti__common__wrapper__t.html#abfe356ac823faf247c99c3238ceee826',1,'bcache::ti_common_wrapper_t::preprocess_source()']]],
+  ['print_5fraw_5fstderr_414',['print_raw_stderr',['../namespacebcache_1_1sys.html#ad60932313008a8b7efc6e797941edf6d',1,'bcache::sys']]],
+  ['print_5fraw_5fstdout_415',['print_raw_stdout',['../namespacebcache_1_1sys.html#ab7c3933c8c48401cec5fb7a06aeca3ad',1,'bcache::sys']]]
 ];

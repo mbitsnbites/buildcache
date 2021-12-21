@@ -87,6 +87,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbcache_1_1file_1_1file__lock__t.html">file_lock_t</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A scoped exclusive global lock class.  <a href="classbcache_1_1file_1_1file__lock__t.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbcache_1_1file_1_1filter__t.html">filter_t</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">File name filter function for directory traversal.  <a href="classbcache_1_1file_1_1filter__t.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbcache_1_1file_1_1scoped__work__dir__t.html">scoped_work_dir_t</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A helper class for temporarily changing the current working dir (CWD).  <a href="classbcache_1_1file_1_1scoped__work__dir__t.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -177,9 +180,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a20d82a176422975488ed85290b60ca46"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebcache_1_1file.html#a20d82a176422975488ed85290b60ca46">human_readable_size</a> (const int64_t byte_size)</td></tr>
 <tr class="memdesc:a20d82a176422975488ed85290b60ca46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a size to a human readable string.  <a href="namespacebcache_1_1file.html#a20d82a176422975488ed85290b60ca46">More...</a><br /></td></tr>
 <tr class="separator:a20d82a176422975488ed85290b60ca46"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a36e2a2a480d13bf5c12d4ca5984043e4"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classbcache_1_1file_1_1file__info__t.html">file_info_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebcache_1_1file.html#a36e2a2a480d13bf5c12d4ca5984043e4">walk_directory</a> (const std::string &amp;path)</td></tr>
-<tr class="memdesc:a36e2a2a480d13bf5c12d4ca5984043e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Walk a directory and its subdirectories.  <a href="namespacebcache_1_1file.html#a36e2a2a480d13bf5c12d4ca5984043e4">More...</a><br /></td></tr>
-<tr class="separator:a36e2a2a480d13bf5c12d4ca5984043e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf44ac0824d18f6b7259afbd3b8879ee"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classbcache_1_1file_1_1file__info__t.html">file_info_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebcache_1_1file.html#acf44ac0824d18f6b7259afbd3b8879ee">walk_directory</a> (const std::string &amp;path, const <a class="el" href="classbcache_1_1file_1_1filter__t.html">filter_t</a> &amp;filter=<a class="el" href="classbcache_1_1file_1_1filter__t.html">filter_t</a>())</td></tr>
+<tr class="memdesc:acf44ac0824d18f6b7259afbd3b8879ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Walk a directory and its subdirectories.  <a href="namespacebcache_1_1file.html#acf44ac0824d18f6b7259afbd3b8879ee">More...</a><br /></td></tr>
+<tr class="separator:acf44ac0824d18f6b7259afbd3b8879ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54973a421c8a023436fe393276f02e95"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebcache_1_1file.html#a54973a421c8a023436fe393276f02e95">get_unique_id</a> ()</td></tr>
 <tr class="memdesc:a54973a421c8a023436fe393276f02e95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a unique ID string.  <a href="namespacebcache_1_1file.html#a54973a421c8a023436fe393276f02e95">More...</a><br /></td></tr>
 <tr class="separator:a54973a421c8a023436fe393276f02e95"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1068,8 +1071,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a36e2a2a480d13bf5c12d4ca5984043e4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a36e2a2a480d13bf5c12d4ca5984043e4">&#9670;&nbsp;</a></span>walk_directory()</h2>
+<a id="acf44ac0824d18f6b7259afbd3b8879ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf44ac0824d18f6b7259afbd3b8879ee">&#9670;&nbsp;</a></span>walk_directory()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1078,8 +1081,18 @@ Functions</h2></td></tr>
           <td class="memname">std::vector&lt; <a class="el" href="classbcache_1_1file_1_1file__info__t.html">file_info_t</a> &gt; bcache::file::walk_directory </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>path</em></td><td>)</td>
+          <td class="paramname"><em>path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const <a class="el" href="classbcache_1_1file_1_1filter__t.html">filter_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>filter</em> = <code><a class="el" href="classbcache_1_1file_1_1filter__t.html">filter_t</a>()</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1088,6 +1101,7 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">path</td><td>The path to the directory. </td></tr>
+    <tr><td class="paramname">filter</td><td>File name filter. </td></tr>
   </table>
   </dd>
 </dl>

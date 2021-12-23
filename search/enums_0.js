@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['cache_5faccuracy_5ft_493',['cache_accuracy_t',['../namespacebcache_1_1config.html#a2b99e133bfa5578f6a0bbafe99b01008',1,'bcache::config']]],
-  ['comp_5fmode_5ft_494',['comp_mode_t',['../classbcache_1_1cache__entry__t.html#a20dc12bbfb67303b6db35cecfd490cd9',1,'bcache::cache_entry_t']]],
-  ['compress_5fformat_5ft_495',['compress_format_t',['../namespacebcache_1_1config.html#a7612e4ffda908f03234288061a12a575',1,'bcache::config']]]
+  ['blocking_5ft_499',['blocking_t',['../classbcache_1_1file__lock__t.html#a9ba280f664929e747cd0a3ffa0d150ab',1,'bcache::file_lock_t']]]
 ];

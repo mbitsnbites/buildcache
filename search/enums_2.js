@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['log_5flevel_5ft_497',['log_level_t',['../namespacebcache_1_1debug.html#a31c666e6f8e07944d3e21c083425d13f',1,'bcache::debug']]]
+  ['id_5ft_503',['id_t',['../namespacebcache_1_1perf.html#abaea4e72b5eb5f0a9aff534f12ef07c0',1,'bcache::perf']]]
 ];

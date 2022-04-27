@@ -57,7 +57,7 @@ New backends are relatively easy to add, both as built-in wrappers in C++ and as
 ## Status
 
 BuildCache has been used daily in production environments for years with near
-zero issues (any problem that has emereged has of course been fixed), which
+zero issues (any problem that has emerged has of course been fixed), which
 gives it a good track record.
 
 With that said, BuildCache is still considered to be under development and

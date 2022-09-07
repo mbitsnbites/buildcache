@@ -55,7 +55,7 @@ std::string to_string(const cache_accuracy_t accuracy);
 std::string to_string(const compress_format_t format);
 
 /// @brief Initialize the configuration based on environment variables etc.
-void init();
+void init(const char* bcache_dir = nullptr, bool force = false);
 
 /// @returns the BuildCache configuration file.
 const std::string& config_file();

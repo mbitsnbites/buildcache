@@ -378,17 +378,17 @@ std::string to_string(const compress_format_t format) {
   }
 }
 
-void init() {
+void init(const char* bcache_dir, bool force) {
   // Guard: Only initialize once.
   static bool s_initialized = false;
-  if (s_initialized) {
+  if (s_initialized && !force) {
     return;
   }
   s_initialized = true;
 
   try {
     // Get the BuildCache home directory.
-    s_dir = get_dir();
+    s_dir = bcache_dir != nullptr ? std::string(bcache_dir) : get_dir();
 
     // Load any paramaters from the user configuration file.
     // Note: We do this before reading the configuration from the environment, so that the

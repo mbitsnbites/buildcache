@@ -421,6 +421,9 @@ void print_help(const char* program_name) {
   std::cout << "    " << program_name << " compiler [compiler-options]\n";
   std::cout << "\n";
   std::cout << "Options:\n";
+  std::cout << "    -d, --directory PATH  operate on cache directory PATH instead of the default\n";
+  std::cout << "\n";
+  std::cout << "Commands:\n";
   std::cout << "    -C, --clear           clear the local cache (except configuration)\n";
   std::cout << "    -s, --show-stats      show statistics summary\n";
   std::cout << "    -c, --show-config     show current configuration\n";
@@ -469,8 +472,35 @@ int main(int argc, const char** argv) {
     std::exit(1);
   }
 
+  // Expected position for a BuildCache command
+  int argi = 1;
+
+  // If directory is the first argument, parse, re-initialize config and update the
+  // position of the optional BuildCache command. If directory is the second argument
+  // the first argument should be a BuildCache command, otherwise the directory was
+  // intended for a wrapped compiler and should be ignored.
+  if (compare_arg(argv[1], "-d", "--directory")) {
+    if (argc < 3 || argv[2][0] == '-') {
+      std::cerr << argv[0] << ": missing PATH for " << argv[1] << "\n";
+      print_help(argv[0]);
+      std::exit(1);
+    }
+    // Set the expected position for a BuildCache command
+    argi = 3;
+    // Re-initialize with the cache dir specified in the command line.
+    bcache::config::init(argv[2], true);
+  } else if (argc > 2 && compare_arg(argv[2], "-d", "--directory") && argv[1][0] == '-') {
+    if (argc < 4 || argv[3][0] == '-') {
+      std::cerr << argv[0] << ": missing PATH for " << argv[2] << "\n";
+      print_help(argv[0]);
+      std::exit(1);
+    }
+    // Re-initialize with the cache dir specified in the command line.
+    bcache::config::init(argv[3], true);
+  }
+
+  const std::string arg_str(argv[argi]);
   // Check if we are running any BuildCache commands.
-  const std::string arg_str(argv[1]);
   if (compare_arg(arg_str, "-C", "--clear")) {
     clear_cache_and_exit();
   } else if (compare_arg(arg_str, "-s", "--show-stats")) {
@@ -495,5 +525,5 @@ int main(int argc, const char** argv) {
   }
 
   // We got this far, so we're running as a compiler wrapper.
-  wrap_compiler_and_exit(argc - 1, &argv[1]);
+  wrap_compiler_and_exit(argc - argi, &argv[argi]);
 }

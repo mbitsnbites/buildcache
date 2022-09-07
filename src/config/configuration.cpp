@@ -388,7 +388,7 @@ void init(const char* bcache_dir, bool force) {
 
   try {
     // Get the BuildCache home directory.
-    s_dir = bcache_dir ? std::string(bcache_dir) : get_dir();
+    s_dir = bcache_dir != nullptr ? std::string(bcache_dir) : get_dir();
 
     // Load any paramaters from the user configuration file.
     // Note: We do this before reading the configuration from the environment, so that the

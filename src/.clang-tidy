@@ -11,7 +11,10 @@ modernize-use-nullptr,\
 performance-*,\
 readability-*,\
 -readability-convert-member-functions-to-static,\
--readability-magic-numbers"
+-readability-function-cognitive-complexity,\
+-readability-identifier-length,\
+-readability-magic-numbers,\
+-readability-use-anyofallof"
 
 CheckOptions:
   - key:   readability-function-size.StatementThreshold

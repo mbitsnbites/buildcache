@@ -362,7 +362,8 @@ int l_require_std(lua_State* state) {
 
 bool is_program_match(const std::string& script_str, const std::string& program_path) {
   // We require that a program wrapper script starts with "-- match(...)".
-  if (script_str.size() < 10 || !std::equal(&script_str[0], &script_str[0] + 9, "-- match(")) {
+  if (script_str.size() < 10 ||
+      !std::equal(script_str.data(), script_str.data() + 9, "-- match(")) {
     return false;
   }
 

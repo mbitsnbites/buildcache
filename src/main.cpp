@@ -275,25 +275,19 @@ std::unique_ptr<bcache::program_wrapper_t> find_suitable_wrapper(
   std::cout << "  local - Local file system based cache (level 1)\n";
   std::cout << "  Redis - Remote in-memory cache (level 2)\n";
   std::cout << "  HTTP  - Remote webdav cache (level 2)\n";
-#ifdef ENABLE_S3
   std::cout << "  S3    - Remote object storage based cache (level 2)\n";
-#endif
 
   // Print a list of third party components.
   std::cout << "\nThird party components:\n";
   std::cout << "  cJSON " << CJSON_VERSION_MAJOR << "." << CJSON_VERSION_MINOR << "."
             << CJSON_VERSION_PATCH << "\n";
-#ifdef ENABLE_S3
   std::cout << "  cpp-base64 2.rc.04\n";
-#endif
   std::cout << "  hiredis " << HIREDIS_MAJOR << "." << HIREDIS_MINOR << "." << HIREDIS_PATCH;
 #ifdef ENABLE_SSL
   std::cout << " (with SSL/TLS support)";
 #endif
   std::cout << "\n";
-#ifdef ENABLE_S3
   std::cout << "  HTTPRequest\n";
-#endif
   std::cout << "  lua " << LUA_VERSION_MAJOR << "." << LUA_VERSION_MINOR << "."
             << LUA_VERSION_RELEASE << "\n";
   std::cout << "  lz4 " << LZ4_VERSION_STRING << "\n";

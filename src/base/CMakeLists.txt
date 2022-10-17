@@ -28,6 +28,8 @@ set(BASE_SRC
   file_utils.hpp
   hasher.cpp
   hasher.hpp
+  hmac.cpp
+  hmac.hpp
   file_lock.cpp
   file_lock.hpp
   serializer_utils.cpp
@@ -39,23 +41,6 @@ set(BASE_SRC
   unicode_utils.cpp
   unicode_utils.hpp
   )
-
-# For Windows and macOS we use native API:s to implement HMAC. For all other
-# systems (e.g. Linux) we need OpenSSL.
-set(HAS_HMAC true)
-if(NOT (WIN32 OR MINGW OR APPLE))
-  find_package(OpenSSL)
-  if(NOT OPENSSL_FOUND)
-    set(HAS_HMAC false)
-  endif()
-endif()
-if(HAS_HMAC)
-  set(HAS_HMAC true PARENT_SCOPE)
-  list(APPEND BASE_SRC
-    hmac.cpp
-    hmac.hpp
-    )
-endif()
 
 add_library(base ${BASE_SRC})
 target_link_libraries(base xxhash lz4 zstd)
@@ -82,11 +67,9 @@ buildcache_add_test(NAME hasher_test
                     SOURCES hasher_test.cpp
                     LIBRARIES base)
 
-if(HAS_HMAC)
-  buildcache_add_test(NAME hmac_test
-                      SOURCES hmac_test.cpp
-                      LIBRARIES base)
-endif()
+buildcache_add_test(NAME hmac_test
+                    SOURCES hmac_test.cpp
+                    LIBRARIES base)
 
 buildcache_add_test(NAME string_list_test
                     SOURCES string_list_test.cpp

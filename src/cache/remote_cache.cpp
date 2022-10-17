@@ -22,11 +22,8 @@
 #include <base/debug_utils.hpp>
 #include <cache/http_cache_provider.hpp>
 #include <cache/redis_cache_provider.hpp>
-#include <config/configuration.hpp>
-
-#ifdef ENABLE_S3
 #include <cache/s3_cache_provider.hpp>
-#endif
+#include <config/configuration.hpp>
 
 namespace bcache {
 namespace {
@@ -74,10 +71,8 @@ bool remote_cache_t::connect() {
     m_provider = new http_cache_provider_t();
   } else if (protocol == "redis") {
     m_provider = new redis_cache_provider_t();
-#ifdef ENABLE_S3
   } else if (protocol == "s3") {
     m_provider = new s3_cache_provider_t();
-#endif
   }
   if (m_provider == nullptr) {
     debug::log(debug::log_level_t::ERROR) << "Unsupported remote protocol: " << protocol;

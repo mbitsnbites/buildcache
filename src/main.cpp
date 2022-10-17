@@ -286,8 +286,11 @@ std::unique_ptr<bcache::program_wrapper_t> find_suitable_wrapper(
 #ifdef ENABLE_S3
   std::cout << "  cpp-base64 2.rc.04\n";
 #endif
-  std::cout << "  hiredis " << HIREDIS_MAJOR << "." << HIREDIS_MINOR << "." << HIREDIS_PATCH
-            << "\n";
+  std::cout << "  hiredis " << HIREDIS_MAJOR << "." << HIREDIS_MINOR << "." << HIREDIS_PATCH;
+#ifdef ENABLE_SSL
+  std::cout << " (with SSL/TLS support)";
+#endif
+  std::cout << "\n";
 #ifdef ENABLE_S3
   std::cout << "  HTTPRequest\n";
 #endif

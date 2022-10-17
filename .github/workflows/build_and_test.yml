@@ -27,6 +27,7 @@ jobs:
             shell: bash,
             cc: "gcc",
             cxx: "g++",
+            extra_cmake_flags: "-DDISABLE_SSL=on",
             static_checks: true,
             artifact: "buildcache-linux.tar.gz",
             artifact_format: "gnutar",

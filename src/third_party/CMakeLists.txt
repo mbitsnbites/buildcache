@@ -176,13 +176,15 @@ set(hiredis_sources
   )
 # hiredis SSL support requires OpenSSL
 # for now, disable on windows
-if(NOT (WIN32 OR MINGW))
+if(NOT (WIN32 OR MINGW OR DISABLE_SSL))
   find_package(OpenSSL)
   if(OPENSSL_FOUND)
     list(APPEND hiredis_sources
       hiredis/ssl.c
       )
   endif()
+else()
+  message("NOTE: redis SSL/TLS is unsupported in this build")
 endif()
 add_library(hiredis ${hiredis_sources})
 target_include_directories(hiredis INTERFACE .)
@@ -192,8 +194,10 @@ if(MSVC)
 endif()
 if(WIN32 OR MINGW)
   target_link_libraries(hiredis PRIVATE ws2_32)
-elseif(OPENSSL_FOUND)
+endif()
+if(OPENSSL_FOUND)
   target_link_libraries(hiredis PRIVATE OpenSSL::SSL)
+  target_compile_definitions(hiredis INTERFACE -DENABLE_SSL)
 endif()
 
 #---------------------------------------------------------------------------------------------------

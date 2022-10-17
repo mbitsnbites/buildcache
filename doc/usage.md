@@ -56,7 +56,7 @@ BuildCache[52286] (DEBUG) Invoked as symlink: gcc
 
 ## Impersonating a wrapped tool
 
-Setting `BUILDACHE_IMPERSONATE` forces BuildCache to operate as a tool wrapper,
+Setting `BUILDCACHE_IMPERSONATE` forces BuildCache to operate as a tool wrapper,
 using the value of the property as the tool to wrap. This allows pointing build
 systems directly at the BuildCache executable instead of using symbolic links.
 Note that when this setting has a non-default value BuildCache command line
@@ -70,7 +70,7 @@ For example:
 $ BUILDCACHE_IMPERSONATE=g++ buildcache -c -O2 hello.cpp -o hello.o
 
 # Wraps execution of "g++ -s", probably not desired!
-$ export BUILDACHE_IMPERSONATE=g++
+$ export BUILDCACHE_IMPERSONATE=g++
 $ buildcache -s
 ```
 

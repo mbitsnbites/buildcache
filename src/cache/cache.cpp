@@ -215,7 +215,8 @@ bool cache_t::lookup_in_local_cache(const std::string& hash,
     }
 
     const auto& target_path = expected_file->second.path();
-    debug::log(debug::INFO) << "Cache hit (" << hash << "): " << file_id << " => " << target_path;
+    debug::log(debug::INFO) << "Local cache hit (" << hash << "): " << file_id << " => "
+                            << target_path;
 
     if (create_target_dirs) {
       file::create_dir_with_parents(file::get_dir_part(target_path));

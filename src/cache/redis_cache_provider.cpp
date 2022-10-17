@@ -156,7 +156,7 @@ cache_entry_t bcache::redis_cache_provider_t::lookup(const std::string& hash) {
     return cache_entry_t::deserialize(get_data(key));
   } catch (const std::exception& e) {
     // We most likely had a cache miss.
-    debug::log(debug::log_level_t::DEBUG) << e.what();
+    debug::log(debug::log_level_t::DEBUG) << "Lookup failed: " << e.what();
     return cache_entry_t();
   }
 }
@@ -192,11 +192,15 @@ void redis_cache_provider_t::get_file(const std::string& hash,
                                       const std::string& target_path,
                                       const bool is_compressed) {
   const auto key = remote_key_name(hash, source_id);
-  auto data = get_data(key);
-  if (is_compressed) {
-    data = comp::decompress(data);
+  try {
+    auto data = get_data(key);
+    if (is_compressed) {
+      data = comp::decompress(data);
+    }
+    file::write(data, target_path);
+  } catch (const std::exception& e) {
+    throw std::runtime_error(std::string("Can't get file: ") + e.what());
   }
-  file::write(data, target_path);
 }
 
 std::string redis_cache_provider_t::get_data(const std::string& key) {
@@ -208,6 +212,7 @@ std::string redis_cache_provider_t::get_data(const std::string& key) {
   auto* reply_ptr = redisCommand(m_ctx, "GET %s", key.c_str());
 
   std::string data;
+  std::string err;
   bool success = false;
   if (reply_ptr != nullptr) {
     // Interpret the result.
@@ -219,23 +224,24 @@ std::string redis_cache_provider_t::get_data(const std::string& key) {
           << "Downloaded " << data.size() << " bytes from the remote cache";
       success = true;
     } else if (reply->type == REDIS_REPLY_ERROR) {
-      data = std::string("Remote cache reply error: ") + std::string(reply->str, reply->len);
+      err = std::string("Remote cache reply error: ") + std::string(reply->str, reply->len);
     } else if (reply->type == REDIS_REPLY_NIL) {
-      // This is what happens if we have a cache miss.
-      data = std::string("Remote cache miss: ") + key;
+      // This is what happens if we have a cache miss or if a cache entry is missing some files
+      // (e.g. a partially LRU pruned cache entry).
+      err = std::string("Missing object in remote cache: ") + key;
     } else {
-      data = std::string("Unexpected remote cache reply type: ") + std::to_string(reply->type);
+      err = std::string("Unexpected remote cache reply type: ") + std::to_string(reply->type);
     }
 
     freeReplyObject(reply);
   } else {
     // The command failed.
-    data = std::string("Remote cache GET error: ") + std::string(m_ctx->errstr);
+    err = std::string("Remote cache GET error: ") + std::string(m_ctx->errstr);
     disconnect();
   }
 
   if (!success) {
-    throw std::runtime_error(data);
+    throw std::runtime_error(err);
   }
   return data;
 }

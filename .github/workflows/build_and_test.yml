@@ -22,11 +22,12 @@ jobs:
       matrix:
         config:
         - {
-            name: "Ubuntu 20.04 GCC",
-            os: ubuntu-20.04,
+            name: "Ubuntu 22.04 GCC",
+            os: ubuntu-22.04,
             shell: bash,
             cc: "gcc",
             cxx: "g++",
+            extra_cmake_flags: "-DDISABLE_SSL=on",
             static_checks: true,
             artifact: "buildcache-linux.tar.gz",
             artifact_format: "gnutar",
@@ -63,8 +64,8 @@ jobs:
             static_checks: true,
           }
         - {
-            name: "Ubuntu 18.04 GCC",
-            os: ubuntu-18.04,
+            name: "Ubuntu 20.04 GCC",
+            os: ubuntu-20.04,
             shell: bash,
             cc: "gcc",
             cxx: "g++",
@@ -183,7 +184,7 @@ jobs:
       matrix:
         config:
         - {
-            name: "Ubuntu 20.04 GCC",
+            name: "Ubuntu 22.04 GCC",
             artifact: "buildcache-linux.tar.gz",
             artifact_content_type: "application/gzip",
             os: ubuntu-latest

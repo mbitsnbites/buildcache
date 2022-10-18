@@ -65,4 +65,18 @@ TEST_CASE("sha1_hmac() produces expected results") {
     const auto result = to_hex(sha1_hmac(key, data));
     CHECK_EQ(result, "28cfb82af65df022e08fa1a67121068c1d480bc8");
   }
+
+  SUBCASE("Case 4 - Key length == 64 chars") {
+    const std::string key = "0123456789012345678901234567890123456789012345678901234567890123";
+    const std::string data = "This is a string";
+    const auto result = to_hex(sha1_hmac(key, data));
+    CHECK_EQ(result, "59ba27cc1f0079294ddfc9cce4b507020fb3f91f");
+  }
+
+  SUBCASE("Case 5 - Key length > 64 chars") {
+    const std::string key = "0123456789012345678901234567890123456789012345678901234567890123abcd";
+    const std::string data = "This is a string";
+    const auto result = to_hex(sha1_hmac(key, data));
+    CHECK_EQ(result, "b5442dce0788560bdc2548180868e5cb3c76ecea");
+  }
 }

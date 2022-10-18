@@ -366,7 +366,7 @@ run_result_t run(const string_list_t& args, const bool quiet, const std::string&
       argv.push_back(nullptr);
 
       // Call the command.
-      execv(argv[0], &argv[0]);
+      execv(argv[0], argv.data());
 
       // If execv returns, it must have failed.
       switch (errno) {

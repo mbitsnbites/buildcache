@@ -11,7 +11,3 @@ $ cd build
 $ cmake -DCMAKE_BUILD_TYPE=Release ../src
 $ cmake --build . --config Release
 ```
-
-Note: For S3 support on non-macOS/Windows systems you need OpenSSL (e.g. install
-`libssl-dev` on Ubuntu before running CMake).
-

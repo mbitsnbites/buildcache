@@ -432,11 +432,18 @@ bool compare_arg(const std::string& arg,
 
 void print_help(const char* program_name) {
   std::cout << "Usage:\n";
-  std::cout << "    " << program_name << " [options]\n";
-  std::cout << "    " << program_name << " compiler [compiler-options]\n";
+  std::cout << "    " << program_name << " [options] <command>\n";
+  std::cout << "    " << program_name << " [options] <compiler> [compiler-options]\n";
+  std::cout << "    BUILDCACHE_IMPERSONATE=<compiler> " << program_name << " [compiler-options]\n";
+  std::cout << "    <symlink> [compiler-options]\n";
+  std::cout << "\n";
+  std::cout << "<compiler>  the program to run (e.g. a C++ compiler)\n";
+  std::cout << "<symlink>   a symlink to the BuildCache executable, and the name of\n";
+  std::cout << "            the symlink is the program to run (e.g. \"g++\")\n";
   std::cout << "\n";
   std::cout << "Options:\n";
-  std::cout << "    -d, --directory PATH  operate on cache directory PATH instead of the default\n";
+  std::cout << "    -d, --directory PATH  operate on cache directory PATH instead\n";
+  std::cout << "                          of the default\n";
   std::cout << "\n";
   std::cout << "Commands:\n";
   std::cout << "    -C, --clear           clear the local cache (except configuration)\n";
@@ -515,7 +522,7 @@ int main(int argc, const char** argv) {
     print_help(argv[0]);
     std::exit(0);
   } else if (arg_str[0] == '-') {
-    std::cerr << argv[0] << ": invalid option -- " << arg_str << "\n";
+    std::cerr << argv[0] << ": invalid command -- " << arg_str << "\n";
     print_help(argv[0]);
     std::exit(1);
   }

@@ -49,34 +49,34 @@ const auto PATH_DELIMITER = std::string(1, PATH_DELIMITER_CHR);
 std::string s_config_file;
 
 // Configuration options.
-config::cache_accuracy_t s_accuracy = config::cache_accuracy_t::DEFAULT;
-bool s_cache_link_commands = false;
-bool s_compress = true;
-config::compress_format_t s_compress_format = config::compress_format_t::DEFAULT;
-int32_t s_compress_level = -1;
-int32_t s_debug = -1;
-bool s_disable = false;
+config::cache_accuracy_t s_accuracy;
+bool s_cache_link_commands;
+bool s_compress;
+config::compress_format_t s_compress_format;
+int32_t s_compress_level;
+int32_t s_debug;
+bool s_disable;
 std::string s_dir;
-bool s_direct_mode = false;
-bool s_hard_links = false;
+bool s_direct_mode;
+bool s_hard_links;
 string_list_t s_hash_extra_files;
 std::string s_impersonate;
 std::string s_log_file;
 string_list_t s_lua_paths;
-int64_t s_max_cache_size = DEFAULT_MAX_CACHE_SIZE;
-int64_t s_max_local_entry_size = DEFAULT_MAX_LOCAL_ENTRY_SIZE;
-int64_t s_max_remote_entry_size = DEFAULT_MAX_REMOTE_ENTRY_SIZE;
-bool s_perf = false;
+int64_t s_max_cache_size;
+int64_t s_max_local_entry_size;
+int64_t s_max_remote_entry_size;
+bool s_perf;
 std::string s_prefix;
-bool s_read_only = false;
-bool s_read_only_remote = false;
+bool s_read_only;
+bool s_read_only_remote;
 std::string s_redis_username;
 std::string s_redis_password;
-bool s_remote_locks = false;
+bool s_remote_locks;
 std::string s_remote;
 std::string s_s3_access;
 std::string s_s3_secret;
-bool s_terminate_on_miss = false;
+bool s_terminate_on_miss;
 
 std::string to_lower(const std::string& str) {
   std::string str_lower(str.size(), ' ');
@@ -130,6 +130,37 @@ config::compress_format_t to_compress_format(const std::string& str) {
     return config::compress_format_t::ZSTD;
   }
   return config::compress_format_t::DEFAULT;
+}
+
+void set_defaults() noexcept {
+  s_accuracy = config::cache_accuracy_t::DEFAULT;
+  s_cache_link_commands = false;
+  s_compress = true;
+  s_compress_format = config::compress_format_t::DEFAULT;
+  s_compress_level = -1;
+  s_debug = -1;
+  s_disable = false;
+  s_dir = std::string();
+  s_direct_mode = false;
+  s_hard_links = false;
+  s_hash_extra_files = string_list_t();
+  s_impersonate = std::string();
+  s_log_file = std::string();
+  s_lua_paths = string_list_t();
+  s_max_cache_size = DEFAULT_MAX_CACHE_SIZE;
+  s_max_local_entry_size = DEFAULT_MAX_LOCAL_ENTRY_SIZE;
+  s_max_remote_entry_size = DEFAULT_MAX_REMOTE_ENTRY_SIZE;
+  s_perf = false;
+  s_prefix = std::string();
+  s_read_only = false;
+  s_read_only_remote = false;
+  s_redis_username = std::string();
+  s_redis_password = std::string();
+  s_remote_locks = false;
+  s_remote = std::string();
+  s_s3_access = std::string();
+  s_s3_secret = std::string();
+  s_terminate_on_miss = false;
 }
 
 void load_from_file(const std::string& file_name) {
@@ -378,13 +409,10 @@ std::string to_string(const compress_format_t format) {
   }
 }
 
-void init(const char* bcache_dir, bool force) {
-  // Guard: Only initialize once.
-  static bool s_initialized = false;
-  if (s_initialized && !force) {
-    return;
-  }
-  s_initialized = true;
+void init(const char* bcache_dir) {
+  // Initialize the configuration to default values. Note that we MUST guarantee that this is
+  // performed before any configuration value is queried in order to avoid using undefined values.
+  set_defaults();
 
   try {
     // Get the BuildCache home directory.

@@ -409,6 +409,21 @@ std::unique_ptr<bcache::program_wrapper_t> find_suitable_wrapper(
   std::exit(return_code);
 }
 
+void init_config(const char* bcache_dir = nullptr) noexcept {
+  try {
+    // Initialize the configuration.
+    bcache::config::init(bcache_dir);
+
+    // Set up debug logging acccording to what is given by the configuration.
+    bcache::debug::set_log_level(bcache::config::debug());
+    bcache::debug::set_log_file(bcache::config::log_file());
+  } catch (const std::exception& e) {
+    bcache::debug::log(bcache::debug::FATAL) << e.what();
+  } catch (...) {
+    bcache::debug::log(bcache::debug::FATAL) << "Failed to initialize the configuration.";
+  }
+}
+
 bool compare_arg(const std::string& arg,
                  const std::string& short_form,
                  const std::string& long_form = "") {
@@ -439,18 +454,11 @@ void print_help(const char* program_name) {
 }  // namespace
 
 int main(int argc, const char** argv) {
-  try {
-    // Initialize the configuration.
-    bcache::config::init();
-
-    // Set up debug logging acccording to what is given by the configuration.
-    bcache::debug::set_log_level(bcache::config::debug());
-    bcache::debug::set_log_file(bcache::config::log_file());
-  } catch (const std::exception& e) {
-    bcache::debug::log(bcache::debug::FATAL) << e.what();
-  } catch (...) {
-    bcache::debug::log(bcache::debug::FATAL) << "An exception occurred.";
-  }
+  // Initialize the configuration.
+  // NOTE: This must be the first thing that we do in order to have well defined config values
+  // (which are used throughout the code, e.g. for controlling log levels). We may override the
+  // configuration later if the -d option is used.
+  init_config();
 
   // Handle BUILDCACHE_IMPERSONATE invocation.
   const auto& impersonate = bcache::config::impersonate();
@@ -467,40 +475,28 @@ int main(int argc, const char** argv) {
     wrap_compiler_and_exit(argc, &argv[0]);
   }
 
-  if (argc < 2) {
+  // Parse BuildCache options (must be given before any command).
+  int arg_pos = 1;
+  if (compare_arg(argv[arg_pos], "-d", "--directory")) {
+    if ((arg_pos + 1) >= argc || argv[arg_pos + 1][0] == '-') {
+      std::cerr << argv[0] << ": missing PATH for " << argv[arg_pos] << "\n";
+      print_help(argv[0]);
+      std::exit(1);
+    }
+    const auto* bcache_dir = argv[arg_pos + 1];
+    arg_pos += 2;
+
+    // Re-initialize with the cache dir specified in the command line.
+    init_config(bcache_dir);
+  }
+
+  if ((argc - arg_pos) < 1) {
     print_help(argv[0]);
     std::exit(1);
   }
 
-  // Expected position for a BuildCache command
-  int argi = 1;
-
-  // If directory is the first argument, parse, re-initialize config and update the
-  // position of the optional BuildCache command. If directory is the second argument
-  // the first argument should be a BuildCache command, otherwise the directory was
-  // intended for a wrapped compiler and should be ignored.
-  if (compare_arg(argv[1], "-d", "--directory")) {
-    if (argc < 3 || argv[2][0] == '-') {
-      std::cerr << argv[0] << ": missing PATH for " << argv[1] << "\n";
-      print_help(argv[0]);
-      std::exit(1);
-    }
-    // Set the expected position for a BuildCache command
-    argi = 3;
-    // Re-initialize with the cache dir specified in the command line.
-    bcache::config::init(argv[2], true);
-  } else if (argc > 2 && compare_arg(argv[2], "-d", "--directory") && argv[1][0] == '-') {
-    if (argc < 4 || argv[3][0] == '-') {
-      std::cerr << argv[0] << ": missing PATH for " << argv[2] << "\n";
-      print_help(argv[0]);
-      std::exit(1);
-    }
-    // Re-initialize with the cache dir specified in the command line.
-    bcache::config::init(argv[3], true);
-  }
-
-  const std::string arg_str(argv[argi]);
   // Check if we are running any BuildCache commands.
+  const std::string arg_str(argv[arg_pos]);
   if (compare_arg(arg_str, "-C", "--clear")) {
     clear_cache_and_exit();
   } else if (compare_arg(arg_str, "-s", "--show-stats")) {
@@ -525,5 +521,5 @@ int main(int argc, const char** argv) {
   }
 
   // We got this far, so we're running as a compiler wrapper.
-  wrap_compiler_and_exit(argc - argi, &argv[argi]);
+  wrap_compiler_and_exit(argc - arg_pos, &argv[arg_pos]);
 }

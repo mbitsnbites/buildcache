@@ -99,10 +99,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a8bf57d8c74b14813810897824f3e159c"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebcache_1_1config.html#a8bf57d8c74b14813810897824f3e159c">to_string</a> (const <a class="el" href="namespacebcache_1_1config.html#a7612e4ffda908f03234288061a12a575">compress_format_t</a> format)</td></tr>
 <tr class="memdesc:a8bf57d8c74b14813810897824f3e159c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a compression format enum value to a string.  <a href="namespacebcache_1_1config.html#a8bf57d8c74b14813810897824f3e159c">More...</a><br /></td></tr>
 <tr class="separator:a8bf57d8c74b14813810897824f3e159c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa04a425bf0d95a15a6db5cfc55cf624d"><td class="memItemLeft" align="right" valign="top"><a id="aa04a425bf0d95a15a6db5cfc55cf624d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebcache_1_1config.html#aa04a425bf0d95a15a6db5cfc55cf624d">init</a> ()</td></tr>
-<tr class="memdesc:aa04a425bf0d95a15a6db5cfc55cf624d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the configuration based on environment variables etc. <br /></td></tr>
-<tr class="separator:aa04a425bf0d95a15a6db5cfc55cf624d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c582e4f93537e821f68a657f19360b9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebcache_1_1config.html#a0c582e4f93537e821f68a657f19360b9">init</a> (const char *bcache_dir=nullptr)</td></tr>
+<tr class="memdesc:a0c582e4f93537e821f68a657f19360b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the configuration based on environment variables etc.  <a href="namespacebcache_1_1config.html#a0c582e4f93537e821f68a657f19360b9">More...</a><br /></td></tr>
+<tr class="separator:a0c582e4f93537e821f68a657f19360b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ec6b0911ca0b739f28f47fdd34e6f64"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebcache_1_1config.html#a8ec6b0911ca0b739f28f47fdd34e6f64">config_file</a> ()</td></tr>
 <tr class="separator:a8ec6b0911ca0b739f28f47fdd34e6f64"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a320a01058c2681de760b9ddfddb63f0e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacebcache_1_1config.html#a2b99e133bfa5578f6a0bbafe99b01008">cache_accuracy_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebcache_1_1config.html#a320a01058c2681de760b9ddfddb63f0e">accuracy</a> ()</td></tr>
@@ -462,6 +461,32 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="name
       </table>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>the executable to impersonate. </dd></dl>
+
+</div>
+</div>
+<a id="a0c582e4f93537e821f68a657f19360b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c582e4f93537e821f68a657f19360b9">&#9670;&nbsp;</a></span>init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void bcache::config::init </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>bcache_dir</em> = <code>nullptr</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initialize the configuration based on environment variables etc. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">bcache_dir</td><td>override BUILDCACHE_DIR (optional). </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

@@ -409,6 +409,21 @@ std::unique_ptr<bcache::program_wrapper_t> find_suitable_wrapper(
   std::exit(return_code);
 }
 
+void init_config(const char* bcache_dir = nullptr) noexcept {
+  try {
+    // Initialize the configuration.
+    bcache::config::init(bcache_dir);
+
+    // Set up debug logging acccording to what is given by the configuration.
+    bcache::debug::set_log_level(bcache::config::debug());
+    bcache::debug::set_log_file(bcache::config::log_file());
+  } catch (const std::exception& e) {
+    bcache::debug::log(bcache::debug::FATAL) << e.what();
+  } catch (...) {
+    bcache::debug::log(bcache::debug::FATAL) << "Failed to initialize the configuration.";
+  }
+}
+
 bool compare_arg(const std::string& arg,
                  const std::string& short_form,
                  const std::string& long_form = "") {
@@ -417,10 +432,20 @@ bool compare_arg(const std::string& arg,
 
 void print_help(const char* program_name) {
   std::cout << "Usage:\n";
-  std::cout << "    " << program_name << " [options]\n";
-  std::cout << "    " << program_name << " compiler [compiler-options]\n";
+  std::cout << "    " << program_name << " [options] <command>\n";
+  std::cout << "    " << program_name << " [options] <compiler> [compiler-options]\n";
+  std::cout << "    BUILDCACHE_IMPERSONATE=<compiler> " << program_name << " [compiler-options]\n";
+  std::cout << "    <symlink> [compiler-options]\n";
+  std::cout << "\n";
+  std::cout << "<compiler>  the program to run (e.g. a C++ compiler)\n";
+  std::cout << "<symlink>   a symlink to the BuildCache executable, and the name of\n";
+  std::cout << "            the symlink is the program to run (e.g. \"g++\")\n";
   std::cout << "\n";
   std::cout << "Options:\n";
+  std::cout << "    -d, --directory PATH  operate on cache directory PATH instead\n";
+  std::cout << "                          of the default\n";
+  std::cout << "\n";
+  std::cout << "Commands:\n";
   std::cout << "    -C, --clear           clear the local cache (except configuration)\n";
   std::cout << "    -s, --show-stats      show statistics summary\n";
   std::cout << "    -c, --show-config     show current configuration\n";
@@ -436,18 +461,11 @@ void print_help(const char* program_name) {
 }  // namespace
 
 int main(int argc, const char** argv) {
-  try {
-    // Initialize the configuration.
-    bcache::config::init();
-
-    // Set up debug logging acccording to what is given by the configuration.
-    bcache::debug::set_log_level(bcache::config::debug());
-    bcache::debug::set_log_file(bcache::config::log_file());
-  } catch (const std::exception& e) {
-    bcache::debug::log(bcache::debug::FATAL) << e.what();
-  } catch (...) {
-    bcache::debug::log(bcache::debug::FATAL) << "An exception occurred.";
-  }
+  // Initialize the configuration.
+  // NOTE: This must be the first thing that we do in order to have well defined config values
+  // (which are used throughout the code, e.g. for controlling log levels). We may override the
+  // configuration later if the -d option is used.
+  init_config();
 
   // Handle BUILDCACHE_IMPERSONATE invocation.
   const auto& impersonate = bcache::config::impersonate();
@@ -464,13 +482,28 @@ int main(int argc, const char** argv) {
     wrap_compiler_and_exit(argc, &argv[0]);
   }
 
-  if (argc < 2) {
+  // Parse BuildCache options (must be given before any command).
+  int arg_pos = 1;
+  if (compare_arg(argv[arg_pos], "-d", "--directory")) {
+    if ((arg_pos + 1) >= argc || argv[arg_pos + 1][0] == '-') {
+      std::cerr << argv[0] << ": missing PATH for " << argv[arg_pos] << "\n";
+      print_help(argv[0]);
+      std::exit(1);
+    }
+    const auto* bcache_dir = argv[arg_pos + 1];
+    arg_pos += 2;
+
+    // Re-initialize with the cache dir specified in the command line.
+    init_config(bcache_dir);
+  }
+
+  if ((argc - arg_pos) < 1) {
     print_help(argv[0]);
     std::exit(1);
   }
 
   // Check if we are running any BuildCache commands.
-  const std::string arg_str(argv[1]);
+  const std::string arg_str(argv[arg_pos]);
   if (compare_arg(arg_str, "-C", "--clear")) {
     clear_cache_and_exit();
   } else if (compare_arg(arg_str, "-s", "--show-stats")) {
@@ -489,11 +522,11 @@ int main(int argc, const char** argv) {
     print_help(argv[0]);
     std::exit(0);
   } else if (arg_str[0] == '-') {
-    std::cerr << argv[0] << ": invalid option -- " << arg_str << "\n";
+    std::cerr << argv[0] << ": invalid command -- " << arg_str << "\n";
     print_help(argv[0]);
     std::exit(1);
   }
 
   // We got this far, so we're running as a compiler wrapper.
-  wrap_compiler_and_exit(argc - 1, &argv[1]);
+  wrap_compiler_and_exit(argc - arg_pos, &argv[arg_pos]);
 }

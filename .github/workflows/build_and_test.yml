@@ -22,8 +22,8 @@ jobs:
       matrix:
         config:
         - {
-            name: "Ubuntu 22.04 GCC",
-            os: ubuntu-22.04,
+            name: "Ubuntu 20.04 GCC",
+            os: ubuntu-20.04,
             shell: bash,
             cc: "gcc",
             cxx: "g++",
@@ -64,8 +64,8 @@ jobs:
             static_checks: true,
           }
         - {
-            name: "Ubuntu 20.04 GCC",
-            os: ubuntu-20.04,
+            name: "Ubuntu 22.04 GCC",
+            os: ubuntu-22.04,
             shell: bash,
             cc: "gcc",
             cxx: "g++",
@@ -184,7 +184,7 @@ jobs:
       matrix:
         config:
         - {
-            name: "Ubuntu 22.04 GCC",
+            name: "Ubuntu 20.04 GCC",
             artifact: "buildcache-linux.tar.gz",
             artifact_content_type: "application/gzip",
             os: ubuntu-latest

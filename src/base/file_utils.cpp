@@ -21,6 +21,7 @@
 #include <base/env_utils.hpp>
 #include <base/file_utils.hpp>
 #include <base/string_list.hpp>
+#include <base/thread_pool.hpp>
 #include <base/unicode_utils.hpp>
 
 #include <cstdint>
@@ -87,6 +88,132 @@ const auto PATH_DELIMITER = std::string(1, PATH_DELIMITER_CHR);
 // This is a static variable that holds a strictly incrementing number used for generating unique
 // temporary file names.
 std::atomic_uint_fast32_t s_tmp_name_number;
+
+/// @brief A multi-threaded directory walker.
+class dir_walker_t {
+public:
+  dir_walker_t(const filter_t& filter) : m_filter(filter), m_pool(thread_pool_t::ALL_HW_THREADS) {
+  }
+
+  void walk(const std::string& path) {
+    m_pool.enqueue(std::bind(&dir_walker_t::walk_one_dir, this, path));
+    m_pool.wait();
+  }
+
+  const std::vector<file_info_t>& files() const {
+    return m_files;
+  }
+
+private:
+  void walk_one_dir(const std::string& path) {
+    std::vector<file_info_t> files;
+
+#ifdef _WIN32
+    const auto search_str = utf8_to_ucs2(append_path(path, "*"));
+    WIN32_FIND_DATAW find_data;
+    auto* find_handle = FindFirstFileW(search_str.c_str(), &find_data);
+    if (find_handle == INVALID_HANDLE_VALUE) {
+      throw std::runtime_error("Unable to walk the directory.");
+    }
+    do {
+      const auto name = ucs2_to_utf8(std::wstring(&find_data.cFileName[0]));
+      if ((name != ".") && (name != "..") && m_filter.keep(name)) {
+        const auto file_path = append_path(path, name);
+        time::seconds_t modify_time = 0;
+        time::seconds_t access_time = 0;
+        int64_t size = 0;
+        bool is_dir = false;
+        if ((find_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) {
+          m_pool.enqueue(std::bind(&dir_walker_t::walk_one_dir, this, file_path));
+          // TODO(m): Accumulate size & date for a dir from its children, recursively.
+#if 0
+          for (const auto& entry : subdir_files) {
+            files.emplace_back(entry);
+            size += entry.size();
+            modify_time = std::max(modify_time, entry.modify_time());
+            access_time = std::max(access_time, entry.access_time());
+          }
+#endif
+          is_dir = true;
+        } else {
+          size = two_dwords_to_int64(find_data.nFileSizeLow, find_data.nFileSizeHigh);
+          modify_time = time::win32_filetime_to_unix_epoch(
+              find_data.ftLastWriteTime.dwLowDateTime, find_data.ftLastWriteTime.dwHighDateTime);
+          access_time = time::win32_filetime_to_unix_epoch(
+              find_data.ftLastAccessTime.dwLowDateTime, find_data.ftLastAccessTime.dwHighDateTime);
+        }
+        // Note: We pass inode = 0, since inode numbers are not supported on Windows (AFAIK).
+        const uint64_t inode = 0U;
+        files.emplace_back(file_info_t(file_path, modify_time, access_time, size, inode, is_dir));
+      }
+    } while (FindNextFileW(find_handle, &find_data) != 0);
+
+    FindClose(find_handle);
+
+    const auto find_error = GetLastError();
+    if (find_error != ERROR_NO_MORE_FILES) {
+      throw std::runtime_error("Failed to walk the directory.");
+    }
+
+#else
+    auto* dir = opendir(path.c_str());
+    if (dir == nullptr) {
+      throw std::runtime_error("Unable to walk the directory.");
+    }
+
+    auto* entity = readdir(dir);
+    while (entity != nullptr) {
+      const auto name = std::string(entity->d_name);
+      if ((name != ".") && (name != "..") && m_filter.keep(name)) {
+        const auto file_path = append_path(path, name);
+        struct stat file_stat;
+        if (stat(file_path.c_str(), &file_stat) == 0) {
+          static_assert(sizeof(file_stat.st_ino) <= sizeof(uint64_t), "Unsupported st_ino size");
+          const auto inode = static_cast<uint64_t>(file_stat.st_ino);
+          if (S_ISDIR(file_stat.st_mode)) {
+            auto dir_info = file_info_t(file_path, 0, 0, 0, inode, true);
+            files.emplace_back(dir_info);
+            m_pool.enqueue(std::bind(&dir_walker_t::walk_one_dir, this, file_path));
+          } else if (S_ISREG(file_stat.st_mode)) {
+            const auto size = static_cast<int64_t>(file_stat.st_size);
+#ifdef __APPLE__
+            const auto modify_time = static_cast<time::seconds_t>(file_stat.st_mtimespec.tv_sec);
+            const auto access_time = static_cast<time::seconds_t>(file_stat.st_atimespec.tv_sec);
+#else
+            const auto modify_time = static_cast<time::seconds_t>(file_stat.st_mtim.tv_sec);
+            const auto access_time = static_cast<time::seconds_t>(file_stat.st_atim.tv_sec);
+#endif
+            files.emplace_back(
+                file_info_t(file_path, modify_time, access_time, size, inode, false));
+          }
+        }
+      }
+      entity = readdir(dir);
+    }
+
+    closedir(dir);
+#endif
+
+    // TODO(m): Accumulate size & date in this dir into the dir file_info_t.
+#if 0
+    for (const auto& entry : files) {
+      size += entry.size();
+      modify_time = std::max(modify_time, entry.modify_time());
+      access_time = std::max(access_time, entry.access_time());
+    }
+#endif
+
+    std::unique_lock<std::mutex> lock(m_mutex);
+    m_files.insert(m_files.end(), files.begin(), files.end());
+  }
+
+private:
+  const filter_t& m_filter;
+
+  thread_pool_t m_pool;
+  std::vector<file_info_t> m_files;
+  std::mutex m_mutex;
+};
 
 int get_process_id() {
 #ifdef _WIN32
@@ -1015,100 +1142,9 @@ std::string human_readable_size(const int64_t byte_size) {
 }
 
 std::vector<file_info_t> walk_directory(const std::string& path, const filter_t& filter) {
-  std::vector<file_info_t> files;
-
-#ifdef _WIN32
-  const auto search_str = utf8_to_ucs2(append_path(path, "*"));
-  WIN32_FIND_DATAW find_data;
-  auto* find_handle = FindFirstFileW(search_str.c_str(), &find_data);
-  if (find_handle == INVALID_HANDLE_VALUE) {
-    throw std::runtime_error("Unable to walk the directory.");
-  }
-  do {
-    const auto name = ucs2_to_utf8(std::wstring(&find_data.cFileName[0]));
-    if ((name != ".") && (name != "..") && filter.keep(name)) {
-      const auto file_path = append_path(path, name);
-      time::seconds_t modify_time = 0;
-      time::seconds_t access_time = 0;
-      int64_t size = 0;
-      bool is_dir = false;
-      if ((find_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) {
-        auto subdir_files = walk_directory(file_path, filter);
-        for (const auto& entry : subdir_files) {
-          files.emplace_back(entry);
-          size += entry.size();
-          modify_time = std::max(modify_time, entry.modify_time());
-          access_time = std::max(access_time, entry.access_time());
-        }
-        is_dir = true;
-      } else {
-        size = two_dwords_to_int64(find_data.nFileSizeLow, find_data.nFileSizeHigh);
-        modify_time = time::win32_filetime_to_unix_epoch(find_data.ftLastWriteTime.dwLowDateTime,
-                                                         find_data.ftLastWriteTime.dwHighDateTime);
-        access_time = time::win32_filetime_to_unix_epoch(find_data.ftLastAccessTime.dwLowDateTime,
-                                                         find_data.ftLastAccessTime.dwHighDateTime);
-      }
-      // Note: We pass inode = 0, since inode numbers are not supported on Windows (AFAIK).
-      const uint64_t inode = 0U;
-      files.emplace_back(file_info_t(file_path, modify_time, access_time, size, inode, is_dir));
-    }
-  } while (FindNextFileW(find_handle, &find_data) != 0);
-
-  FindClose(find_handle);
-
-  const auto find_error = GetLastError();
-  if (find_error != ERROR_NO_MORE_FILES) {
-    throw std::runtime_error("Failed to walk the directory.");
-  }
-
-#else
-  auto* dir = opendir(path.c_str());
-  if (dir == nullptr) {
-    throw std::runtime_error("Unable to walk the directory.");
-  }
-
-  auto* entity = readdir(dir);
-  while (entity != nullptr) {
-    const auto name = std::string(entity->d_name);
-    if ((name != ".") && (name != "..") && filter.keep(name)) {
-      const auto file_path = append_path(path, name);
-      struct stat file_stat;
-      if (stat(file_path.c_str(), &file_stat) == 0) {
-        time::seconds_t modify_time = 0;
-        time::seconds_t access_time = 0;
-        int64_t size = 0;
-        bool is_dir = false;
-        if (S_ISDIR(file_stat.st_mode)) {
-          auto subdir_files = walk_directory(file_path, filter);
-          for (const auto& entry : subdir_files) {
-            files.emplace_back(entry);
-            size += entry.size();
-            modify_time = std::max(modify_time, entry.modify_time());
-            access_time = std::max(access_time, entry.access_time());
-          }
-          is_dir = true;
-        } else if (S_ISREG(file_stat.st_mode)) {
-          size = static_cast<int64_t>(file_stat.st_size);
-#ifdef __APPLE__
-          modify_time = static_cast<time::seconds_t>(file_stat.st_mtimespec.tv_sec);
-          access_time = static_cast<time::seconds_t>(file_stat.st_atimespec.tv_sec);
-#else
-          modify_time = static_cast<time::seconds_t>(file_stat.st_mtim.tv_sec);
-          access_time = static_cast<time::seconds_t>(file_stat.st_atim.tv_sec);
-#endif
-        }
-        static_assert(sizeof(file_stat.st_ino) <= sizeof(uint64_t), "Unsupported st_ino size");
-        const auto inode = static_cast<uint64_t>(file_stat.st_ino);
-        files.emplace_back(file_info_t(file_path, modify_time, access_time, size, inode, is_dir));
-      }
-    }
-    entity = readdir(dir);
-  }
-
-  closedir(dir);
-#endif
-
-  return files;
+  dir_walker_t dir_walker(filter);
+  dir_walker.walk(path);
+  return dir_walker.files();
 }
 
 std::string get_unique_id() {

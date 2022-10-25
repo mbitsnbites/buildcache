@@ -36,6 +36,7 @@ set(BASE_SRC
   serializer_utils.hpp
   string_list.hpp
   string_list.cpp
+  thread_pool.hpp
   time_utils.cpp
   time_utils.hpp
   unicode_utils.cpp
@@ -44,9 +45,19 @@ set(BASE_SRC
 
 add_library(base ${BASE_SRC})
 target_link_libraries(base xxhash lz4 zstd)
+
+# System specific dependencies.
 if(WIN32 OR MINGW)
   target_link_libraries(base userenv)
-elseif(OPENSSL_FOUND)
+endif()
+if(MINGW)
+  target_link_libraries(base mingw_stdthreads)
+  target_compile_definitions(base PUBLIC USE_MINGW_THREADS)
+else()
+  find_package(Threads REQUIRED)
+  target_link_libraries(base Threads::Threads)
+endif()
+if(OPENSSL_FOUND)
   target_link_libraries(base ${OPENSSL_CRYPTO_LIBRARIES})
   target_compile_definitions(base PRIVATE HAS_OPENSSL)
 endif()

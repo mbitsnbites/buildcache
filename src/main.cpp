@@ -484,7 +484,7 @@ int main(int argc, const char** argv) {
 
   // Parse BuildCache options (must be given before any command).
   int arg_pos = 1;
-  if (compare_arg(argv[arg_pos], "-d", "--directory")) {
+  if ((arg_pos < argc) && compare_arg(argv[arg_pos], "-d", "--directory")) {
     if ((arg_pos + 1) >= argc || argv[arg_pos + 1][0] == '-') {
       std::cerr << argv[0] << ": missing PATH for " << argv[arg_pos] << "\n";
       print_help(argv[0]);

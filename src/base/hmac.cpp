@@ -315,7 +315,9 @@ std::string sha1_hmac(const std::string& key, const std::string& data) {
     // Concatenate inner_key_pad + data.
     std::vector<uint8_t> msg(inner_key_pad.size() + data.size());
     std::memcpy(msg.data(), inner_key_pad.data(), inner_key_pad.size());
-    std::memcpy(&msg[inner_key_pad.size()], data.data(), data.size());
+    if (!data.empty()) {
+      std::memcpy(&msg[inner_key_pad.size()], data.data(), data.size());
+    }
 
     // Calculate the inner hash.
     inner_hash = sha1(msg.data(), msg.size());

@@ -307,7 +307,7 @@ std::string msvc_wrapper_t::preprocess_source() {
     }
   }
   if ((!is_object_compilation) || (!has_object_output)) {
-    throw std::runtime_error("Unsupported complation command.");
+    throw std::runtime_error("Unsupported compilation command.");
   }
 
   // Disable unwanted printing of source file name in Visual Studio.

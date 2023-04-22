@@ -290,7 +290,7 @@ std::string ti_common_wrapper_t::preprocess_source() {
     return hasher.final().as_string();
   }
 
-  throw std::runtime_error("Unsupported complation command.");
+  throw std::runtime_error("Unsupported compilation command.");
 }
 
 void ti_common_wrapper_t::append_response_file(const std::string& response_file) {

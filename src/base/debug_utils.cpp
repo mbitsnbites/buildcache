@@ -104,14 +104,14 @@ log::~log() {
     const auto level_str = std::string("(") + get_level_string(m_level) + ")";
     ss << "BuildCache[" << get_process_id() << "] " << pad_string(level_str, 7) << " "
        << m_stream.str() << "\n";
-    bool write_to_stdout = false;
+    bool write_to_stderr = false;
     try {
       file::append(ss.str(), s_log_file);
     } catch (const std::runtime_error&) {
-      write_to_stdout = true;
+      write_to_stderr = true;
     }
-    if (write_to_stdout) {
-      std::cout << ss.str() << std::flush;
+    if (write_to_stderr) {
+      std::cerr << ss.str() << std::flush;
     }
   }
 }

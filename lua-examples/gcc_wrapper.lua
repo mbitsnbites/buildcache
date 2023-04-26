@@ -168,7 +168,7 @@ function preprocess_source ()
     end
   end
   if (not is_object_compilation) or (not has_object_output) then
-    error("Unsupported complation command.")
+    error("Unsupported compilation command.")
   end
 
   -- Run the preprocessor step.

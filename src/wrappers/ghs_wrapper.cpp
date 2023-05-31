@@ -27,16 +27,47 @@
 #include <list>
 #include <regex>
 #include <set>
+#include <sstream>
 #include <stdexcept>
 
 namespace bcache {
 namespace {
 // Tick this to a new number if the format has changed in a non-backwards-compatible way.
-const std::string HASH_VERSION = "1";
+const std::string HASH_VERSION = "2";
 
 bool is_source_file(const std::string& arg) {
   const auto ext = lower_case(file::get_extension(arg));
   return ((ext == ".cpp") || (ext == ".cc") || (ext == ".cxx") || (ext == ".c"));
+}
+
+std::string get_nonexisting_source_file_path() {
+  // Try a few different paths until we find one that represents a non-existing file...
+  for (int i = 0; i < 100; ++i) {
+    std::ostringstream ss;
+    ss << "_nofile_" << i << ".cpp";
+    auto path = ss.str();
+    if (!bcache::file::file_exists(path)) {
+      return path;
+    }
+  }
+
+  // Bail at this point.
+  // TODO(m): Can we do better?
+  throw std::runtime_error("Unable to produce a path to a non-existing file");
+}
+
+std::string extract_version_info(const std::string& version_str) {
+  // We do not want all lines in the version_str (e.g. any error messages), so we extract lines that
+  // include "version" or "revision" (case insensitive).
+  std::string result;
+  string_list_t lines(version_str, "\n");
+  const std::regex pattern("(version|revision)", std::regex_constants::icase);
+  for (const auto& line : lines) {
+    if (std::regex_search(line, pattern)) {
+      result += line + "\n";
+    }
+  }
+  return result;
 }
 }  // namespace
 
@@ -99,12 +130,7 @@ string_list_t ghs_wrapper_t::get_capabilities() {
 }
 
 std::string ghs_wrapper_t::get_program_id() {
-  // Getting a version string from the GHS compiler by passing "--version" is less than trivial. For
-  // instance you need to pass valid -bsp and -os_dir arguments, and a dummy source file that does
-  // not exist (otherwise it will fail or actually perform the compilation), and then the output is
-  // sent to stderr instead of stdout.
-
-  // Instead, we fall back to the default program ID logic (i.e. hash the program binary).
+  // We start by using the default program ID logic (i.e. hash the program binary).
   const auto program_version_info = program_wrapper_t::get_program_id();
 
   // Try to retrieve the version information for the OS files.
@@ -125,7 +151,36 @@ std::string ghs_wrapper_t::get_program_id() {
     }
   }
 
-  return HASH_VERSION + program_version_info + os_version_info;
+  // Try to retrieve the version information by querying the version info from the compiler.
+  // Getting a version string from the GHS compiler by passing "--version" is less than trivial. You
+  // need to pass valid -bsp and -os_dir arguments, and a dummy source file that does not exist
+  // (otherwise it will fail or actually perform the compilation). Finally, the output is sent to
+  // stderr instead of stdout, along with the compilation error message.
+  std::string cmd_line_version;
+  try {
+    if (!os_dir.empty()) {
+      std::string bsp;
+      for (const auto& arg : m_args) {
+        if (arg.substr(0, 5) == "-bsp=") {
+          bsp = arg.substr(5);
+        }
+      }
+      if (!bsp.empty()) {
+        string_list_t version_args;
+        version_args += m_args[0];
+        version_args += "-os_dir=" + os_dir;
+        version_args += "-bsp=" + bsp;
+        version_args += "--version";
+        version_args += get_nonexisting_source_file_path();
+        const auto result = sys::run(version_args);
+        cmd_line_version = extract_version_info(result.std_err);
+      }
+    }
+  } catch (std::exception& e) {
+    debug::log(debug::ERROR) << "ghs version info: " << e.what();
+  }
+
+  return HASH_VERSION + program_version_info + os_version_info + cmd_line_version;
 }
 
 string_list_t ghs_wrapper_t::get_relevant_arguments() {

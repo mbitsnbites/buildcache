@@ -44,7 +44,7 @@
 
 #include <array>
 #include <stdexcept>
-#include <stdint.h>
+#include <cstdint>
 #include <vector>
 
 namespace bcache {

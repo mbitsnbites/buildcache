@@ -1,3 +1,5 @@
+## This repo has moved to: https://gitlab.com/bits-n-bites/buildcache
+
 # BuildCache [![Build and Test](https://github.com/mbitsnbites/buildcache/workflows/Build%20and%20Test/badge.svg)](https://github.com/mbitsnbites/buildcache/actions)
 
 BuildCache is an advanced compiler accelerator that caches and reuses build
